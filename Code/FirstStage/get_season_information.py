@@ -28,7 +28,7 @@ def buscar_correspondencia(data, competition_name, competition_gender, season_na
 # Función para obtener la ruta de salida
 def obtener_ruta_output():
     ruta_actual = os.path.abspath(os.path.dirname(__file__))
-    ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage'))
+    ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files'))
     return ruta_output
 
 # Función para guardar datos con metadatos en un archivo JSON en la carpeta de salida
