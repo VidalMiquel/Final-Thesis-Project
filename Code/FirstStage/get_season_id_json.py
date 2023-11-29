@@ -22,8 +22,8 @@ def descargar_archivo(url, nombre_archivo):
 ruta_actual = os.path.abspath(os.path.dirname(__file__))
 
 # Definir las rutas de entrada y salida
-ruta_input = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage'))
-ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage'))
+ruta_input = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage','Middle_files'))
+ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files'))
 
 nombre_archivo_temporada = 'chosen_season_data.json'
 ruta_chosen_season_data = os.path.join(ruta_input, nombre_archivo_temporada)

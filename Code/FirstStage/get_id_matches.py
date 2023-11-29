@@ -4,7 +4,7 @@ import os
 def filtrar_partidos_por_equipo(ruta_fichero_season_id, nombre_equipo):
     # Obtener la ruta del directorio donde se ejecuta el script
     ruta_actual = os.path.abspath(os.path.dirname(__file__))
-    ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage'))
+    ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files'))
     ruta_season_id = os.path.join(ruta_output, ruta_fichero_season_id)
 
     with open(ruta_season_id, 'r', encoding='utf-8') as archivo:
@@ -37,7 +37,7 @@ while True:
     filtrar_partidos_por_equipo('season_id.json', nombre_equipo_usuario)
 
     # Verificar si hay partidos seleccionados leyendo el archivo 'id_matches.json'
-    ruta_output = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'Data', 'FirstStage'))
+    ruta_output = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'Data', 'FirstStage','Middle_files'))
     ruta_identificadores = os.path.join(ruta_output, 'id_matches.json')
     
     with open(ruta_identificadores, 'r') as archivo_identificadores:
