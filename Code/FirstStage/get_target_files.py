@@ -21,10 +21,11 @@ if os.path.exists(ruta_id_matches):
     for jornada, partidos in datos_id_matches.items():
         for partido_id in partidos:
             # Construir la URL con el partido_id actual
-            url = f'https://github.com/statsbomb/open-data/blob/master/data/events/{partido_id}.json'
+            #url = f'https://github.com/statsbomb/open-data/blob/master/data/events/{partido_id}.json'
+            url = f'https://raw.githubusercontent.com/VidalMiquel/Statsbomb/master/data/events/{partido_id}.json'
             
             # Nombre del archivo a guardar, usando el partido_id
-            nombre_archivo = f'{jornada}.json'
+            nombre_archivo = 'Football_day_{}.json'.format(jornada)
             
             # Ruta completa donde se guardará el archivo
             ruta_archivo_guardado = os.path.join(ruta_output, nombre_archivo)
