@@ -38,31 +38,56 @@ def filtrar_partidos_por_equipo(ruta_fichero_season_id, nombre_equipo):
     # Ruta para guardar el archivo de partidos seleccionados
     ruta_salida = os.path.join(ruta_output, 'id_matches.json')
 
+
     # Escribir los partidos seleccionados en un archivo JSON
     with open(ruta_salida, 'w') as archivo_salida:
         # Guardar los datos en el archivo JSON con formato
         json.dump(partidos_seleccionados, archivo_salida, indent=4)
 
+# Función para leer datos de la temporada desde un archivo JSON
+def obtener_chosen_season_data_json(nombre_archivo):
+    with open(nombre_archivo, 'r') as file:  # Abre el archivo en modo lectura
+        data = json.load(file)  # Carga los datos JSON desde el archivo
+    return data
 
-# Obtener el nombre del equipo ingresado por el usuario por terminal
-while True:
-    nombre_equipo_usuario = input("Introduce el nombre del equipo: ")
+def obtener_parametros(data):
+    resultados = data['metadatos']  # Obtiene la lista de resultados
+    return resultados[0]['club']# Devuelve el club
 
+
+
+def obtener_valor_club():
+    try:
+        # Obtener la ruta del directorio actual
+        ruta_actual = os.path.abspath(os.path.dirname(__file__))
+    
+        # Definir las rutas de entrada y salida
+        ruta_archivo = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files', 'chosen_season_data.json'))
+
+        # Verificar si el archivo existe
+        if not os.path.exists(ruta_archivo):
+            raise FileNotFoundError(f"El archivo {ruta_archivo} no fue encontrado.")
+
+        # Leer el archivo JSON
+        with open(ruta_archivo, 'r') as file:
+            data = json.load(file)
+
+            # Obtener el valor de 'club' del archivo JSON
+            club = data['metadatos']['club']
+            return club
+
+    except FileNotFoundError as e:
+        return str(e)
+    except KeyError:
+        return "El valor 'club' no está presente en el archivo JSON."
+
+def main():
+    # Llamar a la función para obtener el valor de 'club'
+    valor_club = obtener_valor_club()
     # Filtrar los partidos del equipo ingresado y guardar los IDs en un archivo JSON
-    filtrar_partidos_por_equipo('season_id.json', nombre_equipo_usuario)
+    filtrar_partidos_por_equipo('season_id.json', valor_club)
+    # Imprimir el valor de 'club' obtenido del archivo JSON
+    print(f"Valor de 'club' obtenido: {valor_club}")
 
-    # Verificar si se encontraron partidos leyendo el archivo 'id_matches.json'
-    ruta_output = os.path.abspath(os.path.join(os.path.dirname(
-        __file__), '..', '..', 'Data', 'FirstStage', 'Middle_files'))
-    ruta_identificadores = os.path.join(ruta_output, 'id_matches.json')
-
-    with open(ruta_identificadores, 'r') as archivo_identificadores:
-        partidos_seleccionados = json.load(archivo_identificadores)
-
-    # Si se encuentran partidos, salir del bucle
-    if partidos_seleccionados:
-        break
-    else:
-        print(f"No se encontraron partidos para el equipo '{ nombre_equipo_usuario}'. Inténtalo de nuevo.")
-
-print("Partidos encontrados y guardados en 'id_matches.json'.")
+if __name__ == "__main__":
+    main()
