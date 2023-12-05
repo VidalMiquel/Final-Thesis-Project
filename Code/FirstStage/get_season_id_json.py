@@ -3,11 +3,14 @@ import urllib.request
 import os  
 
 # Función para leer datos de la temporada desde un archivo JSON
-def leer_datos_temporada(nombre_archivo):
+def obtener_chosen_season_data_json(nombre_archivo):
     with open(nombre_archivo, 'r') as file:  # Abre el archivo en modo lectura
         data = json.load(file)  # Carga los datos JSON desde el archivo
-        resultados = data['resultados']  # Obtiene la lista de resultados
-        return resultados[0]['competition_id'], resultados[0]['season_id']  # Devuelve el competition_id y season_id
+    return data
+
+def obtener_parametros(data):
+    resultados = data['resultados']  # Obtiene la lista de resultados
+    return resultados[0]['competition_id'], resultados[0]['season_id']  # Devuelve el competition_id y season_id
 
 # Función para construir la URL para descargar el archivo JSON
 def construir_url(competition_id, season_id):
@@ -33,7 +36,9 @@ nombre_archivo_temporada = 'chosen_season_data.json'
 ruta_chosen_season_data = os.path.join(ruta_input, nombre_archivo_temporada)  # Ruta del archivo de datos de temporada
 
 # Leer el competition_id y season_id desde el archivo de datos de temporada
-competition_id, season_id = leer_datos_temporada(ruta_chosen_season_data)
+data_frame = obtener_chosen_season_data_json(ruta_chosen_season_data)
+
+competition_id, season_id = obtener_parametros(data_frame)
 
 # Construir la URL para descargar el archivo JSON usando competition_id y season_id
 url = construir_url(competition_id, season_id)
