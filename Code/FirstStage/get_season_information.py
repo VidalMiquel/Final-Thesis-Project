@@ -7,7 +7,7 @@ import sys
 def get_season_information():
     # Verificar si se proporcionaron los argumentos adecuados
     print(sys.argv)
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 6:
         print(
             "Por favor, proporcione los valores para CompetitionName, CompetitionYear, CompetitionGender, y Club."
         )
@@ -18,8 +18,9 @@ def get_season_information():
     competition_year = sys.argv[2]
     competition_gender = sys.argv[3]
     club = sys.argv[4]
+    experimentName = sys.argv[5]
 
-    return competition_name, competition_year, competition_gender, club
+    return competition_name, competition_year, competition_gender, club, experimentName
 
 
 # Función para leer un archivo JSON desde una URL
@@ -55,14 +56,14 @@ def buscar_correspondencia(data, competition_name, competition_gender, season_na
 def obtener_ruta_output():
     ruta_actual = os.path.abspath(os.path.dirname(__file__))
     ruta_output = os.path.abspath(
-        os.path.join(ruta_actual, "..", "..", "Data", "FirstStage", "Middle_files")
+        os.path.join(ruta_actual, "..", "..", "Data", experimentName, "FirstStage", "Middle_files")
     )
     return ruta_output
 
 
 # Función para guardar datos con metadatos en un archivo JSON en la carpeta de salida
 def guardar_datos_json(
-    resultados_busqueda, competition_name, competition_gender, season_name, club
+    resultados_busqueda, competition_name, competition_gender, season_name, club, experimentName
 ):
     nombre_archivo = "chosen_season_data.json"
     ruta_output = obtener_ruta_output()
@@ -79,6 +80,7 @@ def guardar_datos_json(
                 "competition_gender": competition_gender,
                 "season_name": season_name,
                 "club": club,
+                "experimentName": experimentName
             },
             "resultados": resultados_busqueda,
         }
@@ -105,13 +107,14 @@ if contenido_json is not None:
         values = get_season_information()
 
         if values:
-            competition_name, competition_year, competition_gender, club = values
+            competition_name, competition_year, competition_gender, club, experimentName = values
 
             # Utilizar los valores obtenidos como sea necesario
             print("Competition Name:", competition_name)
             print("Competition Year:", competition_year)
             print("Competition Gender:", competition_gender)
             print("Club:", club)
+            print("experimentName", experimentName)
 
             # Aquí podrías usar estos valores para realizar más operaciones en tu script
             # ...
@@ -130,6 +133,7 @@ if contenido_json is not None:
                 competition_gender,
                 competition_year,
                 club,
+                experimentName
             )
         else:
             print("No se encontraron correspondencias para los valores proporcionados.")
