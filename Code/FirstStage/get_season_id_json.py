@@ -1,6 +1,21 @@
 import json  
 import urllib.request  
 import os  
+import sys
+
+def obtener_nombre_experimento():
+    # Verificar si se proporcionaron los argumentos adecuados
+    print(sys.argv)
+    if len(sys.argv) != 2:
+        print(
+            "Por favor, proporcione los valores para CompetitionName, CompetitionYear, CompetitionGender, y Club."
+        )
+        return None
+
+    # Obtener los valores de los argumentos
+    experimentName = sys.argv[1]
+
+    return experimentName
 
 # Función para leer datos de la temporada desde un archivo JSON
 def obtener_chosen_season_data_json(nombre_archivo):
@@ -27,9 +42,12 @@ def descargar_archivo(url, nombre_archivo):
 # Obtener la ruta del directorio donde se ejecuta el script
 ruta_actual = os.path.abspath(os.path.dirname(__file__))
 
+#Obteer valor experimento
+nombre_experimento = obtener_nombre_experimento()
+
 # Definir las rutas de entrada y salida
-ruta_input = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files'))
-ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files'))
+ruta_input = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', nombre_experimento, 'FirstStage', 'Middle_files'))
+ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', nombre_experimento, 'FirstStage', 'Middle_files'))
 
 # Definir el nombre del archivo que contiene datos de temporada
 nombre_archivo_temporada = 'chosen_season_data.json'

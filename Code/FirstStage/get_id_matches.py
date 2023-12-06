@@ -1,12 +1,29 @@
 import json
 import os
+import sys
 
+
+def obtener_nombre_experimento():
+    # Verificar si se proporcionaron los argumentos adecuados
+    print(sys.argv)
+    if len(sys.argv) != 2:
+        print(
+            "Por favor, proporcione los valores para CompetitionName, CompetitionYear, CompetitionGender, y Club."
+        )
+        return None
+
+    # Obtener los valores de los argumentos
+    experimentName = sys.argv[1]
+
+    return experimentName
 
 def filtrar_partidos_por_equipo(ruta_fichero_season_id, nombre_equipo):
+
+    nombre_experimento = obtener_nombre_experimento()
     # Obtener la ruta del directorio donde se ejecuta el script
     ruta_actual = os.path.abspath(os.path.dirname(__file__))
     ruta_output = os.path.abspath(os.path.join(
-        ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files'))
+        ruta_actual, '..', '..', 'Data',nombre_experimento, 'FirstStage', 'Middle_files'))
     # Ruta del archivo de la temporada
     ruta_season_id = os.path.join(ruta_output, ruta_fichero_season_id)
 
@@ -55,14 +72,14 @@ def obtener_parametros(data):
     return resultados[0]['club']# Devuelve el club
 
 
-
 def obtener_valor_club():
     try:
         # Obtener la ruta del directorio actual
         ruta_actual = os.path.abspath(os.path.dirname(__file__))
-    
+
+        nombre_experimento = obtener_nombre_experimento()
         # Definir las rutas de entrada y salida
-        ruta_archivo = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files', 'chosen_season_data.json'))
+        ruta_archivo = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', nombre_experimento, 'FirstStage', 'Middle_files', 'chosen_season_data.json'))
 
         # Verificar si el archivo existe
         if not os.path.exists(ruta_archivo):

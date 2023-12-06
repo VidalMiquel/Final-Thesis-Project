@@ -1,15 +1,32 @@
 import os
 import json
 import urllib.request
+import sys
+
+def obtener_nombre_experimento():
+    # Verificar si se proporcionaron los argumentos adecuados
+    print(sys.argv)
+    if len(sys.argv) != 2:
+        print(
+            "Por favor, proporcione los valores para CompetitionName, CompetitionYear, CompetitionGender, y Club."
+        )
+        return None
+
+    # Obtener los valores de los argumentos
+    experimentName = sys.argv[1]
+
+    return experimentName
+
+nombre_experimento = obtener_nombre_experimento()
 
 # Obtener la ruta del directorio donde se ejecuta el script
 ruta_actual = os.path.abspath(os.path.dirname(__file__))
 
 # Ruta al archivo 'id_matches.json' desde TFG/Code/FirstStage/
-ruta_id_matches = os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Middle_files', 'id_matches.json')
+ruta_id_matches = os.path.join(ruta_actual, '..', '..', 'Data', nombre_experimento, 'FirstStage', 'Middle_files', 'id_matches.json')
 
 # Ruta donde se guardarán los archivos descargados
-ruta_output = os.path.join(ruta_actual, '..', '..', 'Data', 'FirstStage', 'Target_files')
+ruta_output = os.path.join(ruta_actual, '..', '..', 'Data', nombre_experimento, 'FirstStage', 'Target_files')
 
 # Verificar si el archivo 'id_matches.json' existe
 if os.path.exists(ruta_id_matches):

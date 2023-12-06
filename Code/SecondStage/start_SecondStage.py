@@ -30,22 +30,22 @@ def crear_estructura_carpetas():
     ruta_expermientName = os.path.join(ruta_data, nombre_carpeta_experimentName)
 
     # Nombre de la carpeta "FirstStage"
-    nombre_carpeta_first_stage = 'FirstStage'
+    nombre_carpeta_first_stage = 'SecondStage'
 
     # Ruta completa para la carpeta "FirstStage" dentro de "Data"
-    ruta_first_stage = os.path.join(ruta_expermientName, nombre_carpeta_first_stage)
+    ruta_second_stage = os.path.join(ruta_expermientName, nombre_carpeta_first_stage)
 
     # Ruta completa para la carpeta "Middle_files" dentro de "FirstStage"
-    ruta_middle_files = os.path.join(ruta_first_stage, 'Middle_files')
+    ruta_middle_files = os.path.join(ruta_second_stage, 'Middle_files')
 
     # Ruta completa para la carpeta "Target_files" dentro de "FirstStage"
-    ruta_target_files = os.path.join(ruta_first_stage, 'Target_files')
+    ruta_target_files = os.path.join(ruta_second_stage, 'Target_files')
 
     # Crear la carpeta "Data" si no existe
     crear_carpeta_ruta_absoluta(ruta_data)
 
     # Crear la carpeta "FirstStage" dentro de "Data" si no existe
-    crear_carpeta_ruta_absoluta(ruta_first_stage)
+    crear_carpeta_ruta_absoluta(ruta_second_stage)
 
     # Crear la carpeta "Middle_files" dentro de "FirstStage" si no existe
     crear_carpeta_ruta_absoluta(ruta_middle_files)
