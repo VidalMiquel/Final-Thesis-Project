@@ -13,6 +13,10 @@ cd "$current_directory"
 echo "Creando los directorios necesarios con start_SecondStage.py..."
 python start_SecondStage.py "$experimentName"
 
+# Ejecutar start_SecondStage.py
+echo "Separando los fihceros según los goles..."
+python splitByGoals.py "$experimentName"
+
 echo "" # Línea en blanco
 echo "Proceso completado."echo ""
 # Línea en blanco
