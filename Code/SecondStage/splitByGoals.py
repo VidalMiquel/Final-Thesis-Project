@@ -4,6 +4,8 @@ import os
 import json
 import pandas as pd
 
+
+# Function to get the experiment name from command-line arguments
 def getExperimentName():
     if len(sys.argv) > 1:
         return sys.argv[1]
@@ -11,131 +13,124 @@ def getExperimentName():
         print("ExperimentName has not been provided as an argument.")
         sys.exit(1)
 
-def generateDynamicPaths(experimentName):
 
-    currentDir = os.path.abspath(os.path.dirname(__file__))   # Directorio actual del script
-    print(currentDir)
-    dataFolder = os.path.join(currentDir, '..', '..', 'Data', experimentName, 'FirstStage', 'Target_files')
-    print(dataFolder)
-    targetFolder = os.path.join(currentDir, '..', '..', 'Data', experimentName, 'SecondStage', 'Middle_files')
-    print(targetFolder)
+# Function to generate dynamic paths for data and target folders
+def generateDynamicPaths(experimentName):
+    currentDir = os.path.abspath(
+        os.path.dirname(__file__)
+    )  # Get the current directory of the script
+
+    dataFolder = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "FirstStage", "Target_files"
+    )
+
+    targetFolder = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "SecondStage", "Middle_files"
+    )
 
     if not os.path.exists(targetFolder):
-        print(f"The folder {targetFolder} does not exist for experiment {experimentName}.")
+        print(
+            f"The folder {targetFolder} does not exist for experiment {
+                experimentName}."
+        )
         sys.exit(1)
 
     return dataFolder, targetFolder
 
 
-def count_files_in_folder(folder_path):
+# Function to count files in a folder
+def countFilesInFolder(folderPath):
     try:
-        # Verificar si la ruta es un directorio válido
-        if os.path.isdir(folder_path):
-            files = os.listdir(folder_path)
-            num_files = len(files)
-            return num_files
+        if os.path.isdir(folderPath):
+            files = os.listdir(folderPath)
+            numFiles = len(files)
+            return numFiles
         else:
-            print(f"La ruta {folder_path} no es un directorio válido.")
+            print(f"The path {folderPath} is not a valid directory.")
             return None
     except OSError as e:
-        print(f"Error al acceder al directorio: {e}")
+        print(f"Error accessing the directory: {e}")
         return None
-    
-import os
 
-def iterate_and_check_files(currentPath, num_files):
+
+# Function to iterate through files in a folder and check their existence
+def iterateAndCheckFiles(currentPath, numFiles):
     try:
-        # Iterar sobre cada uno de los archivos en targetPath
-        for i in range(1, num_files + 1):
-            file_name = f"Football_day_{i}.json"
-            file_path = os.path.join(currentPath, file_name)
-            
-            # Verificar si el archivo existe
-            if os.path.exists(file_path) and os.path.isfile(file_path):
-                print(f"El archivo '{file_name}' se encontró correctamente.")
-            else:
-                print(f"No se encontró el archivo '{file_name}'.")
+        for i in range(1, numFiles + 1):
+            fileName = f"footballDay_{i}.json"
+            filePath = os.path.join(currentPath, fileName)
+            if not (os.path.exists(filePath) and os.path.isfile(filePath)):
+                print(f"The file '{fileName}' was not found.")     
     except OSError as e:
-        print(f"Error al acceder a la ruta: {e}")
+        print(f"Error accessing the path: {e}")
 
-import os
 
-def iterate_and_read_files(currentPath, targetPath, num_files):
+# Function to iterate through files, read them, and perform operations
+def iterateAndReadFiles(currentPath, targetPath, numFiles):
     try:
-        for i in range(1, num_files + 1):
-            file_name = f"Football_day_{i}.json"
-            file_path = os.path.join(currentPath, file_name)
+        for i in range(1, numFiles + 1):
+            fileName = f"footballDay_{i}.json"
+            filePath = os.path.join(currentPath, fileName)
             try:
-                with open(file_path, 'r', encoding='utf-8') as file:
+                with open(filePath, "r", encoding="utf-8") as file:
                     content = json.load(file)
-                    #print(file_path)
                     dFrame = pd.DataFrame(content)
-                    splitList = get_division_indices(dFrame)
-                    generate_division_files(splitList,dFrame,i, targetPath)
+                    splitList = getDivisionIndices(dFrame)
+                    generateDivisionFiles(splitList, dFrame, i, targetPath)
             except OSError as e:
-                print(f"Error al leer el archivo '{file_name}': {e}")
+                print(f"Error reading the file '{fileName}': {e}")
             except json.JSONDecodeError as e:
-                print(f"Error al decodificar JSON en '{file_name}': {e}")
+                print(f"Error decoding JSON in '{fileName}': {e}")
     except OSError as e:
-        print(f"Error al acceder a la ruta: {e}")
+        print(f"Error accessing the path: {e}")
 
 
-def get_division_indices(data):
-    # Filter rows based on conditions
-    auxiliar = data[data["type"].apply(lambda x: (x)['id'] == 23)]
+# Function to get division indices from the data
+def getDivisionIndices(data):
+    auxiliar = data[data["type"].apply(lambda x: (x)["id"] == 23)]
     aux2 = auxiliar[auxiliar["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26)]
 
-    # Check if 'aux2' is not empty before proceeding
     if not aux2.empty:
-        # Get division indices
-        division_indices = aux2.index.tolist()
-        division_indices.insert(0, 0)  # Add initial index to divide the first segment
-        division_indices.append(len(data))  # Add final index to divide the last segment
-        print(division_indices)
-        return division_indices
+        divisionIndices = aux2.index.tolist()
+        divisionIndices.insert(0, 0)
+        divisionIndices.append(len(data))
+        return divisionIndices
     else:
         print("There are no divisions in 'data' as aux2 is empty.")
-        return None
+        return [0, len(data)]  # Return [0, len(data)] as default values when no divisions are found
 
 
-
-def generate_division_files(indices_list, dataframe, jornada_value, target_path):
+# Function to generate division files based on indices
+def generateDivisionFiles(indicesList, dataframe, jornadaValue, targetPath):
     try:
-        # Iterar sobre los índices de división
-        for i in range(len(indices_list) - 1):
-            start_index = indices_list[i]
-            end_index = indices_list[i + 1]
+        for i in range(len(indicesList) - 1):
+            startIndex = indicesList[i]
+            endIndex = indicesList[i + 1]
 
-            # Obtener el segmento correspondiente en el DataFrame
-            segment = dataframe.iloc[start_index:end_index]
+            segment = dataframe.iloc[startIndex:endIndex]
 
-            # Verificar si el segmento no está vacío antes de guardar
             if not segment.empty:
-                # Nombre del archivo con el formato Football_day_n_m
-                file_name = f"Football_day_{jornada_value}_{i+1}.json"
-                file_path = os.path.join(target_path, file_name)
+                fileName = f"footballDay_{jornadaValue}_{i+1}.json"
+                filePath = os.path.join(targetPath, fileName)
 
-                # Guardar el segmento como un archivo JSON
-                segment.to_json(file_path, orient='records')
-                print(f"Archivo '{file_name}' generado exitosamente.")
+                segment.to_json(filePath, orient="records")
             else:
-                print(f"El segmento {i+1} para la jornada {jornada_value} está vacío, no se generará archivo.")
+                print(
+                    f"The segment {
+                        i+1} for the jornada {jornadaValue} is empty, no file will be generated."
+                )
     except Exception as e:
-        print(f"Error al generar archivos de división: {e}")
+        print(f"Error generating division files: {e}")
 
 
-
+# Main function to execute the program
 def main():
     experimentName = getExperimentName()
-    #experimentName = "FCBarcelona"
     dataFolder, targetFolder = generateDynamicPaths(experimentName)
-    numFootballDayFiles = count_files_in_folder(dataFolder)
-    #numFootballDayFiles, footballDayFiles = countFootballDayFiles(targetFolder)
+    numFootballDayFiles = countFilesInFolder(dataFolder)
 
-    print(f"ExperimentName value is: {experimentName}")
-    print(f"Total number of Football_Day_n files is: {numFootballDayFiles}")
+    iterateAndReadFiles(dataFolder, targetFolder, numFootballDayFiles)
 
-    #iterate_and_check_files(dataFolder, numFootballDayFiles)
-    iterate_and_read_files(dataFolder, targetFolder, numFootballDayFiles)  
+
 if __name__ == "__main__":
     main()
