@@ -4,139 +4,148 @@ import os
 import sys
 
 
-def get_season_information():
-    # Verificar si se proporcionaron los argumentos adecuados
-    print(sys.argv)
+def getSeasonInformation():
+    # Verify if the correct arguments are provided
     if len(sys.argv) != 6:
         print(
-            "Por favor, proporcione los valores para CompetitionName, CompetitionYear, CompetitionGender, y Club."
+            "Please provide values for CompetitionName, CompetitionYear, CompetitionGender, and Club."
         )
         return None
 
-    # Obtener los valores de los argumentos
-    competition_name = sys.argv[1]
-    competition_year = sys.argv[2]
-    competition_gender = sys.argv[3]
+    # Get the values of the arguments
+    competitionName = sys.argv[1]
+    competitionYear = sys.argv[2]
+    competitionGender = sys.argv[3]
     club = sys.argv[4]
     experimentName = sys.argv[5]
 
-    return competition_name, competition_year, competition_gender, club, experimentName
+    return competitionName, competitionYear, competitionGender, club, experimentName
 
 
-# Función para leer un archivo JSON desde una URL
-def leer_json_desde_url(url):
+# Function to read a JSON file from a URL
+def readJsonFromUrl(url):
     try:
         with urllib.request.urlopen(url) as response:
             data = json.load(response)
-            return data  # Devolver el contenido del archivo JSON
+            return data  # Return the content of the JSON file
     except Exception as e:
-        print(f"Error al leer el archivo desde la URL: {e}")
+        print(f"Error reading file from URL: {e}")
         return None
 
 
-# Función para buscar correspondencia en los datos
-def buscar_correspondencia(data, competition_name, competition_gender, season_name):
-    resultados = []
+# Function to search for matches in the data
+def searchMatch(data, competitionName, competitionGender, seasonName):
+    results = []
     for competition in data:
         if (
-            competition["competition_name"] == competition_name
-            and competition["competition_gender"] == competition_gender
+            competition["competition_name"] == competitionName
+            and competition["competition_gender"] == competitionGender
         ):
-            if competition["season_name"] == season_name:
-                resultados.append(
+            if competition["season_name"] == seasonName:
+                results.append(
                     {
-                        "competition_id": competition["competition_id"],
-                        "season_id": competition["season_id"],
+                        "competitionId": competition["competition_id"],
+                        "seasonId": competition["season_id"],
                     }
                 )
-    return resultados
+    return results
 
 
-# Función para obtener la ruta de salida
-def obtener_ruta_output():
-    ruta_actual = os.path.abspath(os.path.dirname(__file__))
-    ruta_output = os.path.abspath(
-        os.path.join(ruta_actual, "..", "..", "Data", experimentName, "FirstStage", "Middle_files")
+# Function to obtain the output path
+def getOutputPath():
+    currentPath = os.path.abspath(os.path.dirname(__file__))
+    outputPath = os.path.abspath(
+        os.path.join(
+            currentPath,
+            "..",
+            "..",
+            "Data",
+            experimentName,
+            "FirstStage",
+            "Middle_files",
+        )
     )
-    return ruta_output
+    return outputPath
 
 
-# Función para guardar datos con metadatos en un archivo JSON en la carpeta de salida
-def guardar_datos_json(
-    resultados_busqueda, competition_name, competition_gender, season_name, club, experimentName
+# Function to save data with metadata to a JSON file in the output folder
+def saveJsonData(
+    searchResults,
+    competitionName,
+    competitionGender,
+    seasonName,
+    club,
+    experimentName,
 ):
-    nombre_archivo = "chosen_season_data.json"
-    ruta_output = obtener_ruta_output()
-    ruta_archivo_completa = os.path.join(ruta_output, nombre_archivo)
+    filename = "chosen_season_data.json"
+    outputPath = getOutputPath()
+    completeFilePath = os.path.join(outputPath, filename)
 
     try:
-        if not os.path.exists(ruta_output):
-            os.makedirs(ruta_output)
+        if not os.path.exists(outputPath):
+            os.makedirs(outputPath)
 
-        # Crear un diccionario para almacenar los metadatos
-        metadatos = {
-            "metadatos": {
-                "competition_name": competition_name,
-                "competition_gender": competition_gender,
-                "season_name": season_name,
+        # Create a dictionary to store metadata
+        metadata = {
+            "metadata": {
+                "competition_name": competitionName,
+                "competition_gender": competitionGender,
+                "season_name": seasonName,
                 "club": club,
-                "experimentName": experimentName
+                "experimentName": experimentName,
             },
-            "resultados": resultados_busqueda,
+            "results": searchResults,
         }
 
-        with open(ruta_archivo_completa, "w", encoding="utf-8") as file:
-            json.dump(metadatos, file, indent=4)
+        with open(completeFilePath, "w", encoding="utf-8") as file:
+            json.dump(metadata, file, indent=4)
         print(
-            f'Los datos se han guardado en el archivo "{nombre_archivo}" en la carpeta de salida correctamente.'
+            f'Data has been saved in the file "{filename}" in the output folder successfully.'
         )
     except Exception as e:
-        print(f"Error al guardar el archivo JSON: {e}")
+        print(f"Error saving JSON file: {e}")
 
 
-# URL del archivo competitions.json
-url_competitions_json = (
+# URL of the competitions.json file
+urlCompetitionsJson = (
     "https://github.com/VidalMiquel/Statsbomb/raw/master/data/competitions.json"
 )
 
-# Leer el contenido del archivo competitions.json desde la URL
-contenido_json = leer_json_desde_url(url_competitions_json)
+# Read the contents of the competitions.json file from the URL
+jsonData = readJsonFromUrl(urlCompetitionsJson)
 
-if contenido_json is not None:
+if jsonData is not None:
     try:
-        values = get_season_information()
+        values = getSeasonInformation()
 
         if values:
-            competition_name, competition_year, competition_gender, club, experimentName = values
+            (
+                competitionName,
+                competitionYear,
+                competitionGender,
+                club,
+                experimentName,
+            ) = values
 
-            # Utilizar los valores obtenidos como sea necesario
-            print("Competition Name:", competition_name)
-            print("Competition Year:", competition_year)
-            print("Competition Gender:", competition_gender)
-            print("Club:", club)
-            print("experimentName", experimentName)
 
-            # Aquí podrías usar estos valores para realizar más operaciones en tu script
-            # ...
-
-            # Por ejemplo, si quieres pasar estos valores a otras funciones o realizar alguna lógica específica
-            # puedes hacerlo a partir de aquí utilizando estas variables.
-
-        resultados_busqueda = buscar_correspondencia(
-            contenido_json, competition_name, competition_gender, competition_year
+            # Further operations using these values can be performed here in your script
+            # For instance, passing these values to other functions or performing specific logic
+            # based on these variables can be done from this point onwards.
+        searchResults = searchMatch(
+            jsonData, competitionName, competitionGender, competitionYear
         )
 
-        if resultados_busqueda:
-            guardar_datos_json(
-                resultados_busqueda,
-                competition_name,
-                competition_gender,
-                competition_year,
+        if searchResults:
+            saveJsonData(
+                searchResults,
+                competitionName,
+                competitionGender,
+                competitionYear,
                 club,
-                experimentName
+                experimentName,
             )
         else:
-            print("No se encontraron correspondencias para los valores proporcionados.")
+            print("No matches found for the provided values.")
 
     except Exception as e:
-        print(f"Ocurrió un error: {e}")
+        print(f"An error occurred: {e}")

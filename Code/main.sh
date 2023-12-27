@@ -1,20 +1,26 @@
 #!/bin/bash
 
-# Solicitar al usuario el nombre del experimento
-echo "Ingrese el nombre del experimento:"
-read nombre_experimento
+# Prompt the user to enter the experiment name
+echo "Enter the experiment name:"
+read experimentName
+echo ""
 
-# Directorio donde se encuentran las etapas (mismo nivel que main.sh)
-directorio=$(dirname "$0")
-echo $directorio
+echo "Enter the club (club):"
+read club
+echo ""
 
-# Iterar sobre los directorios presentes en el mismo nivel que main.sh
-for etapa in "$directorio"/*/; do
-    nombre_etapa=$(basename "$etapa")
-    echo $nombre_etapa
-    # Verificar si es un directorio de etapa válido (no comienza con "_")
-    if [[ $nombre_etapa != _* && -f "$etapa/main_$nombre_etapa.sh" ]]; then
-        echo "Ejecutando $nombre_etapa..."
-        bash "$etapa/main_$nombre_etapa.sh" "$nombre_experimento"
+# Directory where the stages are located (same level as main.sh)
+directory=$(dirname "$0")
+
+
+# Iterate over the directories at the same level as main.sh
+for stage in "$directory"/*/; do
+    stageName=$(basename "$stage")
+
+    # Check if it is a valid stage directory (does not start with "_")
+    if [[ $stageName != _* && -f "$stage/main_$stageName.sh" ]]; then
+
+        bash "$stage/main_$stageName.sh" "$experimentName" "$club"
+        echo ""
     fi
 done

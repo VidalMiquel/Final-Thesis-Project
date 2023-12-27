@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 def get_experiment_name():
     if len(sys.argv) > 1:
         return sys.argv[1]
@@ -21,25 +22,25 @@ def crear_estructura_carpetas():
     ruta_actual = os.path.abspath(os.path.dirname(__file__))
 
     # Construir la ruta absoluta de TFG/Data
-    ruta_data = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data'))
+    ruta_data = os.path.abspath(os.path.join(ruta_actual, "..", "..", "Data"))
 
-    #Nombre de la carpeta "experimentName"
+    # Nombre de la carpeta "experimentName"
     nombre_carpeta_experimentName = get_experiment_name()
 
     # Ruta completa para la carpeta "experimentName" dentro de "Data"
     ruta_expermientName = os.path.join(ruta_data, nombre_carpeta_experimentName)
 
     # Nombre de la carpeta "FirstStage"
-    nombre_carpeta_first_stage = 'SecondStage'
+    nombre_carpeta_first_stage = "SecondStage"
 
     # Ruta completa para la carpeta "FirstStage" dentro de "Data"
     ruta_second_stage = os.path.join(ruta_expermientName, nombre_carpeta_first_stage)
 
     # Ruta completa para la carpeta "Middle_files" dentro de "FirstStage"
-    ruta_middle_files = os.path.join(ruta_second_stage, 'Middle_files')
+    ruta_middle_files = os.path.join(ruta_second_stage, "Middle_files")
 
     # Ruta completa para la carpeta "Target_files" dentro de "FirstStage"
-    ruta_target_files = os.path.join(ruta_second_stage, 'Target_files')
+    ruta_target_files = os.path.join(ruta_second_stage, "Target_files")
 
     # Crear la carpeta "Data" si no existe
     crear_carpeta_ruta_absoluta(ruta_data)
@@ -52,6 +53,7 @@ def crear_estructura_carpetas():
 
     # Crear la carpeta "Target_files" dentro de "FirstStage" si no existe
     crear_carpeta_ruta_absoluta(ruta_target_files)
+
 
 # Llamar a la función para crear la estructura de carpetas
 crear_estructura_carpetas()

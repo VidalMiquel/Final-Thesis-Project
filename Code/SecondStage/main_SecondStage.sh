@@ -1,22 +1,33 @@
 #!/bin/bash
 
+# Retrieve the experiment name from the first argument
 experimentName="$1"
-echo "El valor del nombre del experimento es: $experimentName"
 
-# Obtener la ruta del directorio actual
-current_directory=$(dirname "$0")
+# Retrieve the club for the experiment from the second argument
+club="$2"
 
-# Cambiar al directorio que contiene start_FirstStage.py
-cd "$current_directory"
+# Get the current directory path
+currentDirectory=$(dirname "$0")
 
-# Ejecutar start_SecondStage.py
-echo "Creando los directorios necesarios con start_SecondStage.py..."
+# Change to the directory containing start_FirstStage.py
+cd "$currentDirectory"
+
+echo Executing SecondStage...
+
+# Execute start_SecondStage.py
+echo "Creating necessary directories with start_SecondStage.py..."
 python start_SecondStage.py "$experimentName"
 
-# Ejecutar start_SecondStage.py
-echo "Separando los fihceros según los goles..."
+# Execute splitByGoals.py
+echo ""
+echo "Splitting files by goals..."
 python splitByGoals.py "$experimentName"
 
-echo "" # Línea en blanco
-echo "Proceso completado."echo ""
-# Línea en blanco
+# Execute filterByTeam.py
+echo ""
+echo "Filtering files by team..."
+python filterByTeam.py "$experimentName" "$club"
+
+echo ""  # Blank line
+echo "Process completed."
+echo ""  # Blank line

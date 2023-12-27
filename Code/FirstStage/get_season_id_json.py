@@ -1,69 +1,88 @@
-import json  
-import urllib.request  
-import os  
+import json
+import urllib.request
+import os
 import sys
 
-def obtener_nombre_experimento():
-    # Verificar si se proporcionaron los argumentos adecuados
-    print(sys.argv)
+
+def getExperimentName():
+    # Check if the proper arguments were provided
     if len(sys.argv) != 2:
         print(
-            "Por favor, proporcione los valores para CompetitionName, CompetitionYear, CompetitionGender, y Club."
+            "Please provide values for CompetitionName, CompetitionYear, CompetitionGender, and Club."
         )
         return None
 
-    # Obtener los valores de los argumentos
+    # Get the argument values
     experimentName = sys.argv[1]
 
     return experimentName
 
-# Función para leer datos de la temporada desde un archivo JSON
-def obtener_chosen_season_data_json(nombre_archivo):
-    with open(nombre_archivo, 'r') as file:  # Abre el archivo en modo lectura
-        data = json.load(file)  # Carga los datos JSON desde el archivo
+
+def getChosenSeasonDataJSON(fileName):
+    with open(fileName, "r") as file:
+        data = json.load(file)
     return data
 
-def obtener_parametros(data):
-    resultados = data['resultados']  # Obtiene la lista de resultados
-    return resultados[0]['competition_id'], resultados[0]['season_id']  # Devuelve el competition_id y season_id
 
-# Función para construir la URL para descargar el archivo JSON
-def construir_url(competition_id, season_id):
-    return f'https://github.com/VidalMiquel/Statsbomb/raw/master/data/matches/{competition_id}/{season_id}.json'
+def getParameters(data):
+    results = data["results"]
+    return results[0]["competitionId"], results[0]["seasonId"]
 
-# Función para descargar un archivo desde una URL
-def descargar_archivo(url, nombre_archivo):
+
+def buildURL(competitionId, seasonId):
+    return f"https://github.com/VidalMiquel/Statsbomb/raw/master/data/matches/{competitionId}/{seasonId}.json"
+
+
+def downloadFile(url, fileName):
     try:
-        urllib.request.urlretrieve(url, nombre_archivo)  # Descarga el archivo desde la URL
-        print(f"El archivo {nombre_archivo} se ha descargado correctamente.")  # Imprime un mensaje si la descarga es exitosa
+        urllib.request.urlretrieve(url, fileName)
+        print(
+            f"The file {fileName} has been downloaded successfully."
+        )
     except Exception as e:
-        print(f"No se pudo descargar el archivo. Error: {e}")  # Captura cualquier excepción en caso de error durante la descarga
+        print(
+            f"Failed to download the file. Error: {e}"
+        )
 
-# Obtener la ruta del directorio donde se ejecuta el script
-ruta_actual = os.path.abspath(os.path.dirname(__file__))
 
-#Obteer valor experimento
-nombre_experimento = obtener_nombre_experimento()
+currentPath = os.path.abspath(os.path.dirname(__file__))
+experimentName = getExperimentName()
 
-# Definir las rutas de entrada y salida
-ruta_input = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', nombre_experimento, 'FirstStage', 'Middle_files'))
-ruta_output = os.path.abspath(os.path.join(ruta_actual, '..', '..', 'Data', nombre_experimento, 'FirstStage', 'Middle_files'))
+inputPath = os.path.abspath(
+    os.path.join(
+        currentPath,
+        "..",
+        "..",
+        "Data",
+        experimentName,
+        "FirstStage",
+        "Middle_files",
+    )
+)
+outputPath = os.path.abspath(
+    os.path.join(
+        currentPath,
+        "..",
+        "..",
+        "Data",
+        experimentName,
+        "FirstStage",
+        "Middle_files",
+    )
+)
 
-# Definir el nombre del archivo que contiene datos de temporada
-nombre_archivo_temporada = 'chosen_season_data.json'
-ruta_chosen_season_data = os.path.join(ruta_input, nombre_archivo_temporada)  # Ruta del archivo de datos de temporada
+chosenSeasonFileName = "chosen_season_data.json"
+chosenSeasonFilePath = os.path.join(
+    inputPath, chosenSeasonFileName
+)
 
-# Leer el competition_id y season_id desde el archivo de datos de temporada
-data_frame = obtener_chosen_season_data_json(ruta_chosen_season_data)
+dataFrame = getChosenSeasonDataJSON(chosenSeasonFilePath)
 
-competition_id, season_id = obtener_parametros(data_frame)
+competitionId, seasonId = getParameters(dataFrame)
 
-# Construir la URL para descargar el archivo JSON usando competition_id y season_id
-url = construir_url(competition_id, season_id)
+url = buildURL(competitionId, seasonId)
 
-# Definir el nombre del archivo de descarga y su ruta de guardado
-nombre_archivo_descarga = 'season_id.json'
-ruta_archivo_guardado = os.path.join(ruta_output, nombre_archivo_descarga)
+downloadFileName = "season_id.json"
+downloadFilePath = os.path.join(outputPath, downloadFileName)
 
-# Descargar el archivo desde la URL y guardarlo en la ruta especificada
-descargar_archivo(url, ruta_archivo_guardado)
+downloadFile(url, downloadFilePath)

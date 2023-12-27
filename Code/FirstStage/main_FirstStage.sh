@@ -1,67 +1,59 @@
 #!/bin/bash
 
+# Get the experiment name from the first argument
 experimentName="$1"
-echo "El valor del nombre del experimento es: $experimentName"
 
-# Obtener la ruta del directorio actual
-current_directory=$(dirname "$0")
+# Get the club value for the experiment from the second argument
+club="$2"
 
-# Cambiar al directorio que contiene start_FirstStage.py
-cd "$current_directory"
+# Get the current directory path
+currentDirectory=$(dirname "$0")
 
-# Ejecutar start_FirstStage.py
-echo "Creando los directorios necesarios con start_FirstStage.py..."
-python start_FirstStage.py "$experimentName"
+# Change to the directory containing start_FirstStage.py
+cd "$currentDirectory"
 
-
-# Solicitar al usuario los valores de CompetitionName, CompetitionYear, CompetitionGender y Club
-echo "Ingrese el nombre de la competición (competitionName):"
+# Prompt the user for CompetitionName, CompetitionYear, CompetitionGender, and Club values
+echo ""
+echo "Enter the competition name (competitionName):"
 read competitionName
 
-echo "Ingrese el año de la competición (competitionYear):"
+echo ""
+echo "Enter the competition year (competitionYear):"
 read competitionYear
 
-echo "Ingrese el género de la competición (competitionGender):"
+echo ""
+echo "Enter the competition gender (competitionGender):"
 read competitionGender
 
-echo "Ingrese el club (club):"
-read club
+echo ""
+echo "Executing FirstStage..."
 
 
+# Execute start_FirstStage.py
+echo "Creating necessary directories with start_FirstStage.py..."
+python start_FirstStage.py "$experimentName"
 
-
-#Agregar líneas en blanco para separar las secciones
-echo "" # Línea en blanco
-echo "Ejecutando get_season_information.py con los parámetros proporcionados..."
+# Add blank lines to separate sections
+echo ""
+echo "Executing get_season_information.py with the provided parameters..."
 python get_season_information.py "$competitionName" "$competitionYear" "$competitionGender" "$club" "$experimentName"
 
-
-#Agregar más líneas en blanco si se desea
-echo "" # Otra línea en blanco
-
-#Ejecutar get_season_id_json.py
-echo "" # Línea en blanco
-echo "Ejecutando get_season_id_json.py..."
+# Execute get_season_id_json.py
+echo "" # Blank line
+echo "Executing get_season_id_json.py..."
 python get_season_id_json.py "$experimentName"
-echo "" # Línea en blanco
 
-#Ejecutar get_id_matches.py
-echo "" # Línea en blanco
-echo "Ejecutando get_id_matches.py..."
+# Execute get_id_matches.py
+echo "" # Blank line
+echo "Executing get_id_matches.py..."
 python get_id_matches.py "$experimentName"
-echo "" # Línea en blanco
 
-#Ejecutar get_target_files.py
-echo "" # Línea en blanco
-echo "Ejecutando get_target_files.py..."
+# Execute get_target_files.py
+echo "" # Blank line
+echo "Executing get_target_files.py..."
 python get_target_files.py "$experimentName"
-echo "" # Línea en blanco
 
-# Agregar una línea en blanco al final del proceso
-echo "" # Última línea en blanco
-echo "Proceso de recopilación de datos completado."
-echo "" # Línea en blanco
+# Add a blank line at the end of the process
+echo "" # Last blank line
+echo "Data collection process completed."
 
-echo "" # Línea en blanco
-echo "Proceso completado."echo ""
-# Línea en blanco
