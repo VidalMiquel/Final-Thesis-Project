@@ -2,25 +2,16 @@ import json
 import urllib.request
 import os
 import sys
-
+import pandas as pd
 
 def getSeasonInformation():
     # Verify if the correct arguments are provided
     if len(sys.argv) != 6:
-        print(
-            "Please provide values for CompetitionName, CompetitionYear, CompetitionGender, and Club."
-        )
-        return None
+        print("Please provide values for CompetitionName, CompetitionYear, CompetitionGender, and Club.")
+        sys.exit(1)
 
     # Get the values of the arguments
-    competitionName = sys.argv[1]
-    competitionYear = sys.argv[2]
-    competitionGender = sys.argv[3]
-    club = sys.argv[4]
-    experimentName = sys.argv[5]
-
-    return competitionName, competitionYear, competitionGender, club, experimentName
-
+    return tuple(sys.argv[1:])
 
 # Function to read a JSON file from a URL
 def readJsonFromUrl(url):
@@ -30,28 +21,34 @@ def readJsonFromUrl(url):
             return data  # Return the content of the JSON file
     except Exception as e:
         print(f"Error reading file from URL: {e}")
-        return None
+        sys.exit(1)
 
-
-# Function to search for matches in the data
 def searchMatch(data, competitionName, competitionGender, seasonName):
-    results = []
-    for competition in data:
-        if (
-            competition["competition_name"] == competitionName
-            and competition["competition_gender"] == competitionGender
-        ):
-            if competition["season_name"] == seasonName:
-                results.append(
-                    {
-                        "competitionId": competition["competition_id"],
-                        "seasonId": competition["season_id"],
-                    }
-                )
-    return results
+    try:
+        df = pd.DataFrame(data)
+        filtered_df = df[
+            (df["competition_name"] == competitionName)
+            & (df["competition_gender"] == competitionGender)
+            & (df["season_name"] == seasonName)
+        ]
 
+        if filtered_df.empty:
+            print("\nNo matches found for the provided values:\n -Competition gender: ", competitionGender, "\n -Competition name: ", competitionName, "\n -Season name: ", seasonName)
+            sys.exit(1)
 
-# Function to obtain the output path
+        result_dict = {
+            "competitionId": int(filtered_df["competition_id"].values[0]),
+            "seasonId": int(filtered_df["season_id"].values[0])
+        }
+
+        return result_dict
+    except pd.errors.EmptyDataError as e:
+        print(f"No data found for the provided values: {e}")
+        sys.exit(1)
+    except IndexError as e:
+        print(f"Index error: {e}")
+        sys.exit(1)
+
 def getOutputPath():
     currentPath = os.path.abspath(os.path.dirname(__file__))
     outputPath = os.path.abspath(
@@ -67,16 +64,7 @@ def getOutputPath():
     )
     return outputPath
 
-
-# Function to save data with metadata to a JSON file in the output folder
-def saveJsonData(
-    searchResults,
-    competitionName,
-    competitionGender,
-    seasonName,
-    club,
-    experimentName,
-):
+def saveJsonData(searchResults, competitionName, competitionGender, seasonName, club, experimentName):
     filename = "chosen_season_data.json"
     outputPath = getOutputPath()
     completeFilePath = os.path.join(outputPath, filename)
@@ -105,7 +93,6 @@ def saveJsonData(
     except Exception as e:
         print(f"Error saving JSON file: {e}")
 
-
 # URL of the competitions.json file
 urlCompetitionsJson = (
     "https://github.com/VidalMiquel/Statsbomb/raw/master/data/competitions.json"
@@ -127,10 +114,9 @@ if jsonData is not None:
                 experimentName,
             ) = values
 
-
-            # Further operations using these values can be performed here in your script
-            # For instance, passing these values to other functions or performing specific logic
-            # based on these variables can be done from this point onwards.
+        # Further operations using these values can be performed here in your script
+        # For instance, passing these values to other functions or performing specific logic
+        # based on these variables can be done from this point onwards.
         searchResults = searchMatch(
             jsonData, competitionName, competitionGender, competitionYear
         )
@@ -145,7 +131,8 @@ if jsonData is not None:
                 experimentName,
             )
         else:
-            print("No matches found for the provided values.")
+            print("No matches found for the provided values:", {values})
 
     except Exception as e:
         print(f"An error occurred: {e}")
+        sys.exit(1)

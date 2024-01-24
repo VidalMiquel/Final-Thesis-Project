@@ -26,7 +26,7 @@ def getChosenSeasonDataJSON(fileName):
 
 def getParameters(data):
     results = data["results"]
-    return results[0]["competitionId"], results[0]["seasonId"]
+    return results["competitionId"], results["seasonId"]
 
 
 def buildURL(competitionId, seasonId):
@@ -37,7 +37,7 @@ def downloadFile(url, fileName):
     try:
         urllib.request.urlretrieve(url, fileName)
         print(
-            f"The file {fileName} has been downloaded successfully."
+            f"The file season_id.json has been downloaded successfully."
         )
     except Exception as e:
         print(
