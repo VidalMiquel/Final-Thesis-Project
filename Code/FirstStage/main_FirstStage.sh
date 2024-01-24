@@ -13,7 +13,6 @@ currentDirectory=$(dirname "$0")
 cd "$currentDirectory"
 
 # Prompt the user for CompetitionName, CompetitionYear, CompetitionGender, and Club values
-echo ""
 echo "Enter the competition name (competitionName):"
 read competitionName
 
@@ -28,32 +27,47 @@ read competitionGender
 echo ""
 echo "Executing FirstStage..."
 
-
 # Execute start_FirstStage.py
 echo "Creating necessary directories with start_FirstStage.py..."
 python start_FirstStage.py "$experimentName"
 
-# Add blank lines to separate sections
+# Execute get_season_information.py with error checking
 echo ""
 echo "Executing get_season_information.py with the provided parameters..."
-python get_season_information.py "$competitionName" "$competitionYear" "$competitionGender" "$club" "$experimentName"
+if python get_season_information.py "$competitionName" "$competitionYear" "$competitionGender" "$club" "$experimentName"; then
+    echo "get_season_information.py executed successfully."
+else
+    exit 1
+fi
 
-# Execute get_season_id_json.py
+# Execute get_season_id_json.py with error checking
 echo "" # Blank line
 echo "Executing get_season_id_json.py..."
-python get_season_id_json.py "$experimentName"
+if python get_season_id_json.py "$experimentName"; then
+    echo "get_season_id_json.py executed successfully."
+else
+    exit 1
+fi
 
-# Execute get_id_matches.py
+# Execute get_id_matches.py with error checking
 echo "" # Blank line
 echo "Executing get_id_matches.py..."
-python get_id_matches.py "$experimentName"
+if python get_id_matches.py "$experimentName"; then
+    echo "get_id_matches.py executed successfully."
+else
+    exit 1
+fi
 
-# Execute get_target_files.py
+# Execute get_target_files.py with error checking
 echo "" # Blank line
 echo "Executing get_target_files.py..."
-python get_target_files.py "$experimentName"
+if python get_target_files.py "$experimentName"; then
+    echo "get_target_files.py executed successfully."
+else
+    exit 1
+fi
 
 # Add a blank line at the end of the process
 echo "" # Last blank line
-echo "Data collection process completed."
 
+echo "Data collection process completed."

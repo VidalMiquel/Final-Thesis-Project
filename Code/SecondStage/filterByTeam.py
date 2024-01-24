@@ -42,12 +42,13 @@ def generateDynamicPaths(experimentName):
 def filterFileByPossessionTeam(data, nameClub):
     # Filter rows based on conditions
     dataTeam = data[data["possession_team"].apply(lambda x: (x)["name"] == nameClub)]
-
+    dataTeamPass = dataTeam[dataTeam["type"].apply(lambda x: (x)["id"] == 30)]
+   
     # Check if 'dataTeam' is not empty before proceeding
-    if not dataTeam.empty:
-        return dataTeam
-    else:
-        return None
+    #if not dataTeamPass.empty:
+    return dataTeamPass
+    #else:
+    #    return None
 
 
 # Function to save filtered data to a file
@@ -59,12 +60,13 @@ def saveFilteredFile(data, targetFolder, fileName):
         filePath = os.path.join(targetFolder, newFileName)
         try:
             data.to_json(filePath, orient="records", lines=True)
-            print(f"File stored at: {filePath}")
+            #print(f"File stored at: {filePath}")
         except Exception as e:
             print(f"Error while saving the file: {e}")
         #print(f"File '{newFileName}' generated successfully.")
     else:
-        print(f"The file is empty, no file will be generated.")
+        #print(data)
+        print(f"The file is empty, no file will be generated: ", fileName)
 
 
 # Function to read files in a folder and process them
