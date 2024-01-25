@@ -8,7 +8,7 @@ def getSeasonInformation():
     # Verify if the correct arguments are provided
     if len(sys.argv) != 6:
         print("Please provide values for CompetitionName, CompetitionYear, CompetitionGender, and Club.")
-        sys.exit(1)
+        raise ValueError("Invalid number of arguments")
 
     # Get the values of the arguments
     return tuple(sys.argv[1:])
@@ -21,7 +21,7 @@ def readJsonFromUrl(url):
             return data  # Return the content of the JSON file
     except Exception as e:
         print(f"Error reading file from URL: {e}")
-        sys.exit(1)
+        raise  # Re-raise the exception
 
 def searchMatch(data, competitionName, competitionGender, seasonName):
     try:
@@ -33,23 +33,21 @@ def searchMatch(data, competitionName, competitionGender, seasonName):
         ]
 
         if filtered_df.empty:
-            print("\nNo matches found for the provided values:\n -Competition gender: ", competitionGender, "\n -Competition name: ", competitionName, "\n -Season name: ", seasonName)
-            sys.exit(1)
-
+            
+            print("\nNo matches found for the provided values:\n -Competition gender: ", competitionGender, 
+                             "\n -Competition name: ", competitionName, "\n -Season name: ", seasonName)
+            raise
+        
         result_dict = {
             "competitionId": int(filtered_df["competition_id"].values[0]),
             "seasonId": int(filtered_df["season_id"].values[0])
         }
 
         return result_dict
-    except pd.errors.EmptyDataError as e:
-        print(f"No data found for the provided values: {e}")
-        sys.exit(1)
-    except IndexError as e:
-        print(f"Index error: {e}")
-        sys.exit(1)
+    except Exception as e:
+        raise  # Re-raise the exception
 
-def getOutputPath():
+def getOutputPath(experimentName):
     currentPath = os.path.abspath(os.path.dirname(__file__))
     outputPath = os.path.abspath(
         os.path.join(
@@ -66,7 +64,7 @@ def getOutputPath():
 
 def saveJsonData(searchResults, competitionName, competitionGender, seasonName, club, experimentName):
     filename = "chosen_season_data.json"
-    outputPath = getOutputPath()
+    outputPath = getOutputPath(experimentName)
     completeFilePath = os.path.join(outputPath, filename)
 
     try:
@@ -92,6 +90,7 @@ def saveJsonData(searchResults, competitionName, competitionGender, seasonName, 
         )
     except Exception as e:
         print(f"Error saving JSON file: {e}")
+        raise  # Re-raise the exception
 
 # URL of the competitions.json file
 urlCompetitionsJson = (
@@ -99,10 +98,10 @@ urlCompetitionsJson = (
 )
 
 # Read the contents of the competitions.json file from the URL
-jsonData = readJsonFromUrl(urlCompetitionsJson)
+try:
+    jsonData = readJsonFromUrl(urlCompetitionsJson)
 
-if jsonData is not None:
-    try:
+    if jsonData is not None:
         values = getSeasonInformation()
 
         if values:
@@ -114,25 +113,23 @@ if jsonData is not None:
                 experimentName,
             ) = values
 
-        # Further operations using these values can be performed here in your script
-        # For instance, passing these values to other functions or performing specific logic
-        # based on these variables can be done from this point onwards.
-        searchResults = searchMatch(
-            jsonData, competitionName, competitionGender, competitionYear
-        )
-
-        if searchResults:
-            saveJsonData(
-                searchResults,
-                competitionName,
-                competitionGender,
-                competitionYear,
-                club,
-                experimentName,
+            # Further operations using these values can be performed here in your script
+            # For instance, passing these values to other functions or performing specific logic
+            # based on these variables can be done from this point onwards.
+            searchResults = searchMatch(
+                jsonData, competitionName, competitionGender, competitionYear
             )
-        else:
-            print("No matches found for the provided values:", {values})
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        sys.exit(1)
+            if searchResults:
+                saveJsonData(
+                    searchResults,
+                    competitionName,
+                    competitionGender,
+                    competitionYear,
+                    club,
+                    experimentName,
+                )
+            else:
+                raise ValueError("No matches found for the provided values:", {values})
+except Exception as e:
+    sys.exit(1)

@@ -37,46 +37,30 @@ def generateDynamicPaths(experimentName):
 
     return dataFolder, targetFolder
 
+import os
 
-# Function to count files in a folder
-def countFilesInFolder(folderPath):
+def getFileNamesInFolder(folderPath):
     try:
         if os.path.isdir(folderPath):
             files = os.listdir(folderPath)
-            numFiles = len(files)
-            return numFiles
+            return files
         else:
-            print(f"The path {folderPath} is not a valid directory.")
-            return None
+            raise FileNotFoundError(f"The path '{folderPath}' is not a valid directory.")
     except OSError as e:
-        print(f"Error accessing the directory: {e}")
-        return None
-
-
-# Function to iterate through files in a folder and check their existence
-def iterateAndCheckFiles(currentPath, numFiles):
-    try:
-        for i in range(1, numFiles + 1):
-            fileName = f"footballDay_{i}.json"
-            filePath = os.path.join(currentPath, fileName)
-            if not (os.path.exists(filePath) and os.path.isfile(filePath)):
-                print(f"The file '{fileName}' was not found.")     
-    except OSError as e:
-        print(f"Error accessing the path: {e}")
+        raise OSError(f"Error accessing the directory: {e}")
 
 
 # Function to iterate through files, read them, and perform operations
-def iterateAndReadFiles(currentPath, targetPath, numFiles):
+def iterateAndReadFiles(currentPath, targetPath, nameFiles):
     try:
-        for i in range(1, numFiles + 1):
-            fileName = f"footballDay_{i}.json"
+        for fileName in nameFiles:
             filePath = os.path.join(currentPath, fileName)
             try:
                 with open(filePath, "r", encoding="utf-8") as file:
                     content = json.load(file)
                     dFrame = pd.DataFrame(content)
                     splitList = getDivisionIndices(dFrame)
-                    generateDivisionFiles(splitList, dFrame, i, targetPath)
+                    generateDivisionFiles(splitList, dFrame, fileName, targetPath)
             except OSError as e:
                 print(f"Error reading the file '{fileName}': {e}")
             except json.JSONDecodeError as e:
@@ -100,8 +84,9 @@ def getDivisionIndices(data):
         return [0, len(data)]  # Return [0, len(data)] as default values when no divisions are found
 
 
+
 # Function to generate division files based on indices
-def generateDivisionFiles(indicesList, dataframe, jornadaValue, targetPath):
+def generateDivisionFiles(indicesList, dataframe, fileName, targetPath):
     try:
         for i in range(len(indicesList) - 1):
             startIndex = indicesList[i]
@@ -110,14 +95,15 @@ def generateDivisionFiles(indicesList, dataframe, jornadaValue, targetPath):
             segment = dataframe.iloc[startIndex:endIndex]
 
             if not segment.empty:
-                fileName = f"footballDay_{jornadaValue}_{i+1}.json"
-                filePath = os.path.join(targetPath, fileName)
+                baseName, extension  = os.path.splitext(fileName)
+                newFilename = f"{baseName}_{i+1}.json"
+                filePath = os.path.join(targetPath, newFilename)
 
                 segment.to_json(filePath, orient="records")
             else:
                 print(
                     f"The segment {
-                        i+1} for the jornada {jornadaValue} is empty, no file will be generated."
+                        i+1} for the jornada {fileName} is empty, no file will be generated."
                 )
     except Exception as e:
         print(f"Error generating division files: {e}")
@@ -127,9 +113,9 @@ def generateDivisionFiles(indicesList, dataframe, jornadaValue, targetPath):
 def main():
     experimentName = getExperimentName()
     dataFolder, targetFolder = generateDynamicPaths(experimentName)
-    numFootballDayFiles = countFilesInFolder(dataFolder)
+    nameFootballDayFiles = getFileNamesInFolder(dataFolder)
 
-    iterateAndReadFiles(dataFolder, targetFolder, numFootballDayFiles)
+    iterateAndReadFiles(dataFolder, targetFolder, nameFootballDayFiles)
 
 
 if __name__ == "__main__":
