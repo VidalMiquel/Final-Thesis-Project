@@ -42,13 +42,13 @@ def generateDynamicPaths(experimentName):
 def filterFileByPossessionTeam(data, nameClub):
     # Filter rows based on conditions
     dataTeam = data[data["possession_team"].apply(lambda x: (x)["name"] == nameClub)]
-    dataTeamPass = dataTeam[dataTeam["type"].apply(lambda x: (x)["id"] == 30)]
+    #dataTeamPass = dataTeam[dataTeam["type"].apply(lambda x: (x)["id"] == 30)]
    
     # Check if 'dataTeam' is not empty before proceeding
-    #if not dataTeamPass.empty:
-    return dataTeamPass
-    #else:
-    #    return None
+    if not dataTeam.empty:
+        return dataTeam
+    else:
+        return None
 
 
 # Function to save filtered data to a file

@@ -31,3 +31,9 @@ A mesura que el projecte avança a través de les diferents etapes, el codi en l
 La carpeta Data i tot el seu contingut es crea dinàmicament gràcies a un fitxer anomenat start_nStage.sh (crea per etapa), present a Code/nStage. Per tant, es crea de manera dinàmica. L'únic que ha de tenir l'usuari final en compte és la carpeta Code. El de més en genera dinàmicament. D'aquí a que el fitxer .gitignore tingui especificat ignorar la carpeta /Data.
 
 Aquest enfocament proporciona una manera dinàmica i flexible de gestionar l'estructura del projecte, permetent que l'usuari final només necessiti preocupar-se de la carpeta Code, ja que la resta de l'estructura es genera de manera automàtica mitjançant l'execució dels fitxers específics de cada etapa.
+
+ACLARACIONS
+
+1- Totes les dades amb les quals estic fent feina han estat descarregades de la següent font d'informació: Statsbomb. Esteim fent feina amb l'apartat accesible per a estudiants.
+
+2-En cas de que l'usuari introdueixi per teclat dades sense correspondència amb la font de dades amb la qual feim feina, l'execusió serà interrompuda i l'usuari serà notificat.

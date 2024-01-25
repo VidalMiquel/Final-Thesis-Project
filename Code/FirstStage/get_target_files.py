@@ -61,7 +61,7 @@ if os.path.exists(idMatchesPath):
             # Download the file from URL and save it to the specified path
             try:
                 urllib.request.urlretrieve(url, filePath)
-                #print(f"File {fileName} downloaded successfully.")
+                print(f"File {fileName} downloaded successfully.")
             except Exception as e:
                 print(f"Failed to download file {fileName}. Error: {e}")
 else:
