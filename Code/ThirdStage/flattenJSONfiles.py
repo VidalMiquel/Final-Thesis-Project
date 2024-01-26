@@ -1,16 +1,18 @@
 from decimal import DivisionByZero
+from operator import index
 import sys
 import os
 import json
 import pandas as pd
+from flatten_json import flatten
 
 
 # Function to get command-line parameters
 def getParameters():
-    if len(sys.argv) == 3:
-        return sys.argv[1], sys.argv[2]
+    if len(sys.argv) == 2:
+        return sys.argv[1]
     else:
-        print("Exactly two values must be provided as arguments.")
+        print("Exactly one value must be provided as arguments.")
         sys.exit(1)
 
 
@@ -19,15 +21,15 @@ def generateDynamicPaths(experimentName):
     currentDir = os.path.abspath(
         os.path.dirname(__file__)
     )  # Get the current directory of the script
-    print(currentDir)
+    #print(currentDir)
     dataFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "SecondStage", "Middle_files"
-    )
-    print(dataFolder)
-    targetFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "SecondStage", "Target_files"
     )
-    print(targetFolder)
+    #print(dataFolder)
+    targetFolder = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "ThirdStage", "Middle_files"
+    )
+    #print(targetFolder)
 
     if not os.path.exists(targetFolder):
         print(
@@ -38,28 +40,18 @@ def generateDynamicPaths(experimentName):
     return dataFolder, targetFolder
 
 
-# Function to filter data based on possession team
-def filterFileByPossessionTeam(data, nameClub):
-    # Filter rows based on conditions
-    dataTeam = data[data["possession_team"].apply(lambda x: (x)["name"] == nameClub)]
-    #dataTeamPass = dataTeam[dataTeam["type"].apply(lambda x: (x)["id"] == 30)]
-   
-    # Check if 'dataTeam' is not empty before proceeding
-    if not dataTeam.empty:
-        return dataTeam
-    else:
-        return None
-
 
 # Function to save filtered data to a file
 def saveFilteredFile(data, targetFolder, fileName):
     # Check if the segment is not empty before saving
+    
     if not data.empty:
         # File name in the format Football_day_n_m
         newFileName = changeFilenames(fileName)
+        print(newFileName)
         filePath = os.path.join(targetFolder, newFileName)
         try:
-            data.to_json(filePath, orient="records")
+            data.to_csv(filePath, index = False, encoding = 'utf-8-sig')
             #print(f"File stored at: {filePath}")
         except Exception as e:
             print(f"Error while saving the file: {e}")
@@ -70,7 +62,7 @@ def saveFilteredFile(data, targetFolder, fileName):
 
 
 # Function to read files in a folder and process them
-def readFolderFiles(currentPath, targetFolder, nameClub):
+def readFolderFiles(currentPath, targetFolder):
     # Check if the folder exists
     if not os.path.isdir(currentPath):
         print(f"The folder '{currentPath}' does not exist.")
@@ -82,36 +74,36 @@ def readFolderFiles(currentPath, targetFolder, nameClub):
         filePath = os.path.join(currentPath, fileName)
 
         try:
-            with open(filePath, "r+", encoding="utf-8") as file:
+            with open(filePath, "r") as file:
                 content = json.load(file)
-                dFrame = pd.DataFrame(content)
-                
-                filteredData = filterFileByPossessionTeam(dFrame, nameClub)
-                saveFilteredFile(filteredData, targetFolder, fileName)
+                df = pd.DataFrame([flatten(d) for d in content])
+                saveFilteredFile(df, targetFolder, fileName)
         except OSError as e:
             print(f"Error while reading the file '{fileName}': {e}")
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON in '{fileName}': {e}")
 
 
-# Function to change file names to a new format
-def changeFilenames(fileName):
-    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"
-    if fileName.startswith("footballDay_") and fileName.endswith(".json"):
-        partsName = fileName.split("_")
-        jornadaValue = partsName[1]
-        iValue = partsName[2].split(".")[0]
-
+def changeFilenames(filename):
+    # Check if the file name follows the pattern "footballDayFiltered_{jornada_value}_{i_value}.json"
+    if filename.startswith("footballDayFiltered_") and filename.endswith(".json"):
+        parts = filename.split("_")
+        jornada_value = parts[1]
+        i_value = parts[2].split(".")[0]
         # New file name
-        newFileName = f"footballDayFiltered_{jornadaValue}_{iValue}.json"
-        return newFileName
+        new_filename = f"footballDayFlattened_{jornada_value}_{i_value}.csv"
+        return new_filename
+    else:
+        print("The file name does not follow the expected pattern.")
+        return None
+
 
 
 # Main function to execute the program
 def main():
-    experimentName, clubName = getParameters()
+    experimentName = getParameters()
     dataFolder, targetFolder = generateDynamicPaths(experimentName)
-    readFolderFiles(dataFolder, targetFolder, clubName)
+    readFolderFiles(dataFolder, targetFolder)
 
 
 if __name__ == "__main__":
