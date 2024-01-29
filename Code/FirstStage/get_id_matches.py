@@ -34,9 +34,13 @@ def filter_matches_by_team(file_season_id_path, team_name):
     # Path to the season data file
     season_id_path = os.path.join(output_path, file_season_id_path)
 
-    # Open the JSON file containing the season data
-    with open(season_id_path, "r", encoding="utf-8") as file:
-        data = json.load(file)  # Load JSON data
+    try:
+        # Open the JSON file containing the season data
+        with open(season_id_path, "r", encoding="utf-8") as file:
+            data = json.load(file)  # Load JSON data
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
     # Dictionary to store matches filtered by the user-provided team
     selected_matches = {}
@@ -62,6 +66,9 @@ def filter_matches_by_team(file_season_id_path, team_name):
             # Add the match ID to the list of selected matches for that match week
             selected_matches[match_week].append(match_id)
 
+    if not selected_matches:
+        raise Exception(f"We don't have data for the selected team: {team_name}")
+    
     # Path to save the selected matches file
     output_path = os.path.join(output_path, "id_matches.json")
 
@@ -122,11 +129,15 @@ def get_club_value():
 
 
 def main():
-    # Call the function to get the 'club' value
-    club_value = get_club_value()
-    # Filter matches of the entered team and save IDs to a JSON file
-    filter_matches_by_team("season_id.json", club_value)
-    print("The match IDs have been successfully obtained.")
+    try:
+        # Call the function to get the 'club' value
+        club_value = get_club_value()
+        # Filter matches of the entered team and save IDs to a JSON file
+        filter_matches_by_team("season_id.json", club_value)
+        print("The match IDs have been successfully obtained.")
+    except Exception as e:
+        print(f"We don't have data for the selected team: {club_value}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
