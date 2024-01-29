@@ -1,6 +1,6 @@
 Aquesta primera etapa (FirstStage) del TFG té com a objectiu obtenir els fitxers que emmagatzemen la infromació dels partits els quals vols estudiar.
 
-Aquesta decisió d'estudi es vol deixar en mans de l'usuari, és a dir, per terminal indicarà quina és la temporada (season_name), quina és la competició (competition_name) i quin futbol vol analitzar, si el masculí o el femení (competition_gender). Amb aquestes tres primeres dades executam "get_season_information.py". El resultat és els valors de competiton_id i season_id, emmagatzemats a "chosen_season_data.json" obtinguts gràcies a una crida a un fitxer i als tres valors obtinguts per teclat. 
+Aquesta decisió d'estudi es vol deixar en mans de l'usuari, és a dir, per terminal indicarà quin club (club_name), quina és la temporada (season_name), quina és la competició (competition_name) i quin futbol vol analitzar, si el masculí o el femení (competition_gender). Amb aquestes quatre dades executam "get_season_information.py". El resultat és els valors de competiton_id i season_id, emmagatzemats a "chosen_season_data.json" obtinguts gràcies a una crida a un fitxer i als tres valors obtinguts per teclat. 
 
 En segon lloc, amb els valors presents a "chosen_season_data.json", executam "get_season_id_json.py". L'objectiu es obtenir mitjançant una crida formada a partir de competiton_id i seaseon_id el fitxer "season_id.jsons". Aquest fitxer conté tots els partits de la temporada i competició desitjada.
 
@@ -21,17 +21,19 @@ TFG
 │       ├── get_season_id_json.py
 │       ├── get_season_information.py
 │       ├── get_target_files.py
-│       ├── main_FirstStage.py
 │       ├── start_FirstStage.py
+│       ├── main_FirstStage.sh
 │       └── README.md
+|   └── main.sh
 └── Data
-    └── FirstStage
-        ├── Middle_files
-        │   ├── chosen_season_data.json
-        │   ├── id_matches.json
-        │   └── season_id.json
-        └── Target_files
-            ├── 1.json
-            ├── 2.json
-            └── 38.json
+    └── experimentName
+        └──FirstStage
+            ├── Middle_files
+            │   ├── chosen_season_data.json
+            │   ├── id_matches.json
+            │   └── season_id.json
+            └── Target_files
+                ├── footballDay_1.json
+                ├── footballDay_2.json
+                └── footballDay_38.json
 
