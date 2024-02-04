@@ -23,9 +23,11 @@ read competitionYear
 echo ""
 echo "Enter the competition gender (competitionGender):"
 read competitionGender
+echo "------------------------------------------"
 
 echo ""
 echo "Executing FirstStage..."
+echo ""
 
 # Execute start_FirstStage.py
 echo "Creating necessary directories with start_FirstStage.py..."
@@ -67,7 +69,8 @@ else
     exit 1
 fi
 
-# Add a blank line at the end of the process
-echo "" # Last blank line
+echo ""  # Blank line
+echo "First Stage completed."
+echo ""
+echo "------------------------------------------"
 
-echo "Data collection process completed."

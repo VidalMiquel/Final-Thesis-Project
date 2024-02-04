@@ -1,4 +1,3 @@
-from decimal import DivisionByZero
 from operator import index
 import sys
 import os
@@ -21,15 +20,12 @@ def generateDynamicPaths(experimentName):
     currentDir = os.path.abspath(
         os.path.dirname(__file__)
     )  # Get the current directory of the script
-    #print(currentDir)
     dataFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "SecondStage", "Target_files"
     )
-    #print(dataFolder)
     targetFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "ThirdStage", "Middle_files"
     )
-    #print(targetFolder)
 
     if not os.path.exists(targetFolder):
         print(
@@ -48,7 +44,6 @@ def saveFilteredFile(data, targetFolder, fileName):
     if not data.empty:
         # File name in the format Football_day_n_m
         newFileName = changeFilenames(fileName)
-        print(newFileName)
         filePath = os.path.join(targetFolder, newFileName)
         try:
             data.to_csv(filePath, index = False, encoding = 'utf-8-sig')

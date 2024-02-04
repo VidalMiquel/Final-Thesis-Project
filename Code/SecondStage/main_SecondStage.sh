@@ -13,6 +13,7 @@ currentDirectory=$(dirname "$0")
 cd "$currentDirectory"
 
 echo Executing SecondStage...
+echo ""
 
 # Execute start_SecondStage.py
 echo "Creating necessary directories with start_SecondStage.py..."
@@ -29,5 +30,6 @@ echo "Filtering files by team..."
 python filterByTeam.py "$experimentName" "$club"
 
 echo ""  # Blank line
-echo "Process completed."
-echo ""  # Blank line
+echo "Second Stage completed."
+echo ""
+echo "------------------------------------------"
