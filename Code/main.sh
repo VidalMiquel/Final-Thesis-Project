@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 # Prompt the user to enter the experiment name
+echo "------------------------------------------"
 echo "Enter the experiment name:"
 read experimentName
 echo ""
@@ -43,4 +44,4 @@ if [ "$error_ocurrido" = true ]; then
 fi
 
 # Continuar con el resto del script principal
-echo "Todo se ejecutó correctamente."
+echo "All executed correctly"

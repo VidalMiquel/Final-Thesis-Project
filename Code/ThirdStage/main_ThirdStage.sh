@@ -9,7 +9,7 @@ club="$2"
 # Get the current directory path
 currentDirectory=$(dirname "$0")
 
-# Change to the directory containing start_FirstStage.py
+# Change to the directory containing startThirdStage.py
 cd "$currentDirectory"
 
 echo Executing ThirdStage...
@@ -22,7 +22,15 @@ echo ""
 # Execute start_SecondStage.py
 echo "Flattening JSON files with flattenJSONfiles.py..."
 python flattenJSONfiles.py "$experimentName"
+echo " "
+
+# Execute start_SecondStage.py
+echo "Filtering CSV files with filterByPasses.py..."
+python filterByPasses.py "$experimentName" "$club"
+
 
 echo ""  # Blank line
-echo "Process completed."
+echo "Third Stage completed."
+echo ""  # Blank line
+echo "------------------------------------------"
 echo ""  # Blank line

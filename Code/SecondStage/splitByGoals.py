@@ -72,7 +72,8 @@ def iterateAndReadFiles(currentPath, targetPath, nameFiles):
 # Function to get division indices from the data
 def getDivisionIndices(data):
     auxiliar = data[data["type"].apply(lambda x: (x)["id"] == 23)]
-    aux2 = auxiliar[auxiliar["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26)]
+    #aux2 = auxiliar[auxiliar["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26)]
+    aux2 = auxiliar[auxiliar["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28)]
 
     if not aux2.empty:
         divisionIndices = aux2.index.tolist()
