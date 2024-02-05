@@ -36,23 +36,22 @@ def generateDynamicPaths(experimentName):
     return dataFolder, targetFolder
 
 
-
 # Function to save filtered data to a file
 def saveFilteredFile(data, targetFolder, fileName):
     # Check if the segment is not empty before saving
-    
+
     if not data.empty:
         # File name in the format Football_day_n_m
         newFileName = changeFilenames(fileName)
         filePath = os.path.join(targetFolder, newFileName)
         try:
-            data.to_csv(filePath, index = False, encoding = 'utf-8-sig')
-            #print(f"File stored at: {filePath}")
+            data.to_csv(filePath, index=False, encoding="utf-8-sig")
+            # print(f"File stored at: {filePath}")
         except Exception as e:
             print(f"Error while saving the file: {e}")
-        #print(f"File '{newFileName}' generated successfully.")
+        # print(f"File '{newFileName}' generated successfully.")
     else:
-        #print(data)
+        # print(data)
         print(f"The file is empty, no file will be generated: ", fileName)
 
 
@@ -91,7 +90,6 @@ def changeFilenames(filename):
     else:
         print("The file name does not follow the expected pattern.")
         return None
-
 
 
 # Main function to execute the program
