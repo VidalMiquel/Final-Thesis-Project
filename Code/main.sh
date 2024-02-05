@@ -28,7 +28,7 @@ for stage in "$directory"/*/; do
 
         # Verificar el código de salida del script anterior
         if [ $? -ne 0 ]; then
-            echo "Error en main_$stageName.sh. Se detiene la ejecución."
+            echo "Error in main_$stageName.sh. Execution ended."
             error_ocurrido=true
             break
         fi

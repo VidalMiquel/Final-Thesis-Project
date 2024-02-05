@@ -19,10 +19,12 @@ echo "Creating necessary directories with startThirdStage.py..."
 python startThirdStage.py "$experimentName"
 echo ""
 
+
 # Execute start_SecondStage.py
 echo "Flattening JSON files with flattenJSONfiles.py..."
 python flattenJSONfiles.py "$experimentName"
 echo " "
+
 
 # Execute start_SecondStage.py
 echo "Filtering CSV files with filterByPasses.py..."
