@@ -6,7 +6,7 @@ echo "Enter the experiment name:"
 read experimentName
 echo ""
 
-echo "Enter the club (club):"
+echo "Enter the club:"
 read club
 echo ""
 
@@ -14,22 +14,22 @@ echo ""
 directory=$(dirname "$0")
 
 # Variable para controlar si ocurrió algún error
-error_ocurrido=false
+mistakeGenerated=false
 
 # Iterate over the directories at the same level as main.sh
 for stage in "$directory"/*/; do
     stageName=$(basename "$stage")
 
     # Check if it is a valid stage directory (does not start with "_")
-    if [[ $stageName != _* && -f "$stage/main_$stageName.sh" ]]; then
+    if [[ $stageName != _* && -f "$stage/main$stageName.sh" ]]; then
 
         # Ejecutar el script de la etapa
-        bash "$stage/main_$stageName.sh" "$experimentName" "$club"
+        bash "$stage/main$stageName.sh" "$experimentName" "$club"
 
         # Verificar el código de salida del script anterior
         if [ $? -ne 0 ]; then
-            echo "Error in main_$stageName.sh. Execution ended."
-            error_ocurrido=true
+            echo "Error in main$stageName.sh. Execution ended."
+            mistakeGenerated=true
             break
         fi
 
@@ -38,7 +38,7 @@ for stage in "$directory"/*/; do
 done
 
 # Verificar si ocurrió algún error durante la ejecución de los scripts
-if [ "$error_ocurrido" = true ]; then
+if [ "$mistakeGenerated" = true ]; then
     echo "Se produjo un error durante la ejecución de los scripts. Se detiene la ejecución."
     exit 1
 fi

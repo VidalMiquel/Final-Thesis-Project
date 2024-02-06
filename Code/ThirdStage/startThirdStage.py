@@ -12,7 +12,7 @@ def get_experiment_name():
 def crear_carpeta_ruta_absoluta(ruta):
     try:
         os.makedirs(ruta)
-        print(f"Creada la carpeta en {ruta}")
+        #print(f"Creada la carpeta en {ruta}")
     except FileExistsError:
         print(f"La carpeta en {ruta} ya existe.")
 
@@ -37,13 +37,10 @@ def crear_estructura_carpetas():
     ruta_third_stage = os.path.join(ruta_expermientName, nombre_carpeta_Third_stage)
 
     # Ruta completa para la carpeta "Middle_files" dentro de "FirstStage"
-    ruta_middle_files = os.path.join(ruta_third_stage, "Middle_files")
+    ruta_middle_files = os.path.join(ruta_third_stage, "MiddleFiles")
 
     # Ruta completa para la carpeta "Target_files" dentro de "FirstStage"
-    ruta_target_files = os.path.join(ruta_third_stage, "Target_files")
-
-    # Crear la carpeta "Data" si no existe
-    crear_carpeta_ruta_absoluta(ruta_data)
+    ruta_target_files = os.path.join(ruta_third_stage, "TargetFiles")
 
     # Crear la carpeta "FirstStage" dentro de "Data" si no existe
     crear_carpeta_ruta_absoluta(ruta_third_stage)

@@ -21,10 +21,10 @@ def generateDynamicPaths(experimentName):
         os.path.dirname(__file__)
     )  # Get the current directory of the script
     dataFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "SecondStage", "Target_files"
+        currentDir, "..", "..", "Data", experimentName, "SecondStage", "TargetFiles"
     )
     targetFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "ThirdStage", "Middle_files"
+        currentDir, "..", "..", "Data", experimentName, "ThirdStage", "MiddleFiles"
     )
 
     if not os.path.exists(targetFolder):

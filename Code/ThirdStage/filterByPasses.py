@@ -20,11 +20,11 @@ def generateDynamicPaths(experimentName):
     )  # Get the current directory of the script
     # print(currentDir)
     dataFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "ThirdStage", "Middle_files"
+        currentDir, "..", "..", "Data", experimentName, "ThirdStage", "MiddleFiles"
     )
     # print(dataFolder)
     targetFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "ThirdStage", "Target_files"
+        currentDir, "..", "..", "Data", experimentName, "ThirdStage", "TargetFiles"
     )
     # print(targetFolder)
 
