@@ -30,8 +30,7 @@ def generateDynamicPaths(experimentName):
 
     if not os.path.exists(targetFolder):
         print(
-            f"The folder {targetFolder} does not exist for experiment {
-                experimentName}."
+            f"The folder {targetFolder} does not exist for experiment {experimentName}."
         )
         sys.exit(1)
 
@@ -96,15 +95,22 @@ def generateDivisionFiles(indicesList, dataframe, fileName, targetPath):
             segment = dataframe.iloc[startIndex:endIndex]
 
             if not segment.empty:
-                baseName, extension  = os.path.splitext(fileName)
-                newFilename = f"{baseName}_{i+1}.json"
-                filePath = os.path.join(targetPath, newFilename)
+                
+                # Split the filename into three segments
+                part = fileName.split("_")
 
-                segment.to_json(filePath, orient="records")
+            # Check if the filename has at least two underscores to ensure a valid split
+                if len(part) >= 2:
+                    numberSegment = part[0]
+                    middleSegment = part[1]
+                    baseName, extension  = os.path.splitext(middleSegment)
+                    newFilename = f"{numberSegment}_{i+1}_{baseName}.json"
+                    filePath = os.path.join(targetPath, newFilename)
+
+                    segment.to_json(filePath, orient="records")
             else:
                 print(
-                    f"The segment {
-                        i+1} for the jornada {fileName} is empty, no file will be generated."
+                    f"The segment {i+1} for the jornada {fileName} is empty, no file will be generated."
                 )
     except Exception as e:
         print(f"Error generating division files: {e}")

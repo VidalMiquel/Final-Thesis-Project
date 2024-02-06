@@ -96,15 +96,15 @@ def readFolderFiles(currentPath, targetFolder, nameClub):
 
 # Function to change file names to a new format
 def changeFilenames(fileName):
-    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"
-    if fileName.startswith("footballDay_") and fileName.endswith(".json"):
-        partsName = fileName.split("_")
-        jornadaValue = partsName[1]
-        iValue = partsName[2].split(".")[0]
-
-        # New file name
-        newFileName = f"footballDayFiltered_{jornadaValue}_{iValue}.json"
-        return newFileName
+    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
+    if fileName.endswith(".json"):
+            parts = fileName.split("_")
+            if len(parts) == 3 and parts[2] == "footballDay.json":
+                newFileName = f"{parts[0]}_{parts[1]}_footballDayFiltered.json"
+                return newFileName
+    else:
+        print("The file name does not follow the expected pattern.")
+        return None
 
 
 # Main function to execute the program

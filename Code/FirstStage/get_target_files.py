@@ -2,7 +2,16 @@ import os
 import json
 import urllib.request
 import sys
+from datetime import datetime
 
+def toDayOfYear(date):
+    # Convert the date string to a datetime object
+    dateObject = datetime.strptime(date, '%Y-%m-%d')
+
+    # Get the day of the year
+    dayOfYear = dateObject.timetuple().tm_yday
+    
+    return dayOfYear
 
 def getExperimentName():
     # Check if the proper arguments were provided
@@ -48,12 +57,13 @@ if os.path.exists(idMatchesPath):
 
     # Iterate through the keys (matchday numbers) and values (lists of matches) in 'id_matches.json'
     for matchday, matches in idMatchesData.items():
+        day = toDayOfYear(matchday)
         for match_id in matches:
             # Build URL with the current match_id
             url = f"https://raw.githubusercontent.com/VidalMiquel/Statsbomb/master/data/events/{match_id}.json"
 
             # File name to be saved, using the match_id
-            fileName = f"footballDay_{matchday}.json"
+            fileName = f"{day}_footballDay.json"
 
             # Full path where the file will be saved
             filePath = os.path.join(outputPath, fileName)
@@ -68,3 +78,5 @@ else:
     print(
         "The 'id_matches.json' file was not found at the specified location."
     )
+
+
