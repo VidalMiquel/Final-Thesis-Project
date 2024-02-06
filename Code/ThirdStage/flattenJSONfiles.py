@@ -77,16 +77,15 @@ def readFolderFiles(currentPath, targetFolder):
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON in '{fileName}': {e}")
 
-
-def changeFilenames(filename):
-    # Check if the file name follows the pattern "footballDayFiltered_{jornada_value}_{i_value}.json"
-    if filename.startswith("footballDayFiltered_") and filename.endswith(".json"):
-        parts = filename.split("_")
-        jornada_value = parts[1]
-        i_value = parts[2].split(".")[0]
-        # New file name
-        new_filename = f"footballDayFlattened_{jornada_value}_{i_value}.csv"
-        return new_filename
+    
+# Function to change file names to a new format
+def changeFilenames(fileName):
+    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
+    if fileName.endswith(".json"):
+            parts = fileName.split("_")
+            if len(parts) == 3 and parts[2] == "footballDayFiltered.json":
+                newFileName = f"{parts[0]}_{parts[1]}_footballDayFlattened.csv"
+                return newFileName
     else:
         print("The file name does not follow the expected pattern.")
         return None

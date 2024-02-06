@@ -72,18 +72,18 @@ def readFolderFiles(currentPath, targetFolder, clubName):
         saveFilteredFile(filteredData, targetFolder, fileName)
 
 
+# Function to change file names to a new format
 def changeFilenames(fileName):
-    # Check if the file name follows the pattern "footballDayFiltered_{jornada_value}_{i_value}.json"
-    if fileName.startswith("footballDayFlattened_") and fileName.endswith(".csv"):
-        parts = fileName.split("_")
-        jornadaValue = parts[1]
-        iValue = parts[2].split(".")[0]
-        # New file name
-        newFileName = f"footballDayPasses_{jornadaValue}_{iValue}.csv"
-        return newFileName
+    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
+    if fileName.endswith(".csv"):
+            parts = fileName.split("_")
+            if len(parts) == 3 and parts[2] == "footballDayFlattened.csv":
+                newFileName = f"{parts[0]}_{parts[1]}_footballDayPasses.csv"
+                return newFileName
     else:
-        print("The file name does not follow the expected pattern.", fileName)
+        print("The file name does not follow the expected pattern.")
         return None
+
 
 
 def filterByPasses(dfRaw, clubName):

@@ -56,7 +56,7 @@ def filter_matches_by_team(file_season_id_path, team_name):
             or team_name.lower() == away_team.lower()
         ):
             # Get the match week number
-            match_week = match["match_week"]
+            match_week = match["match_date"]
             match_id = match["match_id"]  # Get the match ID
 
             if match_week not in selected_matches:
