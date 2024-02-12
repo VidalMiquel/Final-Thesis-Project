@@ -2,55 +2,55 @@ import os
 import sys
 
 
-def get_experiment_name():
+def getExperimentName():
     if len(sys.argv) > 1:
         return sys.argv[1]
     else:
         return None
 
 
-def crear_carpeta_ruta_absoluta(ruta):
+def createDirectoryAbsolutePath(path):
     try:
-        os.makedirs(ruta)
-        #print(f"Creada la carpeta en {ruta}")
+        os.makedirs(path)
+        #print(f"Created folder at {path}")
     except FileExistsError:
-        print(f"La carpeta en {ruta} ya existe.")
+        print(f"The folder at {path} already exists.")
 
 
-def crear_estructura_carpetas():
-    # Obtener la ruta absoluta del directorio actual
-    ruta_actual = os.path.abspath(os.path.dirname(__file__))
+def createFolderStructure():
+    # Get the absolute path of the current directory
+    currentPath = os.path.abspath(os.path.dirname(__file__))
 
-    # Construir la ruta absoluta de TFG/Data
-    ruta_data = os.path.abspath(os.path.join(ruta_actual, "..", "..", "Data"))
+    # Build the absolute path of TFG/Data
+    dataPath = os.path.abspath(os.path.join(currentPath, "..", "..", "Data"))
 
-    # Nombre de la carpeta "experimentName"
-    nombre_carpeta_experimentName = get_experiment_name()
+    # Name of the folder "experimentName"
+    experimentNameFolder = getExperimentName()
 
-    # Ruta completa para la carpeta "experimentName" dentro de "Data"
-    ruta_expermientName = os.path.join(ruta_data, nombre_carpeta_experimentName)
+    # Complete path for the "experimentName" folder within "Data"
+    experimentNamePath = os.path.join(dataPath, experimentNameFolder)
 
-    # Nombre de la carpeta "FirstStage"
-    nombre_carpeta_Third_stage = "ThirdStage"
+    # Name of the folder "ThirdStage"
+    thirdStageFolderName = "ThirdStage"
 
-    # Ruta completa para la carpeta "FirstStage" dentro de "Data"
-    ruta_third_stage = os.path.join(ruta_expermientName, nombre_carpeta_Third_stage)
+    # Complete path for the "ThirdStage" folder within "Data"
+    thirdStagePath = os.path.join(experimentNamePath, thirdStageFolderName)
 
-    # Ruta completa para la carpeta "Middle_files" dentro de "FirstStage"
-    ruta_middle_files = os.path.join(ruta_third_stage, "MiddleFiles")
+    # Complete path for the "MiddleFiles" folder within "ThirdStage"
+    middleFilesPath = os.path.join(thirdStagePath, "MiddleFiles")
 
-    # Ruta completa para la carpeta "Target_files" dentro de "FirstStage"
-    ruta_target_files = os.path.join(ruta_third_stage, "TargetFiles")
+    # Complete path for the "TargetFiles" folder within "ThirdStage"
+    targetFilesPath = os.path.join(thirdStagePath, "TargetFiles")
 
-    # Crear la carpeta "FirstStage" dentro de "Data" si no existe
-    crear_carpeta_ruta_absoluta(ruta_third_stage)
+    # Create the "ThirdStage" folder within "Data" if it doesn't exist
+    createDirectoryAbsolutePath(thirdStagePath)
 
-    # Crear la carpeta "Middle_files" dentro de "FirstStage" si no existe
-    crear_carpeta_ruta_absoluta(ruta_middle_files)
+    # Create the "MiddleFiles" folder within "ThirdStage" if it doesn't exist
+    createDirectoryAbsolutePath(middleFilesPath)
 
-    # Crear la carpeta "Target_files" dentro de "FirstStage" si no existe
-    crear_carpeta_ruta_absoluta(ruta_target_files)
+    # Create the "TargetFiles" folder within "ThirdStage" if it doesn't exist
+    createDirectoryAbsolutePath(targetFilesPath)
 
 
-# Llamar a la función para crear la estructura de carpetas
-crear_estructura_carpetas()
+# Call the function to create the folder structure
+createFolderStructure()

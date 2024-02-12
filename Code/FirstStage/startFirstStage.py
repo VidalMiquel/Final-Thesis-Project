@@ -1,55 +1,55 @@
 import os
 import sys
 
-def get_experiment_name():
+def getExperimentName():
     if len(sys.argv) > 1:
         return sys.argv[1]
     else:
         return None
 
-def create_directory_absolute_path(path):
+def createDirectoryAbsolutePath(path):
     try:
         os.makedirs(path)
         #print(f"Created folder at {path}")
     except FileExistsError:
         print(f"The folder at {path} already exists.")
 
-def create_folder_structure():
+def createFolderStructure():
     # Get the absolute path of the current directory
-    current_path = os.path.abspath(os.path.dirname(__file__))
+    currentPath = os.path.abspath(os.path.dirname(__file__))
 
     # Build the absolute path of TFG/Data
-    data_path = os.path.abspath(os.path.join(current_path, "..", "..", "Data"))
+    dataPath = os.path.abspath(os.path.join(currentPath, "..", "..", "Data"))
 
     # Name of the "experimentName" folder
-    experiment_name_folder = get_experiment_name()
+    experimentNameFolder = getExperimentName()
 
     # Complete path for the "experimentName" folder within "Data"
-    experiment_name_path = os.path.join(data_path, experiment_name_folder)
+    experimentNamePath = os.path.join(dataPath, experimentNameFolder)
 
     # Name of the "FirstStage" folder
-    first_stage_folder_name = "FirstStage"
+    firstStageFolderName = "FirstStage"
 
     # Complete path for the "FirstStage" folder within "Data"
-    first_stage_path = os.path.join(experiment_name_path, first_stage_folder_name)
+    firstStagePath = os.path.join(experimentNamePath, firstStageFolderName)
 
     # Complete path for the "Middle_files" folder within "FirstStage"
-    middle_files_path = os.path.join(first_stage_path, "MiddleFiles")
+    middleFilesPath = os.path.join(firstStagePath, "MiddleFiles")
 
     # Complete path for the "Target_files" folder within "FirstStage"
-    target_files_path = os.path.join(first_stage_path, "TargetFiles")
+    targetFilesPath = os.path.join(firstStagePath, "TargetFiles")
 
     # Create the "Data" folder if it doesn't exist
-    create_directory_absolute_path(data_path)
+    createDirectoryAbsolutePath(dataPath)
 
     # Create the "FirstStage" folder within "Data" if it doesn't exist
-    create_directory_absolute_path(first_stage_path)
+    createDirectoryAbsolutePath(firstStagePath)
 
     # Create the "Middle_files" folder within "FirstStage" if it doesn't exist
-    create_directory_absolute_path(middle_files_path)
+    createDirectoryAbsolutePath(middleFilesPath)
 
     # Create the "Target_files" folder within "FirstStage" if it doesn't exist
-    create_directory_absolute_path(target_files_path)
+    createDirectoryAbsolutePath(targetFilesPath)
 
 # Call the function to create the folder structure
-create_folder_structure()
+createFolderStructure()
