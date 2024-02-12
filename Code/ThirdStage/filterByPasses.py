@@ -89,7 +89,7 @@ def changeFilenames(fileName):
 def filterByPasses(dfRaw, clubName):
     finalDf = pd.DataFrame()
     # List of columns you want to add to the final DataFrame. PROBLEMATIC COLUMN IS: PASS_OUTCOME_NAME
-    columns_to_add = [
+    columnsToAdd = [
         "index",
         "period",
         "minute",
@@ -121,7 +121,7 @@ def filterByPasses(dfRaw, clubName):
     passes = dfNoNan.loc[(dfNoNan["type_id"] == "30") & (dfNoNan["team_name"] == clubName)]
     if not passes.empty:
         # Check if each column exists in the passes DataFrame before adding it
-        for col in columns_to_add:
+        for col in columnsToAdd:
             if col in passes.columns:
                 # If the column exists in passes, add it to the final DataFrame
                 finalDf[col] = passes[col]

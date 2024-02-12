@@ -18,7 +18,7 @@ def getExperimentName():
     return experimentName
 
 
-def getChosenSeasonDataJSON(fileName):
+def getChosenSeasonDataJson(fileName):
     with open(fileName, "r") as file:
         data = json.load(file)
     return data
@@ -29,7 +29,7 @@ def getParameters(data):
     return results["competitionId"], results["seasonId"]
 
 
-def buildURL(competitionId, seasonId):
+def buildUrl(competitionId, seasonId):
     return f"https://github.com/VidalMiquel/Statsbomb/raw/master/data/matches/{competitionId}/{seasonId}.json"
 
 
@@ -76,11 +76,11 @@ chosenSeasonFilePath = os.path.join(
     inputPath, chosenSeasonFileName
 )
 
-dataFrame = getChosenSeasonDataJSON(chosenSeasonFilePath)
+dataFrame = getChosenSeasonDataJson(chosenSeasonFilePath)
 
 competitionId, seasonId = getParameters(dataFrame)
 
-url = buildURL(competitionId, seasonId)
+url = buildUrl(competitionId, seasonId)
 
 downloadFileName = "seasonId.json"
 downloadFilePath = os.path.join(outputPath, downloadFileName)

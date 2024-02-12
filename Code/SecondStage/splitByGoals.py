@@ -1,9 +1,7 @@
-from decimal import DivisionByZero
 import sys
 import os
 import json
 import pandas as pd
-
 
 # Function to get the experiment name from command-line arguments
 def getExperimentName():
@@ -36,6 +34,7 @@ def generateDynamicPaths(experimentName):
 
     return dataFolder, targetFolder
 
+
 import os
 
 def getFileNamesInFolder(folderPath):
@@ -57,9 +56,9 @@ def iterateAndReadFiles(currentPath, targetPath, nameFiles):
             try:
                 with open(filePath, "r", encoding="utf-8") as file:
                     content = json.load(file)
-                    dFrame = pd.DataFrame(content)
-                    splitList = getDivisionIndices(dFrame)
-                    generateDivisionFiles(splitList, dFrame, fileName, targetPath)
+                    dataframe = pd.DataFrame(content)
+                    splitList = getDivisionIndices(dataframe)
+                    generateDivisionFiles(splitList, dataframe, fileName, targetPath)
             except OSError as e:
                 print(f"Error reading the file '{fileName}': {e}")
             except json.JSONDecodeError as e:

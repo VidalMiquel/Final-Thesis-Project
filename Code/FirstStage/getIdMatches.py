@@ -2,8 +2,7 @@ import json
 import os
 import sys
 
-
-def get_experiment_name():
+def getExperimentName():
     # Check if the appropriate arguments are provided
     if len(sys.argv) != 2:
         print(
@@ -12,98 +11,98 @@ def get_experiment_name():
         return None
 
     # Get the values of the arguments
-    experiment_name = sys.argv[1]
-    return experiment_name
+    experimentName = sys.argv[1]
+    return experimentName
 
 
-def filter_matches_by_team(file_season_id_path, team_name):
-    experiment_name = get_experiment_name()
+def filterMatchesByTeam(fileSeasonIdPath, teamName):
+    experimentName = getExperimentName()
     # Get the path of the directory where the script is being executed
-    current_path = os.path.abspath(os.path.dirname(__file__))
-    output_path = os.path.abspath(
+    currentPath = os.path.abspath(os.path.dirname(__file__))
+    outputPath = os.path.abspath(
         os.path.join(
-            current_path,
+            currentPath,
             "..",
             "..",
             "Data",
-            experiment_name,
+            experimentName,
             "FirstStage",
             "MiddleFiles",
         )
     )
     # Path to the season data file
-    season_id_path = os.path.join(output_path, file_season_id_path)
+    seasonIdPath = os.path.join(outputPath, fileSeasonIdPath)
 
     try:
         # Open the JSON file containing the season data
-        with open(season_id_path, "r", encoding="utf-8") as file:
+        with open(seasonIdPath, "r", encoding="utf-8") as file:
             data = json.load(file)  # Load JSON data
     except FileNotFoundError as e:
         print(f"Error: {e}")
         sys.exit(1)
 
     # Dictionary to store matches filtered by the user-provided team
-    selected_matches = {}
+    selectedMatches = {}
 
     # Iterate through the data to filter matches by the user-provided team
     for match in data:
-        home_team = match["home_team"]["home_team_name"]
-        away_team = match["away_team"]["away_team_name"]
+        homeTeam = match["home_team"]["home_team_name"]
+        awayTeam = match["away_team"]["away_team_name"]
 
         # Check if the team name matches either the home or away team of the match
         if (
-            team_name.lower() == home_team.lower()
-            or team_name.lower() == away_team.lower()
+            teamName.lower() == homeTeam.lower()
+            or teamName.lower() == awayTeam.lower()
         ):
             # Get the match week number
-            match_week = match["match_date"]
-            match_id = match["match_id"]  # Get the match ID
+            matchWeek = match["match_date"]
+            matchId = match["match_id"]  # Get the match ID
 
-            if match_week not in selected_matches:
+            if matchWeek not in selectedMatches:
                 # Initialize the list of matches if it's the first time encountering that match week
-                selected_matches[match_week] = []
+                selectedMatches[matchWeek] = []
 
             # Add the match ID to the list of selected matches for that match week
-            selected_matches[match_week].append(match_id)
+            selectedMatches[matchWeek].append(matchId)
 
-    if not selected_matches:
-        raise Exception(f"We don't have data for the selected team: {team_name}")
+    if not selectedMatches:
+        raise Exception(f"We don't have data for the selected team: {teamName}")
     
     # Path to save the selected matches file
-    output_path = os.path.join(output_path, "idMatches.json")
+    outputPath = os.path.join(outputPath, "idMatches.json")
 
     # Write the selected matches to a JSON file
-    with open(output_path, "w") as output_file:
+    with open(outputPath, "w") as outputFile:
         # Save the data to the JSON file with formatting
-        json.dump(selected_matches, output_file, indent=4)
+        json.dump(selectedMatches, outputFile, indent=4)
 
 
 # Function to read chosen season data from a JSON file
-def get_chosen_season_data_json(filename):
+def getChosenSeasonDataJson(filename):
     with open(filename, "r") as file:  # Open the file in read mode
         data = json.load(file)  # Load JSON data from the file
     return data
 
 
-def get_parameters(data):
+def getParameters(data):
     results = data["metadata"]  # Get the list of results
     return results[0]["club"]  # Return the club
 
 
-def get_club_value():
+def getClubValue():
     try:
         # Get the current directory path
-        current_path = os.path.abspath(os.path.dirname(__file__))
+        currentPath = os.path.abspath(os.path.dirname(__file__))
 
-        experiment_name = get_experiment_name()
+        experimentName = getExperimentName()
         # Define input and output paths
-        file_path = os.path.abspath(
+        filePath = os.path.abspath(
             os.path.join(
-                current_path,
+                currentPath,
                 "..",
                 "..",
                 "Data",
-                experiment_name,
+                experimentName,
                 "FirstStage",
                 "MiddleFiles",
                 "chosenSeasonData.json",
@@ -111,11 +110,11 @@ def get_club_value():
         )
 
         # Check if the file exists
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"The file {file_path} was not found.")
+        if not os.path.exists(filePath):
+            raise FileNotFoundError(f"The file {filePath} was not found.")
 
         # Read the JSON file
-        with open(file_path, "r") as file:
+        with open(filePath, "r") as file:
             data = json.load(file)
 
             # Get the value of 'club' from the JSON file
@@ -131,12 +130,12 @@ def get_club_value():
 def main():
     try:
         # Call the function to get the 'club' value
-        club_value = get_club_value()
+        clubValue = getClubValue()
         # Filter matches of the entered team and save IDs to a JSON file
-        filter_matches_by_team("seasonId.json", club_value)
+        filterMatchesByTeam("seasonId.json", clubValue)
         print("The match IDs have been successfully obtained.")
     except Exception as e:
-        print(f"We don't have data for the selected team: {club_value}")
+        print(f"We don't have data for the selected team: {clubValue}")
         sys.exit(1)
 
 

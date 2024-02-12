@@ -58,9 +58,9 @@ if os.path.exists(idMatchesPath):
     # Iterate through the keys (matchday numbers) and values (lists of matches) in 'id_matches.json'
     for matchday, matches in idMatchesData.items():
         day = toDayOfYear(matchday)
-        for match_id in matches:
+        for matchId in matches:
             # Build URL with the current match_id
-            url = f"https://raw.githubusercontent.com/VidalMiquel/Statsbomb/master/data/events/{match_id}.json"
+            url = f"https://raw.githubusercontent.com/VidalMiquel/Statsbomb/master/data/events/{matchId}.json"
 
             # File name to be saved, using the match_id
             fileName = f"{day}_footballDay.json"
@@ -78,5 +78,3 @@ else:
     print(
         "The 'id_matches.json' file was not found at the specified location."
     )
-
-
