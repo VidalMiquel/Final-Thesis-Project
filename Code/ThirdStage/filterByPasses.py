@@ -118,20 +118,18 @@ def filterByPasses(dfRaw, clubName):
 
     # Remove NaN values
     dfNoNan = dfRaw.dropna(axis=1, how="all")
+    #Filter by club's parameter
     passes = dfNoNan.loc[(dfNoNan["type_id"] == "30") & (dfNoNan["team_name"] == clubName)]
-    if not passes.empty:
-        # Check if each column exists in the passes DataFrame before adding it
-        for col in columnsToAdd:
-            if col in passes.columns:
-                # If the column exists in passes, add it to the final DataFrame
-                finalDf[col] = passes[col]
-            else:
-                print(f"Column '{col}' does not exist in the passes DataFrame.")
-        return finalDf
+    #Calculate difference between target columns and df
+    difference = set(columnsToAdd) - set(passes.columns)
+    
+    if difference:
+        #There is difference
+        finalDf = passes.reindex(columns=columnsToAdd)
     else:
-        return passes
-
-
+        #All columns are present
+        finalDf = passes.loc[:, columnsToAdd]
+    return finalDf
 
 
 # Main function to execute the program
