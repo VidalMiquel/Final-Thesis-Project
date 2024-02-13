@@ -44,7 +44,8 @@ def filterFileByPossessionTeam(data, nameClub):
     if not dataTeam.empty:
         return dataTeam
     else:
-        return None
+        dataTeam = pd.DataFrame()
+        return dataTeam
 
 
 # Function to save filtered data to a file
@@ -60,9 +61,8 @@ def saveFilteredFile(data, targetFolder, fileName):
         except Exception as e:
             print(f"Error while saving the file: {e}")
         #print(f"File '{newFileName}' generated successfully.")
-    else:
-        #print(data)
-        print(f"The file is empty, no file will be generated: ", fileName)
+    #else:
+        #print(f"The file is empty, no file will be generated: ", fileName)
 
 
 # Function to read files in a folder and process them

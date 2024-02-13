@@ -23,7 +23,7 @@ echo "startSecondStage.py executed successfully."
 # Execute splitByGoals.py
 echo "" # Blank line
 echo "Executing splitByGoals.py..."
-python splitByGoals.py "$experimentName"
+python splitByGoals.py "$experimentName" "$club"
 echo "splitByGoals.py executed successfully."
 
 # Execute filterByTeam.py
