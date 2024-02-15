@@ -13,6 +13,18 @@ def getParameters():
         sys.exit(1)
 
 
+def getMetaDataFile(path):
+    try:
+        filePath = os.path.join(path, "metadata.csv")
+        df = pd.read_csv(filePath, dtype=str)
+        return df
+    except FileNotFoundError:
+        print(f"File not found at path: {path}")
+        return None
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return None
+
 # Function to generate dynamic paths for data and target folders
 def generateDynamicPaths(experimentName):
     currentDir = os.path.abspath(
@@ -26,6 +38,9 @@ def generateDynamicPaths(experimentName):
     targetFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "ThirdStage", "TargetFiles"
     )
+    metaDataFolder = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "SecondStage"
+    )
     # print(targetFolder)
 
     if not os.path.exists(targetFolder):
@@ -34,16 +49,16 @@ def generateDynamicPaths(experimentName):
         )
         sys.exit(1)
 
-    return dataFolder, targetFolder
+    return dataFolder, targetFolder, metaDataFolder
 
 
 # Function to save filtered data to a file
-def saveFilteredFile(data, targetFolder, fileName):
+def saveFilteredFile(data, targetFolder, fileName, metadata):
     # Check if the segment is not empty before saving
 
     if not data.empty:
         # File name in the format Football_day_n_m
-        newFileName = changeFilenames(fileName)
+        newFileName = changeFilenames(fileName, metadata)
         # print(newFileName)
         filePath = os.path.join(targetFolder, newFileName)
         try:
@@ -57,7 +72,7 @@ def saveFilteredFile(data, targetFolder, fileName):
 
 
 # Function to read files in a folder and process them
-def readFolderFiles(currentPath, targetFolder, clubName):
+def readFolderFiles(currentPath, targetFolder, clubName,metadata):
     # Check if the folder exists
     if not os.path.isdir(currentPath):
         print(f"The folder '{currentPath}' does not exist.")
@@ -69,23 +84,42 @@ def readFolderFiles(currentPath, targetFolder, clubName):
         filePath = os.path.join(currentPath, fileName)
         df = pd.read_csv(filePath, dtype=str)
         filteredData = filterByPasses(df, clubName)
-        saveFilteredFile(filteredData, targetFolder, fileName)
+        saveFilteredFile(filteredData, targetFolder, fileName, metadata)
 
 
 # Function to change file names to a new format
-def changeFilenames(fileName):
+def changeFilenames(fileName, metadata):
     # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
     if fileName.endswith(".csv"):
-            parts = fileName.split("_")
-            if len(parts) == 3 and parts[2] == "footballDayFlattened.csv":
-                newFileName = f"{parts[0]}_{parts[1]}_footballDayPasses.csv"
+        parts = fileName.split("_")
+        if len(parts) == 3 and parts[2] == "footballDayFlattened.csv":
+            id_value = f"{parts[0]}_{parts[1]}"
+            
+            # Filter metadata based on IdFile
+            filtered_metadata = metadata[metadata["IdFiles"] == id_value]
+            
+            if not filtered_metadata.empty:
+                NF = filtered_metadata["NoInformation"].values[0]
+                
+                if NF == "NF":
+                    newFileName = f"{parts[0]}_{parts[1]}_{NF}_footballDayPasses.csv"
+                else:
+                    score = filtered_metadata["Score"].values[0]
+                    newFileName = f"{parts[0]}_{parts[1]}_{score}_footballDayPasses.csv"
+                
                 return newFileName
+            else:
+                print(f"No matching data found for IdFile: {id_value}")
+                return None
+        else:
+            print("The file name does not follow the expected pattern.")
+            return None
     else:
-        print("The file name does not follow the expected pattern.")
+        print("The file name does not have a CSV extension.")
         return None
 
 
-
+                    
 def filterByPasses(dfRaw, clubName):
     finalDf = pd.DataFrame()
     # List of columns you want to add to the final DataFrame. PROBLEMATIC COLUMN IS: PASS_OUTCOME_NAME
@@ -135,8 +169,9 @@ def filterByPasses(dfRaw, clubName):
 # Main function to execute the program
 def main():
     experimentName, clubName = getParameters()
-    dataFolder, targetFolder = generateDynamicPaths(experimentName)
-    readFolderFiles(dataFolder, targetFolder, clubName)
+    dataFolder, targetFolder, metadadaFile = generateDynamicPaths(experimentName)
+    metadada = getMetaDataFile(metadadaFile)
+    readFolderFiles(dataFolder, targetFolder, clubName, metadada)
 
 
 if __name__ == "__main__":
