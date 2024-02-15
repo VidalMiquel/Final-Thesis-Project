@@ -3,6 +3,8 @@ import os
 import json
 import pandas as pd
 
+metadataContent = []  # Initialize an empty list for metadata content
+
 # Function to get the experiment name from command-line arguments
 def getExperimentName():
     if len(sys.argv) == 3:
@@ -49,28 +51,111 @@ def getFileNamesInFolder(folderPath):
 
 
 # Function to iterate through files, read them, and perform operations
-def iterateAndReadFiles(currentPath, targetPath, nameFiles, clubName):
+def iterateAndManagmentFiles(currentPath, targetPath, nameFiles, clubName, experimentName):
     try:
         for fileName in nameFiles:
             filePath = os.path.join(currentPath, fileName)
             try:
                 with open(filePath, "r", encoding="utf-8") as file:
                     content = json.load(file)
-                    dataframe = pd.DataFrame(content)
-                    divisionFiles, score = getGoals(dataframe)
-                    splitList = getDivisionIndices(divisionFiles, len(dataframe))
-                    generateMatchResults(score,clubName)
-                    generateDivisionFiles(splitList, dataframe, fileName, targetPath)
+                    dataFrame = pd.DataFrame(content)
+                    divisionFiles = getGoals(dataFrame)
+                    teamGoals = getScore(dataFrame)
+                    splitList = getDivisionIndices(divisionFiles, len(dataFrame))
+                    resultsForSplit = generateMatchResults(teamGoals,clubName)
+                    newFileName = generateDivisionFiles(splitList, dataFrame, fileName, targetPath)
+                    metadataFile = generateMetadataFile(teamGoals, resultsForSplit, newFileName)
             except OSError as e:
                 print(f"Error reading the file '{fileName}': {e}")
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON in '{fileName}': {e}")
+        #print(metadataFile)
+        saveFilteredFile(metadataFile, experimentName, clubName)
     except OSError as e:
         print(f"Error accessing the path: {e}")
     
+# Function to save filtered data to a file
+def saveFilteredFile(data, experimentName, clubName):
+    
+    currentDir = os.path.abspath(
+        os.path.dirname(__file__)
+    )
+    
+    targetFolder = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "SecondStage"
+    )
+    # Check if the segment is not empty before saving
+
+    df = pd.DataFrame(data)
+    df.columns = ["IdFiles", "ScoringTeam", "Score"]
+    
+    if data:
+        # File name in the format Football_day_n_m
+        filePath = os.path.join(targetFolder, f"metadata.csv")
+        try:
+            df.to_csv(filePath, index=False, encoding="utf-8-sig")
+        except Exception as e:
+            print(f"Error while saving the file: {e}")
+        # print(f"File '{newFileName}' generated successfully.")
+    else:
+        # print(data)
+        print(f"The file is empty, no file will be generated: ")
+
+
+def separateFileName(fileName):
+    correctPart = []
+    for name in fileName:
+        parts = name.split("_")
+        firstPart = "_".join(parts[:2])
+        correctPart.append(firstPart)
+    return correctPart
     
     
+
     
+def generateMetadataFile(teamGoals, scorerSplit, fileName):
+    idFiles = separateFileName(fileName)
+
+    if  teamGoals.empty:
+        metadataContent.append((idFiles[0] + "F", None, None))
+    else:
+            # Create tuples and append them to metadataContent
+        for team, scorer, idFile in zip(teamGoals, scorerSplit, idFiles):
+            metadataContent.append((idFile, team, scorer)) 
+        metadataContent.append((idFiles[-1] + "_F", None, None))
+    return metadataContent
+
+    
+        
+
+def getGoals(data):
+       
+    goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23)]
+    goals = goalkeeperActions[goalkeeperActions["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28)]  
+    teamGoals1 = goals["possession_team"]
+    
+    ownGoals = data[data["type"].apply(lambda x: (x)["id"] == 25)]
+    teamOwnGoals = ownGoals["team"]
+
+    allGoals = pd.concat([teamGoals1, teamOwnGoals], axis=0)
+
+    sortedGoals = allGoals.sort_index()
+
+
+    return sortedGoals
+
+def getScore(data):
+    
+    goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23)]
+    goals = goalkeeperActions[goalkeeperActions["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28)]  
+    
+    ownGoals = data[data["type"].apply(lambda x: (x)["id"] == 25)]
+
+    nameTeamGoal = pd.concat([goals["possession_team"].apply(lambda x: x['name']),ownGoals["team"].apply(lambda x: x['name'])], axis = 0)
+
+    return nameTeamGoal.sort_index()
+
+
 # Function to get division indices from the data
 def getDivisionIndices(data, lenght):
 
@@ -89,17 +174,15 @@ def getGoals(data):
    
     goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23)]
     goals = goalkeeperActions[goalkeeperActions["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28)]  
-    teamGoals1 = goals["possession_team"]
     
     ownGoals = data[data["type"].apply(lambda x: (x)["id"] == 25)]
-    teamOwnGoals = ownGoals["team"]
+    
 
-    allGoals = pd.concat([teamGoals1, teamOwnGoals], axis=0)
-    alternativeGoal = pd.concat([goals["possession_team"].apply(lambda x: x['name']),ownGoals["team"].apply(lambda x: x['name'])], axis = 0)
+    allGoals = pd.concat([goals, ownGoals], axis=0)
+
     sortedGoals = allGoals.sort_index()
-    altertiveGoalSorted = alternativeGoal.sort_index()
-
-    return sortedGoals, altertiveGoalSorted
+    
+    return sortedGoals
 
 def generateMatchResults(clubNames, ClubName):
     matchResults = []
@@ -108,7 +191,7 @@ def generateMatchResults(clubNames, ClubName):
 
 
     if clubNames.empty:
-        matchResults.append("0_0")
+        matchResults.append(f"{home_score}_{away_score}")
     else:
          for club in clubNames:
             if club == ClubName:
@@ -119,50 +202,39 @@ def generateMatchResults(clubNames, ClubName):
             matchResults.append(f"{home_score}_{away_score}")
     
     return matchResults
-# Function to generate division files based on indices
-def generateDivisionFiles(indicesList, dataframe, fileName, targetPath,):
+
+#def generateMetadataFiles(teams, scores):
+    
+
+
+def generateDivisionFiles(indicesList, dataframe, fileName, targetPath):
+    fileNameList = []
     try:
-        if (len(indicesList) - 1) == 1:
-            startIndex = indicesList[0]
-            endIndex = indicesList[1]
+        for i in range(len(indicesList) - 1):
+            startIndex = indicesList[i]
+            endIndex = indicesList[i + 1]
             segment = dataframe.iloc[startIndex:endIndex]
-            
+
             if not segment.empty:
                 part = fileName.split("_")
-
-            # Check if the filename has at least two underscores to ensure a valid split
-            if len(part) >= 2:
                 numberSegment = part[0]
                 middleSegment = part[1]
-                baseName, extension  = os.path.splitext(middleSegment)
-                newFilename = f"{numberSegment}_{1}_{baseName}.json"
-                filePath = os.path.join(targetPath, newFilename)
+                baseName, extension = os.path.splitext(middleSegment)
+                
+                if (len(indicesList) - 1) == 1:
+                    segmentIndex = 1
+                else:
+                    segmentIndex = i + 1
+
+                newFileName = f"{numberSegment}_{segmentIndex}_{baseName}.json"
+                fileNameList.append(newFileName)
+                #print(fileNameList)
+                filePath = os.path.join(targetPath, newFileName)
                 segment.to_json(filePath, orient="records")
-                    
-        else:
-            for i in range(len(indicesList) - 1):
-                startIndex = indicesList[i]
-                endIndex = indicesList[i + 1]
-
-                segment = dataframe.iloc[startIndex:endIndex]
-                
-                if not segment.empty:
-                    
-                    # Split the filename into three segments
-                    part = fileName.split("_")
-
-                # Check if the filename has at least two underscores to ensure a valid split
-                    if len(part) >= 2:
-                        numberSegment = part[0]
-                        middleSegment = part[1]
-                        baseName, extension  = os.path.splitext(middleSegment)
-                        newFilename = f"{numberSegment}_{i+1}_{baseName}.json"
-                        filePath = os.path.join(targetPath, newFilename)
-
-                        segment.to_json(filePath, orient="records")
-                
+        return fileNameList
     except Exception as e:
         print(f"Error generating division files: {e}")
+        
 
 
 # Main function to execute the program
@@ -171,7 +243,7 @@ def main():
     dataFolder, targetFolder = generateDynamicPaths(experimentName)
     nameFootballDayFiles = getFileNamesInFolder(dataFolder)
 
-    iterateAndReadFiles(dataFolder, targetFolder, nameFootballDayFiles, clubName)
+    iterateAndManagmentFiles(dataFolder, targetFolder, nameFootballDayFiles, clubName, experimentName)
 
 
 if __name__ == "__main__":
