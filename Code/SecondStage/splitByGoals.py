@@ -87,16 +87,15 @@ def saveFilteredFile(data, experimentName, clubName):
     # Check if the segment is not empty before saving
 
     df = pd.DataFrame(data)
-    df.columns = ["IdFiles", "ScoringTeam", "Score"]
+    df.columns = ["IdFiles", "ScoringTeam", "Score", "NoInformation"]
     
     if data:
         # File name in the format Football_day_n_m
-        filePath = os.path.join(targetFolder, f"metadata.csv")
+        filePath = os.path.join(targetFolder, f"metadata{clubName}.csv")
         try:
             df.to_csv(filePath, index=False, encoding="utf-8-sig")
         except Exception as e:
             print(f"Error while saving the file: {e}")
-        # print(f"File '{newFileName}' generated successfully.")
     else:
         # print(data)
         print(f"The file is empty, no file will be generated: ")
@@ -110,19 +109,17 @@ def separateFileName(fileName):
         correctPart.append(firstPart)
     return correctPart
     
-    
-
-    
+        
 def generateMetadataFile(teamGoals, scorerSplit, fileName):
     idFiles = separateFileName(fileName)
 
     if  teamGoals.empty:
-        metadataContent.append((idFiles[0] + "F", None, None))
+        metadataContent.append((idFiles[0], None, None, "NF"))
     else:
             # Create tuples and append them to metadataContent
         for team, scorer, idFile in zip(teamGoals, scorerSplit, idFiles):
-            metadataContent.append((idFile, team, scorer)) 
-        metadataContent.append((idFiles[-1] + "_F", None, None))
+            metadataContent.append((idFile, team, scorer, None)) 
+        metadataContent.append((idFiles[-1], None, None, "NF"))
     return metadataContent
 
     
