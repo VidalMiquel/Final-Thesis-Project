@@ -32,7 +32,12 @@ echo " " # Blank line
 echo "Filtering CSV files with filterByPasses.py..."
 python filterByPasses.py "$experimentName" "$club"
 echo "filterByPasses.py executed successfully."
+echo " " # Blank line
 
+# Execute start_SecondStage.py
+echo "Generating final metadata file with generateMetaDataFile.py..."
+python generateMetaDataFile.py "$experimentName" "$club"
+echo "generateMetaDataFile.py executed successfully."
 
 echo ""  # Blank line
 echo "ThirdStage completed."
