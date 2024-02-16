@@ -1,6 +1,5 @@
 import sys
 import os
-import csv
 import pandas as pd
 
 
@@ -13,9 +12,10 @@ def getParameters():
         sys.exit(1)
 
 
-def getMetaDataFile(path):
+def getMetaDataFile(path, clubName):
     try:
-        filePath = os.path.join(path, "metadata.csv")
+        fileName = f"metadata{clubName}.csv"
+        filePath = os.path.join(path, fileName)
         df = pd.read_csv(filePath, dtype=str)
         return df
     except FileNotFoundError:
@@ -30,18 +30,18 @@ def generateDynamicPaths(experimentName):
     currentDir = os.path.abspath(
         os.path.dirname(__file__)
     )  # Get the current directory of the script
-    # print(currentDir)
+
     dataFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "ThirdStage", "MiddleFiles"
     )
-    # print(dataFolder)
+
     targetFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "ThirdStage", "TargetFiles"
     )
     metaDataFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "SecondStage"
     )
-    # print(targetFolder)
+
 
     if not os.path.exists(targetFolder):
         print(
@@ -59,14 +59,14 @@ def saveFilteredFile(data, targetFolder, fileName, metadata):
     if not data.empty:
         # File name in the format Football_day_n_m
         newFileName = changeFilenames(fileName, metadata)
-        # print(newFileName)
+
         filePath = os.path.join(targetFolder, newFileName)
         try:
             data.to_csv(filePath, index=False, encoding="utf-8-sig")
             # print(f"File stored at: {filePath}")
         except Exception as e:
             print(f"Error while saving the file: {e}")
-        # print(f"File '{newFileName}' generated successfully.")
+
     else:
         print(f"The file is empty, no file will be generated: ", fileName)
 
@@ -94,7 +94,6 @@ def changeFilenames(fileName, metadata):
         parts = fileName.split("_")
         if len(parts) == 3 and parts[2] == "footballDayFlattened.csv":
             id_value = f"{parts[0]}_{parts[1]}"
-            
             # Filter metadata based on IdFile
             filtered_metadata = metadata[metadata["IdFiles"] == id_value]
             
@@ -170,7 +169,7 @@ def filterByPasses(dfRaw, clubName):
 def main():
     experimentName, clubName = getParameters()
     dataFolder, targetFolder, metadadaFile = generateDynamicPaths(experimentName)
-    metadada = getMetaDataFile(metadadaFile)
+    metadada = getMetaDataFile(metadadaFile, clubName)
     readFolderFiles(dataFolder, targetFolder, clubName, metadada)
 
 
