@@ -71,8 +71,14 @@ def getIdFile(fileName):
 def getPasses(data, fileName):
     try:
         idFile = getIdFile(fileName)
-        passes = data.shape[0]
-        return idFile, passes
+        # Assuming "type_name" contains the types of passes and "pass_outcome_name" contains the outcomes
+        totalPasses = data.shape[0]  # Counting the total number of passes (rows)
+        incompletePasses = (data["pass_outcome_name"] == "Incomplete").sum()  # Counting incomplete passes
+        completedPasses = totalPasses - incompletePasses
+
+        # Returning the counts
+        return idFile, totalPasses, completedPasses, incompletePasses
+        
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return None, None  # Return None values in case of an error
@@ -81,10 +87,13 @@ def getPassesForFile(dataFolder):
     finalVersion = []
     # Iterate through all the files in the folder
     for fileName in os.listdir(dataFolder):
-        # Join the folder path with the file name
-        filePath = os.path.join(dataFolder, fileName)
-        df = pd.read_csv(filePath, dtype=str)
-        finalVersion.append(getPasses(df, fileName))
+        try:
+            # Join the folder path with the file name
+            filePath = os.path.join(dataFolder, fileName)
+            df = pd.read_csv(filePath, dtype=str)
+            finalVersion.append(getPasses(df, fileName))
+        except Exception as e:
+            print(f"Error processing file '{fileName}': {e}")
     return finalVersion
 
 
@@ -102,9 +111,11 @@ def saveFilteredFile(data, targetFolder):
      
 def generateFinalMetaDataFile(passesList,firstMetadataFile, targetFolder, clubName):
     
-    for idFile, passes in passesList:
-        firstMetadataFile.loc[firstMetadataFile["IdFiles"] == idFile, "passes"] = passes
-        
+    for idFile, passes, completePasses, incompletePasses in passesList:
+        firstMetadataFile.loc[firstMetadataFile["IdFiles"] == idFile, "totalPasses"] = passes
+        firstMetadataFile.loc[firstMetadataFile["IdFiles"] == idFile, "completePasses"] = completePasses
+        firstMetadataFile.loc[firstMetadataFile["IdFiles"] == idFile, "incompletePasses"] = incompletePasses
+            
     try:
         filePath = os.path.join(targetFolder, f"finalMetadata{clubName}.csv")
         firstMetadataFile.to_csv(filePath, index=False, encoding="utf-8-sig")
@@ -119,7 +130,7 @@ def main():
     metaDataFolder, dataFolder, targetFolder = generateDynamicPaths(experimentName, clubName)
     firstMetadataFile = readMetadataFile(metaDataFolder)
     passesList = getPassesForFile(dataFolder)
-    generateFinalMetaDataFile(passesList,firstMetadataFile, targetFolder, clubName) 
+    generateFinalMetaDataFile(passesList, firstMetadataFile, targetFolder, clubName) 
     
 
 if __name__ == "__main__":
