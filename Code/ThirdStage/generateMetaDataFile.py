@@ -75,13 +75,19 @@ def getPasses(data, fileName):
         totalPasses = data.shape[0]  # Counting the total number of passes (rows)
         incompletePasses = (data["pass_outcome_name"] == "Incomplete").sum()  # Counting incomplete passes
         completedPasses = totalPasses - incompletePasses
+        # Get the first and last values of 'minute' and 'second' columns
+        data['minute'] = data['minute'].astype(int)
+        # Get the first and last values of 'minute' and 'second' columns
+        minuteDifference = data['minute'].iloc[-1] - data['minute'].iloc[0]
+        minuteDifference += 1
 
-        # Returning the counts
-        return idFile, totalPasses, completedPasses, incompletePasses
+        # Returning the counts as a list
+        return [idFile, totalPasses, completedPasses, incompletePasses, minuteDifference]
         
     except Exception as e:
         print(f"An error occurred: {str(e)}")
-        return None, None  # Return None values in case of an error
+        return [None, None, None, None, None, None]  # Return None values in case of an error
+
     
 def getPassesForFile(dataFolder):
     finalVersion = []
@@ -111,10 +117,12 @@ def saveFilteredFile(data, targetFolder):
      
 def generateFinalMetaDataFile(passesList,firstMetadataFile, targetFolder, clubName):
     
-    for idFile, passes, completePasses, incompletePasses in passesList:
-        firstMetadataFile.loc[firstMetadataFile["IdFiles"] == idFile, "totalPasses"] = passes
-        firstMetadataFile.loc[firstMetadataFile["IdFiles"] == idFile, "completePasses"] = completePasses
-        firstMetadataFile.loc[firstMetadataFile["IdFiles"] == idFile, "incompletePasses"] = incompletePasses
+    # Convert passesList to a DataFrame for easier manipulation   
+    passes_df = pd.DataFrame(passesList, columns=["IdFiles", "passes", "completePasses", "incompletePasses", "minutes"])
+    
+    # Merge passes_df with firstMetadataFile based on 'IdFiles'
+    firstMetadataFile = pd.merge(firstMetadataFile, passes_df, on='IdFiles', how='left')
+    
             
     try:
         filePath = os.path.join(targetFolder, f"finalMetadata{clubName}.csv")
