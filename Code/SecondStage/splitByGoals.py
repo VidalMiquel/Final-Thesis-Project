@@ -119,7 +119,7 @@ def generateMetadataFile(teamGoals, scorerSplit, fileName):
             # Create tuples and append them to metadataContent
         for team, scorer, idFile in zip(teamGoals, scorerSplit, idFiles):
             metadataContent.append((idFile, team, scorer, None)) 
-        metadataContent.append((idFiles[-1], None, None, "NF"))
+        metadataContent.append((idFiles[-1], None, "NF", "NF"))
     return metadataContent
 
     
