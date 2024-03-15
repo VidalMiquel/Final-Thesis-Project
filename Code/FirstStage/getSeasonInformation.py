@@ -34,8 +34,9 @@ def searchMatch(data, competitionName, competitionGender, seasonName):
 
         if filtered_df.empty:
             
-            print("\nNo matches found for the provided values:\n -Competition gender: ", competitionGender, 
-                             "\n -Competition name: ", competitionName, "\n -Season name: ", seasonName)
+            print("\nNo matches found for the provided values:\n\n -Competition name: " + competitionName + 
+                "\n\n -Competition gender: " + competitionGender + "\n\n -Season name: " + seasonName + "\n")
+
             raise
         
         result_dict = {

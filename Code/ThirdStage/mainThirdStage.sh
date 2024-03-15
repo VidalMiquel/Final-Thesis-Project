@@ -12,14 +12,14 @@ currentDirectory=$(dirname "$0")
 # Change to the directory containing startThirdStage.py
 cd "$currentDirectory"
 
+# Execute start_SecondStage.py
+#echo "Creating necessary directories with startThirdStage.py..."
+#python startThirdStage.py "$experimentName"
+#echo "startThirdStage.py executed successfully."
+#echo "" # Blank line
+
 echo Executing ThirdStage...
 echo "" # Blank line
-# Execute start_SecondStage.py
-echo "Creating necessary directories with startThirdStage.py..."
-python startThirdStage.py "$experimentName"
-echo "startThirdStage.py executed successfully."
-echo "" # Blank line
-
 
 # Execute start_SecondStage.py
 echo "Flattening JSON files and save them wih CSV format with flattenJSONfiles.py..."
