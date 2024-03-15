@@ -16,12 +16,11 @@ echo Executing SecondStage...
 echo "" # Blank line
 
 # Execute startSecondStage.py
-echo "Creating necessary directories with startSecondStage.py..."
-python startSecondStage.py "$experimentName"
-echo "startSecondStage.py executed successfully."
+#echo "Creating necessary directories with startSecondStage.py..."
+#python startSecondStage.py "$experimentName"
+#echo "startSecondStage.py executed successfully."
 
 # Execute splitByGoals.py
-echo "" # Blank line
 echo "Executing splitByGoals.py..."
 python splitByGoals.py "$experimentName" "$club"
 echo "splitByGoals.py executed successfully."

@@ -12,29 +12,27 @@ currentDirectory=$(dirname "$0")
 # Change to the directory containing startFirstStage.py
 cd "$currentDirectory"
 
-# Prompt the user for CompetitionName, CompetitionYear, CompetitionGender, and Club values
-echo "Enter the competition name:"
-read competitionName
+# Prompt the user for CompetitionName, CompetitionYear and CompetitionGender values
 
+read -p "Enter the competition name: " competitionName
 echo "" # Blank line
-echo "Enter the competition year:"
-read competitionYear
 
+read -p "Enter the ccompetition year: " competitionYear
 echo "" # Blank line
-echo "Enter the competition gender:"
-read competitionGender
+
+read -p "Enter the competitionGender: " competitionGender
+
 echo "------------------------------------------"
 
 echo "" # Blank line
-echo "Executing FirstStage..."
+echo Executing FirstStage...
 echo "" # Blank line
 
-# Execute startFirstStage.py
-echo "Creating necessary directories with startFirstStage.py..."
-python startFirstStage.py "$experimentName"
+#Execute startFirstStage.py
+#echo "Creating necessary directories with startFirstStage.py..."
+#python startFirstStage.py "$experimentName"
 
 # Execute getSeasonInformation.py with error checking
-echo "" # Blank line
 echo "Executing getSeasonInformation.py with the provided parameters..."
 if python getSeasonInformation.py "$competitionName" "$competitionYear" "$competitionGender" "$club" "$experimentName"; then
     echo "getSeasonInformation.py executed successfully."

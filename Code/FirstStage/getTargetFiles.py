@@ -58,22 +58,22 @@ if os.path.exists(idMatchesPath):
     # Iterate through the keys (matchday numbers) and values (lists of matches) in 'id_matches.json'
     for matchday, matches in idMatchesData.items():
         day = toDayOfYear(matchday)
-        for matchId in matches:
-            # Build URL with the current match_id
-            url = f"https://raw.githubusercontent.com/VidalMiquel/Statsbomb/master/data/events/{matchId}.json"
+        matchId = matches[0]
+        # Build URL with the current match_id
+        url = f"https://raw.githubusercontent.com/VidalMiquel/Statsbomb/master/data/events/{matchId}.json"
 
-            # File name to be saved, using the match_id
-            fileName = f"{day}_footballDay.json"
+        # File name to be saved, using the match_id
+        fileName = f"{day}_footballDay.json"
 
-            # Full path where the file will be saved
-            filePath = os.path.join(outputPath, fileName)
+        # Full path where the file will be saved
+        filePath = os.path.join(outputPath, fileName)
 
-            # Download the file from URL and save it to the specified path
-            try:
-                urllib.request.urlretrieve(url, filePath)
-                #print(f"File {fileName} downloaded successfully.")
-            except Exception as e:
-                print(f"Failed to download file {fileName}. Error: {e}")
+        # Download the file from URL and save it to the specified path
+        try:
+            urllib.request.urlretrieve(url, filePath)
+            #print(f"File {fileName} downloaded successfully.")
+        except Exception as e:
+            print(f"Failed to download file {fileName}. Error: {e}")
 else:
     print(
         "The 'id_matches.json' file was not found at the specified location."
