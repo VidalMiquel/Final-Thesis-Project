@@ -5,7 +5,7 @@ execute_stage() {
     local stage="$1"
     local experimentName="$2"
     local club="$3"
-    python startData.py "$experimentName" "$stage"
+    python "0Stage/startData.py" "$experimentName" "$stage"
     bash "$stage/main$stage.sh" "$experimentName" "$club"
 }
 

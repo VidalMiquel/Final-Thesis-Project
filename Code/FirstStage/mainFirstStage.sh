@@ -14,13 +14,13 @@ cd "$currentDirectory"
 
 # Prompt the user for CompetitionName, CompetitionYear and CompetitionGender values
 
-read -p "Enter the competition name: " competitionName
+read -p "Enter the competition's name: " competitionName
 echo "" # Blank line
 
-read -p "Enter the ccompetition year: " competitionYear
+read -p "Enter the competition's year: " competitionYear
 echo "" # Blank line
 
-read -p "Enter the competitionGender: " competitionGender
+read -p "Enter the competition's gender: " competitionGender
 
 echo "------------------------------------------"
 

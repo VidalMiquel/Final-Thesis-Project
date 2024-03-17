@@ -68,8 +68,8 @@ def saveFilteredFile(data, targetFolder, fileName, metadata):
             print(f"Error while saving the file: {e}")
 
     else:
-        print(f"The file is empty, no file will be generated: ", fileName)
-
+        #print(f"The file is empty, no file will be generated: ", fileName)
+        pass
 
 # Function to read files in a folder and process them
 def readFolderFiles(currentPath, targetFolder, clubName,metadata):
