@@ -37,8 +37,6 @@ def generateDynamicPaths(experimentName):
     return dataFolder, targetFolder
 
 
-import os
-
 def getFileNamesInFolder(folderPath):
     try:
         if os.path.isdir(folderPath):
