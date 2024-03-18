@@ -4,7 +4,11 @@ import pandas as pd
 import sys
 import networkx as nx
 import numpy as np
+import pickle
+import matplotlib.pyplot as plt
 
+
+metrics = []
 
 # Function to get command-line parameters
 def getParameters():
@@ -76,6 +80,18 @@ def saveGraph(targetPath, G, fileName):
     # Write the graph to the GraphML file
     nx.write_gexf(G, outputFilePath, version="1.2draft", encoding="utf-8", prettyprint=True)
     
+def plotDegreeDistribution(degrees, targetfolder, type):
+    # Plot the degree distribution
+    plt.boxplot(degrees)
+    plt.xlabel('Nodes', fontsize='large')
+    plt.ylabel(f"{type}-Degree", fontsize='large')
+    plt.title(f'{type}-Degree Distribution', fontsize='large')
+    
+    # Construct the full file path
+    fullPath = os.path.join(targetfolder, f"{type}DegreeDistribution.pdf")
+    
+    # Save the plot and show it
+    plt.savefig(fullPath)
 
 def managmentGraph(dataFrame, fileName, targetFolder):
     # Initialize a directed graph using NetworkX
@@ -97,8 +113,19 @@ def managmentGraph(dataFrame, fileName, targetFolder):
     newFileName = changeFilenames(fileName)
     #Save graph
     saveGraph(targetFolder, G, newFileName)
-    
-    
+    getMetrics(G, newFileName, targetFolder)
+   
+
+def getMetrics(G, fileName, targetFolder):
+    my_dict = {}
+    inDegree = list(dict(G.in_degree()).values())
+    outDegree = list(dict(G.out_degree()).values())
+    # Add key-value pairs dynamically
+    my_dict['file'] = fileName
+    my_dict['inDegree'] = inDegree
+    my_dict['outDegree'] = outDegree
+    metrics.append(my_dict)
+
 
 # Function to generate dynamic paths for data and target folders
 def generateDynamicPaths(experimentName):
@@ -123,8 +150,13 @@ def generateDynamicPaths(experimentName):
     return dataFolder, targetFolder
 
 
+def saveMetrics(experimentName):
+    filePath = f'../../Data/{experimentName}/04Stage/Metrics/my_array.pkl'
+    with open(filePath, 'wb') as f:
+        pickle.dump(metrics, f)
+
 # Function to read files in a folder and process them
-def readFolderFiles(currentPath, targetFolder):
+def readFolderFiles(currentPath, targetFolder,experimentName):
     # Check if the folder exists
     if not os.path.isdir(currentPath):
         print(f"The folder '{currentPath}' does not exist.")
@@ -136,13 +168,14 @@ def readFolderFiles(currentPath, targetFolder):
         filePath = os.path.join(currentPath, fileName)
         df = pd.read_csv(filePath, dtype=str)
         managmentGraph(df,fileName,targetFolder)
+    saveMetrics(experimentName)
 
 
 # Main function to execute the program
 def main():
     experimentName = getParameters()
     dataFolder, targetFolder = generateDynamicPaths(experimentName)
-    readFolderFiles(dataFolder, targetFolder)
+    readFolderFiles(dataFolder, targetFolder, experimentName)
 
 
 if __name__ == "__main__":
