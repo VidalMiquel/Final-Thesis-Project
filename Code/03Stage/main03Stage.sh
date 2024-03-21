@@ -12,12 +12,6 @@ currentDirectory=$(dirname "$0")
 # Change to the directory containing start03Stage.py
 cd "$currentDirectory"
 
-# Execute start_SecondStage.py
-#echo "Creating necessary directories with startThirdStage.py..."
-#python startThirdStage.py "$experimentName"
-#echo "startThirdStage.py executed successfully."
-#echo "" # Blank line
-
 echo Executing "03Stage"...
 echo "" # Blank line
 

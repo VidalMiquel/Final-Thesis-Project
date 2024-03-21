@@ -15,11 +15,6 @@ cd "$currentDirectory"
 echo Executing "02"Stage...
 echo "" # Blank line
 
-# Execute startSecondStage.py
-#echo "Creating necessary directories with startSecondStage.py..."
-#python startSecondStage.py "$experimentName"
-#echo "startSecondStage.py executed successfully."
-
 # Execute splitByGoals.py
 echo "Executing splitByGoals.py..."
 python splitByGoals.py "$experimentName" "$club"

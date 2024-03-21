@@ -19,6 +19,11 @@ echo "" # Blank line
 echo "Generating graph from csv file exectuing generateGrpah.py"
 python generateGraph.py "$experimentName"
 echo "generateGraph.py executed successfully."
+echo ""  # Blank line
+
+echo "Getting graphs metrics exectuing getMetrics.py"
+python getMetrics.py "$experimentName"
+echo "getMetrics.py executed successfully."
 
 echo ""  # Blank line
 echo "04Satge completed."
