@@ -28,10 +28,6 @@ echo "" # Blank line
 echo Executing "01Stage"...
 echo "" # Blank line
 
-#Execute startFirstStage.py
-#echo "Creating necessary directories with startFirstStage.py..."
-#python startFirstStage.py "$experimentName"
-
 # Execute getSeasonInformation.py with error checking
 echo "Executing getSeasonInformation.py with the provided parameters..."
 if python getSeasonInformation.py "$competitionName" "$competitionYear" "$competitionGender" "$club" "$experimentName"; then

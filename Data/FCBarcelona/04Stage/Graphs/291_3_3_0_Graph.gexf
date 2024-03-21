@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2024-03-21">
+    <creator>NetworkX 3.2.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <attributes mode="static" class="edge">
+      <attribute id="0" title="possession" type="double" />
+      <attribute id="1" title="location_0" type="double" />
+      <attribute id="2" title="location_1" type="double" />
+      <attribute id="3" title="pass_length" type="double" />
+      <attribute id="4" title="pass_height_id" type="double" />
+      <attribute id="5" title="pass_end_location_0" type="double" />
+      <attribute id="6" title="pass_end_location_1" type="double" />
+      <attribute id="7" title="pass_outcome_name" type="string" />
+      <attribute id="8" title="networkx_key" type="long" />
+    </attributes>
+    <nodes>
+      <node id="4324" label="4324" />
+      <node id="5503" label="5503" />
+      <node id="4320" label="4320" />
+    </nodes>
+    <edges>
+      <edge source="4324" target="5503" id="0">
+        <attvalues>
+          <attvalue for="0" value="156.0" />
+          <attvalue for="1" value="75.4" />
+          <attvalue for="2" value="67.1" />
+          <attvalue for="3" value="10.846197" />
+          <attvalue for="4" value="2.0" />
+          <attvalue for="5" value="79.6" />
+          <attvalue for="6" value="57.1" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5503" target="4320" id="1">
+        <attvalues>
+          <attvalue for="0" value="156.0" />
+          <attvalue for="1" value="85.5" />
+          <attvalue for="2" value="37.2" />
+          <attvalue for="3" value="10.890821" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="94.9" />
+          <attvalue for="6" value="31.7" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="4320" target="5503" id="2">
+        <attvalues>
+          <attvalue for="0" value="156.0" />
+          <attvalue for="1" value="94.9" />
+          <attvalue for="2" value="31.7" />
+          <attvalue for="3" value="9.526804" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="100.9" />
+          <attvalue for="6" value="24.3" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

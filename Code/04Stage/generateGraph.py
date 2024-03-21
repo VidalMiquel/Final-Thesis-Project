@@ -4,11 +4,8 @@ import pandas as pd
 import sys
 import networkx as nx
 import numpy as np
-import pickle
 import matplotlib.pyplot as plt
 
-
-metrics = []
 
 # Function to get command-line parameters
 def getParameters():
@@ -50,7 +47,7 @@ def add_edges_with_attributes(row, G):
         'pass_end_location_0': float(row['pass_end_location_0']),
         'pass_end_location_1': float(row['pass_end_location_1']),
         'pass_outcome_name': str(row['pass_outcome_name'])
-    }
+    }  
     # Add edge with attributes to the graph
     G.add_edge(playerId, passRecipientId, **attributes)
 
@@ -61,10 +58,10 @@ def changeFilenames(fileName):
     if fileName.endswith(".csv"):
         parts = fileName.split("_")
         if len(parts) == 4  and parts[3] == "footballDayPasses.csv":
-            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_Graph.graphml"
+            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_Graph.gexf"
             return newFileName
         elif len(parts) == 5  and parts[4] == "footballDayPasses.csv":
-            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_{parts[3]}_Graph.graphml"
+            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_{parts[3]}_Graph.gexf"
             return newFileName
         else:
             print("The file name does not follow the expected pattern.")
@@ -79,19 +76,7 @@ def saveGraph(targetPath, G, fileName):
 
     # Write the graph to the GraphML file
     nx.write_gexf(G, outputFilePath, version="1.2draft", encoding="utf-8", prettyprint=True)
-    
-def plotDegreeDistribution(degrees, targetfolder, type):
-    # Plot the degree distribution
-    plt.boxplot(degrees)
-    plt.xlabel('Nodes', fontsize='large')
-    plt.ylabel(f"{type}-Degree", fontsize='large')
-    plt.title(f'{type}-Degree Distribution', fontsize='large')
-    
-    # Construct the full file path
-    fullPath = os.path.join(targetfolder, f"{type}DegreeDistribution.pdf")
-    
-    # Save the plot and show it
-    plt.savefig(fullPath)
+
 
 def managmentGraph(dataFrame, fileName, targetFolder):
     # Initialize a directed graph using NetworkX
@@ -113,19 +98,7 @@ def managmentGraph(dataFrame, fileName, targetFolder):
     newFileName = changeFilenames(fileName)
     #Save graph
     saveGraph(targetFolder, G, newFileName)
-    getMetrics(G, newFileName, targetFolder)
    
-
-def getMetrics(G, fileName, targetFolder):
-    my_dict = {}
-    inDegree = list(dict(G.in_degree()).values())
-    outDegree = list(dict(G.out_degree()).values())
-    # Add key-value pairs dynamically
-    my_dict['file'] = fileName
-    my_dict['inDegree'] = inDegree
-    my_dict['outDegree'] = outDegree
-    metrics.append(my_dict)
-
 
 # Function to generate dynamic paths for data and target folders
 def generateDynamicPaths(experimentName):
@@ -150,13 +123,8 @@ def generateDynamicPaths(experimentName):
     return dataFolder, targetFolder
 
 
-def saveMetrics(experimentName):
-    filePath = f'../../Data/{experimentName}/04Stage/Metrics/my_array.pkl'
-    with open(filePath, 'wb') as f:
-        pickle.dump(metrics, f)
-
 # Function to read files in a folder and process them
-def readFolderFiles(currentPath, targetFolder,experimentName):
+def readFolderFiles(currentPath, targetFolder):
     # Check if the folder exists
     if not os.path.isdir(currentPath):
         print(f"The folder '{currentPath}' does not exist.")
@@ -168,14 +136,13 @@ def readFolderFiles(currentPath, targetFolder,experimentName):
         filePath = os.path.join(currentPath, fileName)
         df = pd.read_csv(filePath, dtype=str)
         managmentGraph(df,fileName,targetFolder)
-    saveMetrics(experimentName)
 
 
 # Main function to execute the program
 def main():
     experimentName = getParameters()
     dataFolder, targetFolder = generateDynamicPaths(experimentName)
-    readFolderFiles(dataFolder, targetFolder, experimentName)
+    readFolderFiles(dataFolder, targetFolder)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,489 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2024-03-21">
+    <creator>NetworkX 3.2.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <attributes mode="static" class="edge">
+      <attribute id="0" title="possession" type="double" />
+      <attribute id="1" title="location_0" type="double" />
+      <attribute id="2" title="location_1" type="double" />
+      <attribute id="3" title="pass_length" type="double" />
+      <attribute id="4" title="pass_height_id" type="double" />
+      <attribute id="5" title="pass_end_location_0" type="double" />
+      <attribute id="6" title="pass_end_location_1" type="double" />
+      <attribute id="7" title="pass_outcome_name" type="string" />
+      <attribute id="8" title="networkx_key" type="long" />
+    </attributes>
+    <nodes>
+      <node id="5506" label="5506" />
+      <node id="5211" label="5211" />
+      <node id="4320" label="4320" />
+      <node id="4324" label="4324" />
+      <node id="5503" label="5503" />
+      <node id="5216" label="5216" />
+      <node id="4691" label="4691" />
+      <node id="10609" label="10609" />
+      <node id="5213" label="5213" />
+      <node id="5246" label="5246" />
+      <node id="5470" label="5470" />
+    </nodes>
+    <edges>
+      <edge source="5506" target="5211" id="0">
+        <attvalues>
+          <attvalue for="0" value="40.0" />
+          <attvalue for="1" value="33.6" />
+          <attvalue for="2" value="22.9" />
+          <attvalue for="3" value="14.892951" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="37.4" />
+          <attvalue for="6" value="8.5" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5506" target="4324" id="1">
+        <attvalues>
+          <attvalue for="0" value="42.0" />
+          <attvalue for="1" value="57.0" />
+          <attvalue for="2" value="44.9" />
+          <attvalue for="3" value="25.576551" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="50.0" />
+          <attvalue for="6" value="69.5" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5506" target="4324" id="2">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="54.6" />
+          <attvalue for="2" value="36.7" />
+          <attvalue for="3" value="38.315792" />
+          <attvalue for="4" value="3.0" />
+          <attvalue for="5" value="55.7" />
+          <attvalue for="6" value="75.0" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="5506" target="5216" id="3">
+        <attvalues>
+          <attvalue for="0" value="42.0" />
+          <attvalue for="1" value="78.4" />
+          <attvalue for="2" value="64.4" />
+          <attvalue for="3" value="22.545954" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="68.8" />
+          <attvalue for="6" value="44.0" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5506" target="5216" id="4">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="73.6" />
+          <attvalue for="2" value="47.4" />
+          <attvalue for="3" value="15.90283" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="73.9" />
+          <attvalue for="6" value="31.5" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="5506" target="5470" id="5">
+        <attvalues>
+          <attvalue for="0" value="53.0" />
+          <attvalue for="1" value="82.5" />
+          <attvalue for="2" value="38.0" />
+          <attvalue for="3" value="13.0" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="90.3" />
+          <attvalue for="6" value="27.6" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5211" target="5246" id="6">
+        <attvalues>
+          <attvalue for="0" value="40.0" />
+          <attvalue for="1" value="38.2" />
+          <attvalue for="2" value="9.3" />
+          <attvalue for="3" value="22.614155" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="60.8" />
+          <attvalue for="6" value="8.5" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5211" target="4320" id="7">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="82.7" />
+          <attvalue for="2" value="14.4" />
+          <attvalue for="3" value="14.149558" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="93.7" />
+          <attvalue for="6" value="5.5" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5211" target="4320" id="8">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="104.1" />
+          <attvalue for="2" value="16.7" />
+          <attvalue for="3" value="8.805112" />
+          <attvalue for="4" value="3.0" />
+          <attvalue for="5" value="103.8" />
+          <attvalue for="6" value="25.5" />
+          <attvalue for="7" value="Incomplete" />
+          <attvalue for="8" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="5211" target="4320" id="9">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="103.5" />
+          <attvalue for="2" value="3.2" />
+          <attvalue for="3" value="5.894065" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="97.8" />
+          <attvalue for="6" value="4.7" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="4320" target="5506" id="10">
+        <attvalues>
+          <attvalue for="0" value="42.0" />
+          <attvalue for="1" value="50.9" />
+          <attvalue for="2" value="12.9" />
+          <attvalue for="3" value="15.742935" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="43.7" />
+          <attvalue for="6" value="26.9" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="4320" target="5216" id="11">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="88.7" />
+          <attvalue for="2" value="6.8" />
+          <attvalue for="3" value="15.065523" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="77.8" />
+          <attvalue for="6" value="17.2" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="4320" target="5246" id="12">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="87.4" />
+          <attvalue for="2" value="6.8" />
+          <attvalue for="3" value="13.004999" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="85.1" />
+          <attvalue for="6" value="19.6" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="4324" target="5503" id="13">
+        <attvalues>
+          <attvalue for="0" value="42.0" />
+          <attvalue for="1" value="50.0" />
+          <attvalue for="2" value="69.3" />
+          <attvalue for="3" value="15.953056" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="63.5" />
+          <attvalue for="6" value="77.8" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="4324" target="5503" id="14">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="60.6" />
+          <attvalue for="2" value="67.7" />
+          <attvalue for="3" value="12.332883" />
+          <attvalue for="4" value="2.0" />
+          <attvalue for="5" value="68.7" />
+          <attvalue for="6" value="77.0" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="4324" target="5503" id="15">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="64.8" />
+          <attvalue for="2" value="62.5" />
+          <attvalue for="3" value="4.4102154" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="60.4" />
+          <attvalue for="6" value="62.2" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="2" />
+        </attvalues>
+      </edge>
+      <edge source="4324" target="5506" id="16">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="77.0" />
+          <attvalue for="2" value="80.0" />
+          <attvalue for="3" value="30.693647" />
+          <attvalue for="4" value="2.0" />
+          <attvalue for="5" value="72.1" />
+          <attvalue for="6" value="49.7" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5503" target="5506" id="17">
+        <attvalues>
+          <attvalue for="0" value="42.0" />
+          <attvalue for="1" value="63.5" />
+          <attvalue for="2" value="77.8" />
+          <attvalue for="3" value="14.681962" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="72.5" />
+          <attvalue for="6" value="66.2" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5503" target="5211" id="18">
+        <attvalues>
+          <attvalue for="0" value="44.0" />
+          <attvalue for="1" value="96.8" />
+          <attvalue for="2" value="46.9" />
+          <attvalue for="3" value="15.111916" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="92.9" />
+          <attvalue for="6" value="32.3" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5503" target="5211" id="19">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="65.8" />
+          <attvalue for="2" value="53.4" />
+          <attvalue for="3" value="55.79113" />
+          <attvalue for="4" value="3.0" />
+          <attvalue for="5" value="105.1" />
+          <attvalue for="6" value="13.8" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="1" />
+        </attvalues>
+      </edge>
+      <edge source="5503" target="4320" id="20">
+        <attvalues>
+          <attvalue for="0" value="48.0" />
+          <attvalue for="1" value="65.6" />
+          <attvalue for="2" value="59.4" />
+          <attvalue for="3" value="33.75574" />
+          <attvalue for="4" value="2.0" />
+          <attvalue for="5" value="88.5" />
+          <attvalue for="6" value="34.6" />
+          <attvalue for="7" value="Incomplete" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5503" target="4324" id="21">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="69.5" />
+          <attvalue for="2" value="75.7" />
+          <attvalue for="3" value="14.866069" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="64.5" />
+          <attvalue for="6" value="61.7" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5216" target="5246" id="22">
+        <attvalues>
+          <attvalue for="0" value="42.0" />
+          <attvalue for="1" value="85.8" />
+          <attvalue for="2" value="38.6" />
+          <attvalue for="3" value="10.6216755" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="93.7" />
+          <attvalue for="6" value="31.5" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5216" target="5211" id="23">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="73.9" />
+          <attvalue for="2" value="31.5" />
+          <attvalue for="3" value="23.37734" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="78.6" />
+          <attvalue for="6" value="8.6" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5216" target="4320" id="24">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="78.3" />
+          <attvalue for="2" value="17.2" />
+          <attvalue for="3" value="13.341664" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="88.5" />
+          <attvalue for="6" value="8.6" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5216" target="10609" id="25">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="66.9" />
+          <attvalue for="2" value="11.5" />
+          <attvalue for="3" value="21.708294" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="51.5" />
+          <attvalue for="6" value="26.8" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="4691" target="10609" id="26">
+        <attvalues>
+          <attvalue for="0" value="48.0" />
+          <attvalue for="1" value="8.3" />
+          <attvalue for="2" value="41.2" />
+          <attvalue for="3" value="19.366207" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="9.9" />
+          <attvalue for="6" value="21.9" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="4691" target="5213" id="27">
+        <attvalues>
+          <attvalue for="0" value="48.0" />
+          <attvalue for="1" value="12.0" />
+          <attvalue for="2" value="40.9" />
+          <attvalue for="3" value="22.614155" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="12.8" />
+          <attvalue for="6" value="63.5" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="10609" target="4691" id="28">
+        <attvalues>
+          <attvalue for="0" value="48.0" />
+          <attvalue for="1" value="18.7" />
+          <attvalue for="2" value="17.5" />
+          <attvalue for="3" value="23.380547" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="12.0" />
+          <attvalue for="6" value="39.9" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="10609" target="5506" id="29">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="51.5" />
+          <attvalue for="2" value="26.8" />
+          <attvalue for="3" value="14.747203" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="56.7" />
+          <attvalue for="6" value="40.6" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5213" target="5246" id="30">
+        <attvalues>
+          <attvalue for="0" value="48.0" />
+          <attvalue for="1" value="14.6" />
+          <attvalue for="2" value="67.9" />
+          <attvalue for="3" value="56.75509" />
+          <attvalue for="4" value="3.0" />
+          <attvalue for="5" value="67.9" />
+          <attvalue for="6" value="48.4" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5246" target="5503" id="31">
+        <attvalues>
+          <attvalue for="0" value="48.0" />
+          <attvalue for="1" value="70.8" />
+          <attvalue for="2" value="52.3" />
+          <attvalue for="3" value="10.780074" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="64.3" />
+          <attvalue for="6" value="60.9" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5246" target="5216" id="32">
+        <attvalues>
+          <attvalue for="0" value="51.0" />
+          <attvalue for="1" value="85.1" />
+          <attvalue for="2" value="19.6" />
+          <attvalue for="3" value="15.498387" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="70.5" />
+          <attvalue for="6" value="14.4" />
+          <attvalue for="7" value="nan" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5470" target="5503" id="33">
+        <attvalues>
+          <attvalue for="0" value="53.0" />
+          <attvalue for="1" value="94.4" />
+          <attvalue for="2" value="27.4" />
+          <attvalue for="3" value="4.404543" />
+          <attvalue for="4" value="1.0" />
+          <attvalue for="5" value="94.2" />
+          <attvalue for="6" value="31.8" />
+          <attvalue for="7" value="Incomplete" />
+          <attvalue for="8" value="0" />
+        </attvalues>
+      </edge>
+      <edge source="5470" target="5503" id="34">
+        <attvalues>
+          <attvalue for="0" value="54.0" />
+          <attvalue for="1" value="120.0" />
+          <attvalue for="2" value="0.1" />
+          <attvalue for="3" value="31.419262" />
+          <attvalue for="4" value="3.0" />
+          <attvalue for="5" value="118.9" />
+          <attvalue for="6" value="31.5" />
+          <attvalue for="7" value="Incomplete" />
+          <attvalue for="8" value="1" />
+        </attvalues>
+      </edge>
+    </edges>
+  </graph>
+</gexf>
