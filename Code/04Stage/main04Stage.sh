@@ -24,6 +24,11 @@ echo ""  # Blank line
 echo "Getting graphs metrics exectuing getMetrics.py"
 python getMetrics.py "$experimentName"
 echo "getMetrics.py executed successfully."
+echo ""  # Blank line
+
+echo "Getting graphics exectuing generateGraphic.py"
+python generateGraphic.py "$experimentName"
+echo "generateGraphic.py executed successfully."
 
 echo ""  # Blank line
 echo "04Satge completed."

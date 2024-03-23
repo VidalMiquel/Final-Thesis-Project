@@ -64,7 +64,7 @@ def changeFilenames(fileName):
             print("The file name does not follow the expected pattern.")
             return None
     else:
-        print("The file name does not have a CSV extension.")
+        print("The file name does not have a gexf extension.")
         return None
     
 def getDegree(G):
