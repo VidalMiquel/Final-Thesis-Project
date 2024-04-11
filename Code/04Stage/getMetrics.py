@@ -22,7 +22,7 @@ def generateDynamicPaths(experimentName):
     )  # Get the current directory of the script
 
     dataFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "04Stage", "Graphs"
+        currentDir, "..", "..", "Data", experimentName, "04Stage", "Graphs" , "diGraphs"
     )
 
     targetFolder = os.path.join(
@@ -54,10 +54,10 @@ def changeFilenames(fileName):
     # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
     if fileName.endswith(".gexf"):
         parts = fileName.split("_")
-        if len(parts) == 4  and parts[3] == "Graph.gexf":
+        if len(parts) == 4  and parts[3] == "diGraph.gexf":
             newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_Graph.pkl"
             return newFileName
-        elif len(parts) == 5  and parts[4] == "Graph.gexf":
+        elif len(parts) == 5  and parts[4] == "diGraph.gexf":
             newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_{parts[3]}_Graph.pkl"
             return newFileName
         else:
@@ -78,8 +78,13 @@ def getDegree(G):
     nodeMetrics['inDegree'] = dict(zip(nodes, inDegree))
     nodeMetrics['outDegree'] = dict(zip(nodes, outDegree))
 
+def getClustering(G):
+    nodeMetrics['clustering'] = nx.clustering(G)
+    nodeMetrics['averageClustering'] = nx.average_clustering(G)
+    
 def getMetrics(G):
     getDegree(G)
+    getClustering(G)
    
 def saveMetrics(path):
     try:

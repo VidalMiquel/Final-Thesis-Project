@@ -42,6 +42,24 @@ def getNodeAttributes(dataFrame):
         attributes[player_id] = {"label": player_name}
     return attributes
 
+def directedEdges(dataframe, G):
+    uniquePlayers = dataframe[['player_id', 'pass_recipient_id']].drop_duplicates().dropna()
+    # Convert player IDs and recipient IDs from strings that might represent floats to integers
+    uniquePlayers['player_id'] = uniquePlayers['player_id'].astype(float).astype(int)
+    uniquePlayers['pass_recipient_id'] = uniquePlayers['pass_recipient_id'].astype(float).astype(int)
+
+    # Group by 'player_id' and 'pass_recipient_id', and count occurrences
+    edge_weights = uniquePlayers.groupby(['player_id', 'pass_recipient_id']).size().reset_index(name='weight')
+    
+    # Ensure the weight is integer
+    edge_weights['weight'] = edge_weights['weight'].astype(int)
+    
+    # Add edges to the graph with their weights
+    # Convert DataFrame to list of tuples (node1, node2, weight)
+    edge_list = edge_weights.to_records(index=False)
+    G.add_weighted_edges_from(edge_list)
+
+
 def add_edges_with_attributes(row, G):
     # Extract relevant information
     playerId = int(float(row['player_id']))
@@ -61,15 +79,15 @@ def add_edges_with_attributes(row, G):
 
 
 # Function to change file names to a new format
-def changeFilenames(fileName):
+def changeFilenames(fileName, type):
     # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
     if fileName.endswith(".csv"):
         parts = fileName.split("_")
         if len(parts) == 4  and parts[3] == "footballDayPasses.csv":
-            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_Graph.gexf"
+            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_{type}.gexf"
             return newFileName
         elif len(parts) == 5  and parts[4] == "footballDayPasses.csv":
-            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_{parts[3]}_Graph.gexf"
+            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_{parts[3]}_{type}.gexf"
             return newFileName
         else:
             print("The file name does not follow the expected pattern.")
@@ -86,9 +104,7 @@ def saveGraph(targetPath, G, fileName):
     nx.write_gexf(G, outputFilePath, version="1.2draft", encoding="utf-8", prettyprint=True)
 
 
-def managmentGraph(dataFrame, fileName, targetFolder):
-    # Initialize a directed graph using NetworkX
-    G = nx.MultiDiGraph()
+def managmentMultiGraph(dataFrame, fileName, targetFolder, G):
     #Get valid ID nodes
     validPlayersIDs = getValidId(dataFrame)
     #Add nodes to the graph
@@ -103,7 +119,23 @@ def managmentGraph(dataFrame, fileName, targetFolder):
     #Verification
     assert len(list(G.edges())) == len(validRecipientId), f"number of edges and dataframe' size is not the same"
     #Get new fileName
-    newFileName = changeFilenames(fileName)
+    newFileName = changeFilenames(fileName, "multiDiGraph")
+    #Save graph
+    saveGraph(targetFolder, G, newFileName)
+    
+def managmentDiGraph(dataFrame, fileName, targetFolder, G):
+    #Get valid ID nodes
+    validPlayersIDs = getValidId(dataFrame)
+    #Add nodes to the graph
+    G.add_nodes_from(validPlayersIDs)
+    #Get nodes attributes
+    attributes = getNodeAttributes(dataFrame)
+    #Add node's attributs
+    nx.set_node_attributes(G, attributes)
+    #Add edges 
+    directedEdges(dataFrame, G)
+    #Get new fileName
+    newFileName = changeFilenames(fileName, "diGraph")
     #Save graph
     saveGraph(targetFolder, G, newFileName)
    
@@ -118,21 +150,31 @@ def generateDynamicPaths(experimentName):
         currentDir, "..", "..", "Data", experimentName, "03Stage", "TargetFiles"
     )
 
-    targetFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "04Stage", "Graphs"
+    targetFolderDi = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "04Stage", "Graphs", "diGraphs"
+    )
+    
+    targetFolderMultiDi = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "04Stage", "Graphs", "multiDiGraphs"
     )
 
-    if not os.path.exists(targetFolder):
+    if not os.path.exists(targetFolderDi):
         print(
-            f"The folder {targetFolder} does not exist for experiment {experimentName}."
+            f"The folder {targetFolderDi} does not exist for experiment {experimentName}."
+        )
+        sys.exit(1)
+    
+    if not os.path.exists(targetFolderMultiDi):
+        print(
+            f"The folder {targetFolderMultiDi} does not exist for experiment {experimentName}."
         )
         sys.exit(1)
 
-    return dataFolder, targetFolder
+    return dataFolder, targetFolderDi, targetFolderMultiDi
 
 
 # Function to read files in a folder and process them
-def readFolderFiles(currentPath, targetFolder):
+def readFolderFiles(currentPath, targetFolderDi, targetFolderMultiDi):
     # Check if the folder exists
     if not os.path.isdir(currentPath):
         print(f"The folder '{currentPath}' does not exist.")
@@ -143,14 +185,20 @@ def readFolderFiles(currentPath, targetFolder):
         # Join the folder path with the file name
         filePath = os.path.join(currentPath, fileName)
         df = pd.read_csv(filePath, dtype=str)
-        managmentGraph(df,fileName,targetFolder)
+        # Initialize a directed graph using NetworkX
+        multiDiG = nx.MultiDiGraph()
+        # Initialize a directed graph using NetworkX
+        diG = nx.DiGraph()
+        managmentDiGraph(df,fileName, targetFolderDi, diG)
+        managmentMultiGraph(df,fileName,targetFolderMultiDi, multiDiG)
 
 
 # Main function to execute the program
 def main():
     experimentName = getParameters()
-    dataFolder, targetFolder = generateDynamicPaths(experimentName)
-    readFolderFiles(dataFolder, targetFolder)
+    dataFolder, targetFolderDi, targetFolderMultiDi = generateDynamicPaths(experimentName)
+    readFolderFiles(dataFolder, targetFolderDi, targetFolderMultiDi)
+    
 
 
 if __name__ == "__main__":

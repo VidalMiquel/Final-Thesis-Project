@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2024-04-12">
+    <creator>NetworkX 3.2.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <nodes>
+      <node id="5246" label="Luis Alberto Suárez Díaz" />
+      <node id="5216" label="Andrés Iniesta Luján" />
+      <node id="5506" label="Javier Alejandro Mascherano" />
+      <node id="6379" label="Sergi Roberto Carnicer" />
+      <node id="10609" label="Jérémy Mathieu" />
+      <node id="5211" label="Jordi Alba Ramos" />
+      <node id="4320" label="Neymar da Silva Santos Junior" />
+      <node id="6998" label="Rafael Alcântara do Nascimento" />
+      <node id="5470" label="5470" />
+    </nodes>
+    <edges>
+      <edge source="5246" target="5216" id="0" weight="1" />
+      <edge source="5216" target="4320" id="1" weight="1" />
+      <edge source="5216" target="5506" id="2" weight="1" />
+      <edge source="5506" target="6379" id="3" weight="1" />
+      <edge source="5506" target="6998" id="4" weight="1" />
+      <edge source="5506" target="10609" id="5" weight="1" />
+      <edge source="6379" target="5470" id="6" weight="1" />
+      <edge source="6379" target="5506" id="7" weight="1" />
+      <edge source="10609" target="5211" id="8" weight="1" />
+      <edge source="10609" target="5216" id="9" weight="1" />
+      <edge source="5211" target="4320" id="10" weight="1" />
+      <edge source="4320" target="6998" id="11" weight="1" />
+      <edge source="6998" target="5216" id="12" weight="1" />
+      <edge source="6998" target="5246" id="13" weight="1" />
+    </edges>
+  </graph>
+</gexf>
