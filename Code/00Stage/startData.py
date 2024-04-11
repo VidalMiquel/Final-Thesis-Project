@@ -27,6 +27,8 @@ def createFolderStructure(stageName, experimentName):
         createFolder(os.path.join(folderPath, "TargetFiles"))
     elif stageName == "04Stage":
         createFolder(os.path.join(folderPath, "Graphs"))
+        createFolder(os.path.join(folderPath, "Graphs", "diGraphs"))
+        createFolder(os.path.join(folderPath, "Graphs", "multiDiGraphs"))
         createFolder(os.path.join(folderPath, "Graphics"))
         createFolder(os.path.join(folderPath, "Metrics"))
     else:
