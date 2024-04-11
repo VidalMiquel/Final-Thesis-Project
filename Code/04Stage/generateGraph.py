@@ -27,12 +27,20 @@ def getValidId(dataFrame):
 
     return keysAsInt
 
-#Get node attributs
-def getNodeAttriutes(dataFrame):
+# Define your function to get node attributes
+def getNodeAttributes(dataFrame):
+    # Extract unique players from the DataFrame
     uniquePlayers = dataFrame[['player_id', 'player_name']].drop_duplicates().dropna()
-    # Create a dictionary mapping player IDs to their names
-    playerNameDict = dict(zip(uniquePlayers['player_id'], uniquePlayers['player_name']))
-    return playerNameDict
+    # Initialize an empty dictionary for attributes
+    attributes = {}
+    # Iterate over the rows of the DataFrame
+    for index, row in uniquePlayers.iterrows():
+        # Convert player_id to integer
+        player_id = int(float(row['player_id']))  # Convert to float first, then to int
+        player_name = row['player_name']
+        # Add the attribute for the current player to the dictionary
+        attributes[player_id] = {"label": player_name}
+    return attributes
 
 def add_edges_with_attributes(row, G):
     # Extract relevant information
@@ -86,9 +94,9 @@ def managmentGraph(dataFrame, fileName, targetFolder):
     #Add nodes to the graph
     G.add_nodes_from(validPlayersIDs)
     #Get nodes attributes
-    attributes = getNodeAttriutes(dataFrame)
+    attributes = getNodeAttributes(dataFrame)
     #Add node's attributs
-    nx.set_node_attributes(G, attributes, name='label')
+    nx.set_node_attributes(G, attributes)
     #Add edges and their attributs
     validRecipientId = dataFrame.loc[dataFrame['pass_recipient_id'].notna()]
     _ = validRecipientId.apply(add_edges_with_attributes, args=(G,), axis=1)
