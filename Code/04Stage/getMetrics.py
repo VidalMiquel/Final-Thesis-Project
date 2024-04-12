@@ -82,9 +82,43 @@ def getClustering(G):
     nodeMetrics['clustering'] = nx.clustering(G)
     nodeMetrics['averageClustering'] = nx.average_clustering(G)
     
+def getCloseness(G):
+    nodeMetrics['closness'] = nx.closeness_centrality(G)
+
+def getEfficiency(G):
+    nodeMetrics['globalEfficiency'] = nx.global_efficiency(G)
+    
+def getCommunities(G):
+    nodeMetrics['communityLouvian'] = nx.community.louvain_communities(G)
+    nodeMetrics['communityGreedy'] = nx.algorithms.community.greedy_modularity_communities(G)
+    
+def getBetweenness(G):
+    nodeMetrics['betweenness'] = nx.betweenness_centrality(G)
+
+def getDensity(G):
+    nodeMetrics['density'] = nx.density(G)
+   
+def getDiamater(G):
+    nodeMetrics['diamater'] = nx.diameter(G)
+
+def getEccentricity(G):
+    nodeMetrics['eccentricity'] = nx.eccentricity(G)
+
+def getEigenvector(G):
+    nodeMetrics['eigenvector'] = nx.eigenvector_centrality(G) 
+
+    
 def getMetrics(G):
     getDegree(G)
     getClustering(G)
+    getCloseness(G)
+    getCommunities(G)
+    getBetweenness(G)
+    getDensity(G)
+    if nx.is_strongly_connected(G):
+        getDiamater(G)
+        getEccentricity(G)
+        getEigenvector(G)
    
 def saveMetrics(path):
     try:
