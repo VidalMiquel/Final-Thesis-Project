@@ -5,8 +5,7 @@ import os
 import networkx as nx
 import pickle
 
-nodeMetrics = {}
-
+total = []
 # Function to get command-line parameters
 def getParameters():
     if len(sys.argv) == 2:
@@ -56,10 +55,10 @@ def changeFilenames(fileName):
         parts = fileName.split("_")
         if len(parts) == 4  and parts[3] == "diGraph.gexf":
             newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_Graph.pkl"
-            return newFileName
+            return newFileName, parts[2]
         elif len(parts) == 5  and parts[4] == "diGraph.gexf":
             newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_{parts[3]}_Graph.pkl"
-            return newFileName
+            return newFileName, f"{parts[2]}_{parts[3]}"
         else:
             print("The file name does not follow the expected pattern.")
             return None
@@ -67,7 +66,7 @@ def changeFilenames(fileName):
         print("The file name does not have a gexf extension.")
         return None
     
-def getDegree(G):
+def getDegree(G, nodeMetrics):
     nodes = list(G.nodes())
 
     # Calculate in-degree and out-degree for each node using list comprehensions
@@ -78,49 +77,49 @@ def getDegree(G):
     nodeMetrics['inDegree'] = dict(zip(nodes, inDegree))
     nodeMetrics['outDegree'] = dict(zip(nodes, outDegree))
 
-def getClustering(G):
+def getClustering(G, nodeMetrics):
     nodeMetrics['clustering'] = nx.clustering(G)
     nodeMetrics['averageClustering'] = nx.average_clustering(G)
     
-def getCloseness(G):
+def getCloseness(G, nodeMetrics):
     nodeMetrics['closness'] = nx.closeness_centrality(G)
 
-def getEfficiency(G):
+def getEfficiency(G,nodeMetrics):
     nodeMetrics['globalEfficiency'] = nx.global_efficiency(G)
     
-def getCommunities(G):
+def getCommunities(G, nodeMetrics):
     nodeMetrics['communityLouvian'] = nx.community.louvain_communities(G)
     nodeMetrics['communityGreedy'] = nx.algorithms.community.greedy_modularity_communities(G)
     
-def getBetweenness(G):
+def getBetweenness(G, nodeMetrics):
     nodeMetrics['betweenness'] = nx.betweenness_centrality(G)
 
-def getDensity(G):
+def getDensity(G, nodeMetrics):
     nodeMetrics['density'] = nx.density(G)
    
-def getDiamater(G):
+def getDiamater(G, nodeMetrics):
     nodeMetrics['diamater'] = nx.diameter(G)
 
-def getEccentricity(G):
+def getEccentricity(G, nodeMetrics):
     nodeMetrics['eccentricity'] = nx.eccentricity(G)
 
-def getEigenvector(G):
+def getEigenvector(G, nodeMetrics):
     nodeMetrics['eigenvector'] = nx.eigenvector_centrality(G) 
 
     
-def getMetrics(G):
-    getDegree(G)
-    getClustering(G)
-    getCloseness(G)
-    getCommunities(G)
-    getBetweenness(G)
-    getDensity(G)
+def getMetrics(G, nodeMetrics):
+    getDegree(G, nodeMetrics)
+    getClustering(G, nodeMetrics)
+    getCloseness(G, nodeMetrics)
+    getCommunities(G, nodeMetrics)
+    getBetweenness(G, nodeMetrics)
+    getDensity(G, nodeMetrics)
     if nx.is_strongly_connected(G):
-        getDiamater(G)
-        getEccentricity(G)
-        getEigenvector(G)
+        getDiamater(G, nodeMetrics)
+        getEccentricity(G, nodeMetrics)
+        getEigenvector(G, nodeMetrics)
    
-def saveMetrics(path):
+def saveMetrics(path, nodeMetrics):
     try:
         with open(path, 'wb') as f:
             pickle.dump(nodeMetrics, f)
@@ -135,6 +134,14 @@ def generatePath(targetPath, fileName):
         print("Error occurred while generating path:", str(e))
         return None
 
+def saveTotal(targetFolder):
+    try:
+        with open(f'{targetFolder}/allMetrics.pkl', 'wb') as f:
+            pickle.dump(total, f)
+        print("Metrics saved successfully.")
+    except Exception as e:
+        print("Error occurred while saving metrics:", str(e))
+        
 def manageMetrics(dataFolder, targetFolder):
     
     if not os.path.isdir(dataFolder):
@@ -145,10 +152,16 @@ def manageMetrics(dataFolder, targetFolder):
     for fileName in os.listdir(dataFolder):
         # Join the folder path with the file name
         graph = readGraph(dataFolder, fileName)
-        getMetrics(graph)
-        newFileName = changeFilenames(fileName)
-        path = generatePath(targetFolder, newFileName)
-        saveMetrics(path)
+        newFileName, score = changeFilenames(fileName)
+        nodeMetrics = {}  # Create a new dictionary for each file
+        getMetrics(graph, nodeMetrics)
+        nodeMetrics["score"] = score
+        total.append(nodeMetrics)
+        #path = generatePath(targetFolder, newFileName)
+        #saveMetrics(path, nodeMetrics)
+
+
+    saveTotal(targetFolder)
 
 
 def main():
