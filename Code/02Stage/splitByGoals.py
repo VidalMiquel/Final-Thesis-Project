@@ -60,9 +60,9 @@ def iterateAndManagmentFiles(currentPath, targetPath, nameFiles, clubName, exper
                     divisionFiles = getGoals(dataFrame)
                     teamGoals = getScore(dataFrame)
                     splitList = getDivisionIndices(divisionFiles, len(dataFrame))
-                    resultsForSplit = generateMatchResults(teamGoals,clubName)
+                    scoreDifference, resultsForSplit = generateMatchResults(teamGoals,clubName)
                     newFileName = generateDivisionFiles(splitList, dataFrame, fileName, targetPath)
-                    metadataFile = generateMetadataFile(teamGoals, resultsForSplit, newFileName)
+                    metadataFile = generateMetadataFile(teamGoals, resultsForSplit, newFileName, scoreDifference)
             except OSError as e:
                 print(f"Error reading the file '{fileName}': {e}")
             except json.JSONDecodeError as e:
@@ -85,7 +85,7 @@ def saveFilteredFile(data, experimentName, clubName):
     # Check if the segment is not empty before saving
 
     df = pd.DataFrame(data)
-    df.columns = ["IdFiles", "ScoringTeam", "Score", "NoInformation"]
+    df.columns = ["IdFiles", "ScoringTeam", "Score", "Difference", "NoInformation"]
     
     if data:
         # File name in the format Football_day_n_m
@@ -108,16 +108,16 @@ def separateFileName(fileName):
     return correctPart
     
         
-def generateMetadataFile(teamGoals, scorerSplit, fileName):
+def generateMetadataFile(teamGoals, scorerSplit, fileName, scoreDifference):
     idFiles = separateFileName(fileName)
 
     if  teamGoals.empty:
         metadataContent.append((idFiles[0], None, None, "NF"))
     else:
             # Create tuples and append them to metadataContent
-        for team, scorer, idFile in zip(teamGoals, scorerSplit, idFiles):
-            metadataContent.append((idFile, team, scorer, None)) 
-        metadataContent.append((idFiles[-1], None, "NF", "NF"))
+        for team, scorer, idFile, difference in zip(teamGoals, scorerSplit, idFiles, scoreDifference):
+            metadataContent.append((idFile, team, scorer, int(difference), None)) 
+        metadataContent.append((idFiles[-1], None, "NF", "NF", "NF"))
     return metadataContent
 
     
@@ -181,6 +181,7 @@ def getGoals(data):
 
 def generateMatchResults(clubNames, ClubName):
     matchResults = []
+    resultDifferences = []
     home_score = 0
     away_score = 0
 
@@ -195,12 +196,12 @@ def generateMatchResults(clubNames, ClubName):
                 away_score += 1
 
             matchResults.append(f"{home_score}_{away_score}")
-    
-    return matchResults
+            resultDifferences.append(home_score - away_score)
+            
+    return resultDifferences, matchResults
 
 #def generateMetadataFiles(teams, scores):
     
-
 
 def generateDivisionFiles(indicesList, dataframe, fileName, targetPath):
     fileNameList = []
