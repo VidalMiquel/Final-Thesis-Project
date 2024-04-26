@@ -22,7 +22,7 @@ def createFolderStructure(stageName, experimentName):
     folderPath = os.path.join(currentPath, "..", "..", "Data", experimentName, stageName)
 
     # Create the folders based on stage name
-    if stageName != "04Stage" and stageName != "00Stage":
+    if (stageName != "04Stage" or stageName != "05Stage") and stageName != "00Stage":
         createFolder(os.path.join(folderPath, "MiddleFiles"))
         createFolder(os.path.join(folderPath, "TargetFiles"))
     elif stageName == "04Stage":
