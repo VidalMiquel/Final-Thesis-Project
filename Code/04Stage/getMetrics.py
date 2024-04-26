@@ -4,18 +4,30 @@ import sys
 import os
 import networkx as nx
 import pickle
+import pandas as pd
 
 total = []
+
+network_metrics = {
+    'inDegree_players': {},
+    'outDegree_players': {},
+    'clustering_coefficients': {},
+    'betweenness_centralities': {},
+    'closeness_centralities': {},
+    'eigenvector_centrality': {},
+    'eccentricity': {}
+}
+
 # Function to get command-line parameters
 def getParameters():
-    if len(sys.argv) == 2:
-        return sys.argv[1]
+    if len(sys.argv) == 3:
+        return sys.argv[1], sys.argv[2]
     else:
         print("Exactly two values must be provided as arguments.")
         sys.exit(1)
 
 # Function to generate dynamic paths for data and target folders
-def generateDynamicPaths(experimentName):
+def generateDynamicPaths(experimentName, clubName):
     currentDir = os.path.abspath(
         os.path.dirname(__file__)
     )  # Get the current directory of the script
@@ -27,14 +39,17 @@ def generateDynamicPaths(experimentName):
     targetFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "04Stage", "Metrics"
     )
-
+    
+    metadataFile = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "03Stage", f"finalMetadata{clubName}.csv"
+    )
     if not os.path.exists(targetFolder):
         print(
             f"The folder {targetFolder} does not exist for experiment {experimentName}."
         )
         sys.exit(1)
 
-    return dataFolder, targetFolder
+    return metadataFile, dataFolder, targetFolder
 
 def readGraph(dataFolder, fileName):
     try:
@@ -48,24 +63,21 @@ def readGraph(dataFolder, fileName):
         print(f"Error reading graph from '{filePath}': {e}")
         return None
 
-# Function to change file names to a new format
-def changeFilenames(fileName):
-    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
-    if fileName.endswith(".gexf"):
-        parts = fileName.split("_")
-        if len(parts) == 4  and parts[3] == "diGraph.gexf":
-            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_Graph.pkl"
-            return newFileName, parts[2]
-        elif len(parts) == 5  and parts[4] == "diGraph.gexf":
-            newFileName = f"{parts[0]}_{parts[1]}_{parts[2]}_{parts[3]}_Graph.pkl"
-            return newFileName, f"{parts[2]}_{parts[3]}"
-        else:
-            print("The file name does not follow the expected pattern.")
-            return None
-    else:
-        print("The file name does not have a gexf extension.")
+
+def readMetatadaFile(metadataFolder):
+    try:
+        dfScore = pd.read_csv(metadataFolder)
+        return dfScore
+    except FileNotFoundError:
+        print(f"Path not found: '{metadataFolder}'.")
+        return None
+    except nx.NetworkXError as e:
+        print(f"Path not found: '{metadataFolder}'.")
         return None
     
+
+
+'''
 def getDegree(G, nodeMetrics):
     nodes = list(G.nodes())
 
@@ -105,8 +117,8 @@ def getEccentricity(G, nodeMetrics):
 
 def getEigenvector(G, nodeMetrics):
     nodeMetrics['eigenvector'] = nx.eigenvector_centrality(G) 
-
-    
+'''
+'''
 def getMetrics(G, nodeMetrics):
     getDegree(G, nodeMetrics)
     getClustering(G, nodeMetrics)
@@ -118,13 +130,10 @@ def getMetrics(G, nodeMetrics):
         getDiamater(G, nodeMetrics)
         getEccentricity(G, nodeMetrics)
         getEigenvector(G, nodeMetrics)
+'''    
+
    
-def saveMetrics(path, nodeMetrics):
-    try:
-        with open(path, 'wb') as f:
-            pickle.dump(nodeMetrics, f)
-    except Exception as e:
-        print("Error occurred while saving metrics:", str(e))
+
 
 def generatePath(targetPath, fileName):
     try:
@@ -134,15 +143,75 @@ def generatePath(targetPath, fileName):
         print("Error occurred while generating path:", str(e))
         return None
 
-def saveTotal(targetFolder):
+def saveMetrics(targetFolder):
     try:
         with open(f'{targetFolder}/allMetrics.pkl', 'wb') as f:
-            pickle.dump(total, f)
+            pickle.dump(network_metrics, f)
         print("Metrics saved successfully.")
     except Exception as e:
         print("Error occurred while saving metrics:", str(e))
-        
-def manageMetrics(dataFolder, targetFolder):
+
+def initializeNetworkMetrics(score, graph):
+    # Initialize dictionaries for metrics if they don't exist
+        if score not in network_metrics['inDegree_players']:
+            network_metrics['inDegree_players'][score] = {}
+        if score not in network_metrics['outDegree_players']:
+            network_metrics['outDegree_players'][score] = {}
+        if score not in network_metrics['clustering_coefficients']:
+            network_metrics['clustering_coefficients'][score] = {}
+        if score not in network_metrics['betweenness_centralities']:
+            network_metrics['betweenness_centralities'][score] = {}
+        if score not in network_metrics['closeness_centralities']:
+            network_metrics['closeness_centralities'][score] = {}
+        if nx.is_strongly_connected(graph):   
+            if score not in network_metrics['eigenvector_centrality']:
+                network_metrics['eigenvector_centrality'][score] = {}
+            if score not in network_metrics['eccentricity']:
+                network_metrics['eccentricity'][score] = {}
+ 
+def getScore(fileName):
+    parts = fileName.split("_")
+    if len(parts) == 4:
+        pass
+    elif len(parts) == 5 :
+        return f"{parts[2]}_{parts[3]}"
+
+def getMetrics(graph, score):
+     for node in graph.nodes():
+            # Calculate in-degree and append to inDegree_players dictionary
+            in_degree = graph.in_degree(node)
+            if node not in network_metrics['inDegree_players'][score]:
+                network_metrics['inDegree_players'][score][node] = []
+            network_metrics['inDegree_players'][score][node].append(in_degree)
+            
+            # Calculate out-degree and append to outDegree_players dictionary
+            out_degree = graph.out_degree(node)
+            if node not in network_metrics['outDegree_players'][score]:
+                network_metrics['outDegree_players'][score][node] = []
+            network_metrics['outDegree_players'][score][node].append(out_degree)
+            
+            # Calculate clustering coefficient and store
+            clustering_coefficient = nx.clustering(graph, node)
+            network_metrics['clustering_coefficients'][score][node] = clustering_coefficient
+            
+            # Calculate betweenness centrality and store
+            betweenness_centrality = nx.betweenness_centrality(graph)[node]
+            network_metrics['betweenness_centralities'][score][node] = betweenness_centrality
+            
+            # Calculate closeness centrality and store
+            closeness_centrality = nx.closeness_centrality(graph)[node]
+            network_metrics['closeness_centralities'][score][node] = closeness_centrality
+            
+            if nx.is_strongly_connected(graph):   
+                #Calcualte eccentricity and store
+                eccentricity = nx.eccentricity(graph)[node]
+                network_metrics["eccentricity"][score][node] = eccentricity
+                
+                #Calcualte eccentricity and store
+                eigenvector = nx.eigenvector_centrality(graph)[node]
+                network_metrics["eigenvector_centrality"][score][node] = eigenvector
+
+def manageMetrics(dataFolder, scores):
     
     if not os.path.isdir(dataFolder):
         print(f"The folder '{dataFolder}' does not exist.")
@@ -152,22 +221,21 @@ def manageMetrics(dataFolder, targetFolder):
     for fileName in os.listdir(dataFolder):
         # Join the folder path with the file name
         graph = readGraph(dataFolder, fileName)
-        newFileName, score = changeFilenames(fileName)
-        nodeMetrics = {}  # Create a new dictionary for each file
-        getMetrics(graph, nodeMetrics)
-        nodeMetrics["score"] = score
-        total.append(nodeMetrics)
-        #path = generatePath(targetFolder, newFileName)
-        #saveMetrics(path, nodeMetrics)
-
-
-    saveTotal(targetFolder)
+        score = getScore(fileName)
+        if score in scores:
+            initializeNetworkMetrics(score, graph)
+            getMetrics(graph, score)
+    
+    
 
 
 def main():
-    experimentName = getParameters()
-    dataFolder, targetFolder = generateDynamicPaths(experimentName)
-    manageMetrics(dataFolder, targetFolder)
+    experimentName, clubName = getParameters()
+    metadataFolder, dataFolder, targetFolder = generateDynamicPaths(experimentName, clubName)
+    metadataFile = readMetatadaFile(metadataFolder)
+    scores = metadataFile["Score"].unique()
+    manageMetrics(dataFolder, scores)
+    saveMetrics(targetFolder)
     
 if __name__ == "__main__":
     main()

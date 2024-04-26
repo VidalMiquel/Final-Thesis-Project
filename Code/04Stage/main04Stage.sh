@@ -22,7 +22,7 @@ echo "generateGraph.py executed successfully."
 echo ""  # Blank line
 
 echo "Getting graphs metrics exectuing getMetrics.py"
-python getMetrics.py "$experimentName"
+python getMetrics.py "$experimentName" "$club"
 echo "getMetrics.py executed successfully."
 echo ""  # Blank line
 
