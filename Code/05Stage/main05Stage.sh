@@ -17,7 +17,7 @@ echo "" # Blank line
 
 # Execute generateGraph.py
 echo "Generating tables from executing getTables.py"
-python getTables.py "$experimentName"
+python getTables.py "$experimentName" "$club"
 echo "getTables.py executed successfully."
 echo ""  # Blank line
 
