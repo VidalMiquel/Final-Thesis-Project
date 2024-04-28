@@ -6,9 +6,8 @@ import networkx as nx
 import pickle
 import pandas as pd
 
-total = []
 
-network_metrics = {
+individualNetworkMetrics = {
     'inDegree_players': {},
     'outDegree_players': {},
     'clustering_coefficients': {},
@@ -16,6 +15,13 @@ network_metrics = {
     'closeness_centralities': {},
     'eigenvector_centrality': {},
     'eccentricity': {}
+}
+
+globalNetworkMetrics = {
+    'average_clustering': {},
+    'density': {},
+    #'global_efficiency': {},
+    'diameter': {}
 }
 
 # Function to get command-line parameters
@@ -143,31 +149,43 @@ def generatePath(targetPath, fileName):
         print("Error occurred while generating path:", str(e))
         return None
 
-def saveMetrics(targetFolder):
+def saveMetrics(targetFolder, type, dicty):
     try:
-        with open(f'{targetFolder}/allMetrics.pkl', 'wb') as f:
-            pickle.dump(network_metrics, f)
+        with open(f'{targetFolder}/{type}/{type}networkMetrics.pkl', 'wb') as f:
+            pickle.dump(dicty, f)
         print("Metrics saved successfully.")
     except Exception as e:
         print("Error occurred while saving metrics:", str(e))
 
-def initializeNetworkMetrics(score, graph):
+def inicializeGlobalNetworkMetrics(score, graph):
     # Initialize dictionaries for metrics if they don't exist
-        if score not in network_metrics['inDegree_players']:
-            network_metrics['inDegree_players'][score] = {}
-        if score not in network_metrics['outDegree_players']:
-            network_metrics['outDegree_players'][score] = {}
-        if score not in network_metrics['clustering_coefficients']:
-            network_metrics['clustering_coefficients'][score] = {}
-        if score not in network_metrics['betweenness_centralities']:
-            network_metrics['betweenness_centralities'][score] = {}
-        if score not in network_metrics['closeness_centralities']:
-            network_metrics['closeness_centralities'][score] = {}
+        if score not in globalNetworkMetrics['average_clustering']:
+            globalNetworkMetrics['average_clustering'][score] = []
+        if score not in globalNetworkMetrics['density']:
+            globalNetworkMetrics['density'][score] = []
+        #if score not in network_metrics['global_efficiency']:
+            #network_metrics['global_efficiency'][score] = {}
         if nx.is_strongly_connected(graph):   
-            if score not in network_metrics['eigenvector_centrality']:
-                network_metrics['eigenvector_centrality'][score] = {}
-            if score not in network_metrics['eccentricity']:
-                network_metrics['eccentricity'][score] = {}
+            if score not in globalNetworkMetrics['diameter']:
+                globalNetworkMetrics['diameter'][score] = []
+                
+def initializeIndividualNetworkMetrics(score, graph):
+    # Initialize dictionaries for metrics if they don't exist
+        if score not in individualNetworkMetrics['inDegree_players']:
+            individualNetworkMetrics['inDegree_players'][score] = {}
+        if score not in individualNetworkMetrics['outDegree_players']:
+            individualNetworkMetrics['outDegree_players'][score] = {}
+        if score not in individualNetworkMetrics['clustering_coefficients']:
+            individualNetworkMetrics['clustering_coefficients'][score] = {}
+        if score not in individualNetworkMetrics['betweenness_centralities']:
+            individualNetworkMetrics['betweenness_centralities'][score] = {}
+        if score not in individualNetworkMetrics['closeness_centralities']:
+            individualNetworkMetrics['closeness_centralities'][score] = {}
+        if nx.is_strongly_connected(graph):   
+            if score not in individualNetworkMetrics['eigenvector_centrality']:
+                individualNetworkMetrics['eigenvector_centrality'][score] = {}
+            if score not in individualNetworkMetrics['eccentricity']:
+                individualNetworkMetrics['eccentricity'][score] = {}
  
 def getScore(fileName):
     parts = fileName.split("_")
@@ -176,40 +194,58 @@ def getScore(fileName):
     elif len(parts) == 5 :
         return f"{parts[2]}_{parts[3]}"
 
-def getMetrics(graph, score):
+def getGlobalMetrics(graph, score):
+    # Calculate clustering coefficient and store
+        average_clustering = nx.average_clustering(graph)
+        globalNetworkMetrics['average_clustering'][score].append(average_clustering)
+        
+        #Calculate betweenness centrality and store
+        density = nx.density(graph)
+        globalNetworkMetrics['density'][score].append(density)
+        
+        #Calculate closeness centrality and store
+        #global_efficiency = nx.local_efficiency(graph)
+        #network_metrics['global_efficiency'][score]= global_efficiency
+            
+        if nx.is_strongly_connected(graph):   
+            #Calcualte eccentricity and store
+            diameter = nx.diameter(graph)
+            globalNetworkMetrics["diameter"][score].append(diameter)
+    
+def getIndividualMetrics(graph, score):
      for node in graph.nodes():
             # Calculate in-degree and append to inDegree_players dictionary
             in_degree = graph.in_degree(node)
-            if node not in network_metrics['inDegree_players'][score]:
-                network_metrics['inDegree_players'][score][node] = []
-            network_metrics['inDegree_players'][score][node].append(in_degree)
+            if node not in individualNetworkMetrics['inDegree_players'][score]:
+                individualNetworkMetrics['inDegree_players'][score][node] = []
+            individualNetworkMetrics['inDegree_players'][score][node].append(in_degree)
             
             # Calculate out-degree and append to outDegree_players dictionary
             out_degree = graph.out_degree(node)
-            if node not in network_metrics['outDegree_players'][score]:
-                network_metrics['outDegree_players'][score][node] = []
-            network_metrics['outDegree_players'][score][node].append(out_degree)
+            if node not in individualNetworkMetrics['outDegree_players'][score]:
+                individualNetworkMetrics['outDegree_players'][score][node] = []
+            individualNetworkMetrics['outDegree_players'][score][node].append(out_degree)
             
             # Calculate clustering coefficient and store
             clustering_coefficient = nx.clustering(graph, node)
-            network_metrics['clustering_coefficients'][score][node] = clustering_coefficient
+            individualNetworkMetrics['clustering_coefficients'][score][node] = clustering_coefficient
             
             # Calculate betweenness centrality and store
             betweenness_centrality = nx.betweenness_centrality(graph)[node]
-            network_metrics['betweenness_centralities'][score][node] = betweenness_centrality
+            individualNetworkMetrics['betweenness_centralities'][score][node] = betweenness_centrality
             
             # Calculate closeness centrality and store
             closeness_centrality = nx.closeness_centrality(graph)[node]
-            network_metrics['closeness_centralities'][score][node] = closeness_centrality
+            individualNetworkMetrics['closeness_centralities'][score][node] = closeness_centrality
             
             if nx.is_strongly_connected(graph):   
                 #Calcualte eccentricity and store
                 eccentricity = nx.eccentricity(graph)[node]
-                network_metrics["eccentricity"][score][node] = eccentricity
+                individualNetworkMetrics["eccentricity"][score][node] = eccentricity
                 
                 #Calcualte eccentricity and store
                 eigenvector = nx.eigenvector_centrality(graph)[node]
-                network_metrics["eigenvector_centrality"][score][node] = eigenvector
+                individualNetworkMetrics["eigenvector_centrality"][score][node] = eigenvector
 
 def manageMetrics(dataFolder, scores):
     
@@ -223,8 +259,11 @@ def manageMetrics(dataFolder, scores):
         graph = readGraph(dataFolder, fileName)
         score = getScore(fileName)
         if score in scores:
-            initializeNetworkMetrics(score, graph)
-            getMetrics(graph, score)
+            initializeIndividualNetworkMetrics(score, graph)
+            inicializeGlobalNetworkMetrics(score,graph)
+            getIndividualMetrics(graph, score)
+            getGlobalMetrics(graph, score)
+            
     
     
 
@@ -235,7 +274,8 @@ def main():
     metadataFile = readMetatadaFile(metadataFolder)
     scores = metadataFile["Score"].unique()
     manageMetrics(dataFolder, scores)
-    saveMetrics(targetFolder)
+    saveMetrics(targetFolder, "Individual", individualNetworkMetrics)
+    saveMetrics(targetFolder, "Global", globalNetworkMetrics)
     
 if __name__ == "__main__":
     main()
