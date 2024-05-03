@@ -125,30 +125,31 @@ def generateMetadataFile(teamGoals, scorerSplit, fileName, scoreDifference):
 
 def getGoals(data):
        
-    goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23)]
+    goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23 )]
     goals = goalkeeperActions[goalkeeperActions["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28)]  
-    teamGoals1 = goals["possession_team"]
+    teamGoals1 = goals[["possession_team"]]
     
-    ownGoals = data[data["type"].apply(lambda x: (x)["id"] == 25)]
-    teamOwnGoals = ownGoals["team"]
+    ownGoalsAgainstTeam = data[data["type"].apply(lambda x: (x)["id"] == 20)]
+    teamOwnGoalsAgainst = ownGoalsAgainstTeam["possession_team"]
 
-    allGoals = pd.concat([teamGoals1, teamOwnGoals], axis=0)
+    allGoals = pd.concat([teamGoals1, teamOwnGoalsAgainst], axis=0)
 
     sortedGoals = allGoals.sort_index()
-
-
     return sortedGoals
 
+
 def getScore(data):
+    # Filter to get shots and goals
+    goalFor = data[data["type"].apply(lambda x: x["id"] == 16)]
+    goals = goalFor[goalFor["shot"].apply(lambda x: x["outcome"]["id"] == 97)]
+    goalTeamNames = goals["team"].apply(lambda x: x["name"])
     
-    goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23)]
-    goals = goalkeeperActions[goalkeeperActions["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28)]  
-    
-    ownGoals = data[data["type"].apply(lambda x: (x)["id"] == 25)]
-
-    nameTeamGoal = pd.concat([goals["possession_team"].apply(lambda x: x['name']),ownGoals["team"].apply(lambda x: x['name'])], axis = 0)
-
-    return nameTeamGoal.sort_index()
+    # Filter to get own goals
+    ownGoalsAgainstTeam = data[data["type"].apply(lambda x: x["id"] == 25)]
+    ownGoalTeamNames = ownGoalsAgainstTeam["team"].apply(lambda x: x["name"])
+    # Concatenate and sort the team names
+    teamNames = pd.concat([goalTeamNames, ownGoalTeamNames]).sort_index()
+    return teamNames
 
 
 # Function to get division indices from the data
@@ -157,6 +158,7 @@ def getDivisionIndices(data, lenght):
     if not data.empty:
         
         divisionIndices = data.index.tolist()
+        
         divisionIndices.insert(0, 0)
         divisionIndices.append(lenght)
         return divisionIndices
@@ -164,20 +166,6 @@ def getDivisionIndices(data, lenght):
         #print("There are no divisions in 'data' as aux2 is empty.")
         return [0, lenght]  # Return [0, len(data)] as default values when no divisions are found
 
-# Function to get division indices from the data
-def getGoals(data):
-   
-    goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23)]
-    goals = goalkeeperActions[goalkeeperActions["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28)]  
-    
-    ownGoals = data[data["type"].apply(lambda x: (x)["id"] == 25)]
-    
-
-    allGoals = pd.concat([goals, ownGoals], axis=0)
-
-    sortedGoals = allGoals.sort_index()
-    
-    return sortedGoals
 
 def generateMatchResults(clubNames, ClubName):
     matchResults = []
@@ -216,15 +204,15 @@ def generateDivisionFiles(indicesList, dataframe, fileName, targetPath):
                 numberSegment = part[0]
                 middleSegment = part[1]
                 baseName, extension = os.path.splitext(middleSegment)
-                
                 if (len(indicesList) - 1) == 1:
                     segmentIndex = 1
                 else:
                     segmentIndex = i + 1
 
                 newFileName = f"{numberSegment}_{segmentIndex}_{baseName}.json"
+
                 fileNameList.append(newFileName)
-                #print(fileNameList)
+
                 filePath = os.path.join(targetPath, newFileName)
                 segment.to_json(filePath, orient="records")
         return fileNameList
