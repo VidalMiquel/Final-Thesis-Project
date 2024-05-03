@@ -68,6 +68,7 @@ def saveFilteredFile(data, targetFolder, fileName, metadata):
             print(f"Error while saving the file: {e}")
 
     else:
+        print(fileName)
         #print(f"The file is empty, no file will be generated: ", fileName)
         pass
 
