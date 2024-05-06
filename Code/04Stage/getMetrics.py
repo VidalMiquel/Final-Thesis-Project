@@ -82,65 +82,6 @@ def readMetatadaFile(metadataFolder):
         return None
     
 
-
-'''
-def getDegree(G, nodeMetrics):
-    nodes = list(G.nodes())
-
-    # Calculate in-degree and out-degree for each node using list comprehensions
-    inDegree = list(dict(G.in_degree()).values())
-    outDegree = list(dict(G.out_degree()).values())
-
-    # Combine node IDs with their respective in-degree and out-degree using zip
-    nodeMetrics['inDegree'] = dict(zip(nodes, inDegree))
-    nodeMetrics['outDegree'] = dict(zip(nodes, outDegree))
-
-def getClustering(G, nodeMetrics):
-    nodeMetrics['clustering'] = nx.clustering(G)
-    nodeMetrics['averageClustering'] = nx.average_clustering(G)
-    
-def getCloseness(G, nodeMetrics):
-    nodeMetrics['closness'] = nx.closeness_centrality(G)
-
-def getEfficiency(G,nodeMetrics):
-    nodeMetrics['globalEfficiency'] = nx.global_efficiency(G)
-    
-def getCommunities(G, nodeMetrics):
-    nodeMetrics['communityLouvian'] = nx.community.louvain_communities(G)
-    nodeMetrics['communityGreedy'] = nx.algorithms.community.greedy_modularity_communities(G)
-    
-def getBetweenness(G, nodeMetrics):
-    nodeMetrics['betweenness'] = nx.betweenness_centrality(G)
-
-def getDensity(G, nodeMetrics):
-    nodeMetrics['density'] = nx.density(G)
-   
-def getDiamater(G, nodeMetrics):
-    nodeMetrics['diamater'] = nx.diameter(G)
-
-def getEccentricity(G, nodeMetrics):
-    nodeMetrics['eccentricity'] = nx.eccentricity(G)
-
-def getEigenvector(G, nodeMetrics):
-    nodeMetrics['eigenvector'] = nx.eigenvector_centrality(G) 
-'''
-'''
-def getMetrics(G, nodeMetrics):
-    getDegree(G, nodeMetrics)
-    getClustering(G, nodeMetrics)
-    getCloseness(G, nodeMetrics)
-    getCommunities(G, nodeMetrics)
-    getBetweenness(G, nodeMetrics)
-    getDensity(G, nodeMetrics)
-    if nx.is_strongly_connected(G):
-        getDiamater(G, nodeMetrics)
-        getEccentricity(G, nodeMetrics)
-        getEigenvector(G, nodeMetrics)
-'''    
-
-   
-
-
 def generatePath(targetPath, fileName):
     try:
         outputFilePath = os.path.join(targetPath, fileName)

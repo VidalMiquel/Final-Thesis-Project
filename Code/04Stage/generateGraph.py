@@ -5,7 +5,9 @@ import sys
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
+import pickle
 
+players = {}
 
 # Function to get command-line parameters
 def getParameters():
@@ -41,6 +43,14 @@ def getNodeAttributes(dataFrame):
         # Add the attribute for the current player to the dictionary
         attributes[player_id] = {"label": player_name}
     return attributes
+
+def savePalyers(dict1):
+    global players
+    new_keys = set(dict1.keys()) - set(players.keys())
+    # Update dict1 with the labels from dict2 for the new keys
+    for key in new_keys:
+        players[key] = dict1[key]['label']
+
 
 def directedEdges(dataframe, G):
     uniquePlayers = dataframe[['player_id', 'pass_recipient_id']].drop_duplicates().dropna()
@@ -123,6 +133,9 @@ def managmentMultiGraph(dataFrame, fileName, targetFolder, G):
     #Save graph
     saveGraph(targetFolder, G, newFileName)
     
+
+ 
+
 def managmentDiGraph(dataFrame, fileName, targetFolder, G):
     #Get valid ID nodes
     validPlayersIDs = getValidId(dataFrame)
@@ -130,6 +143,7 @@ def managmentDiGraph(dataFrame, fileName, targetFolder, G):
     G.add_nodes_from(validPlayersIDs)
     #Get nodes attributes
     attributes = getNodeAttributes(dataFrame)
+    savePalyers(attributes)
     #Add node's attributs
     nx.set_node_attributes(G, attributes)
     #Add edges 
@@ -149,7 +163,9 @@ def generateDynamicPaths(experimentName):
     dataFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "03Stage", "TargetFiles"
     )
-
+    targetFolderPlayers = os.path.join(
+        currentDir, "..", "..", "Data", experimentName, "04Stage"
+    )
     targetFolderDi = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "04Stage", "Graphs", "diGraphs"
     )
@@ -170,8 +186,15 @@ def generateDynamicPaths(experimentName):
         )
         sys.exit(1)
 
-    return dataFolder, targetFolderDi, targetFolderMultiDi
+    return dataFolder, targetFolderPlayers, targetFolderDi, targetFolderMultiDi
 
+def savePlayersAsObject(targetFolder):
+    try:
+        with open(f'{targetFolder}/playersList.pkl', 'wb') as f:
+            pickle.dump(players, f)
+        print("Metrics saved successfully.")
+    except Exception as e:
+        print("Error occurred while saving metrics:", str(e))
 
 # Function to read files in a folder and process them
 def readFolderFiles(currentPath, targetFolderDi, targetFolderMultiDi):
@@ -196,9 +219,10 @@ def readFolderFiles(currentPath, targetFolderDi, targetFolderMultiDi):
 # Main function to execute the program
 def main():
     experimentName = getParameters()
-    dataFolder, targetFolderDi, targetFolderMultiDi = generateDynamicPaths(experimentName)
+    dataFolder, targetFolderPlayers, targetFolderDi, targetFolderMultiDi = generateDynamicPaths(experimentName)
     readFolderFiles(dataFolder, targetFolderDi, targetFolderMultiDi)
-    
+    savePlayersAsObject(targetFolderPlayers)
+
 
 
 if __name__ == "__main__":
