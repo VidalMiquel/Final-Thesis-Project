@@ -34,8 +34,9 @@ def createFolderStructure(stageName, experimentName):
         createFolder(os.path.join(folderPath, "Metrics", "Individual"))
         createFolder(os.path.join(folderPath, "Metrics", "Global"))
     elif stageName == "05Stage":
-        createFolder(os.path.join(folderPath, "Tables", "Individual"))
-        createFolder(os.path.join(folderPath, "Tables", "Global"))
+        createFolder(os.path.join(folderPath, "Tables", "Score", "Individual"))
+        createFolder(os.path.join(folderPath, "Tables", "Score", "Global"))
+        createFolder(os.path.join(folderPath, "Tables", "Player"))
     else:
         pass
 
