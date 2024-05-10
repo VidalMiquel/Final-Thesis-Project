@@ -95,29 +95,44 @@ def calculateMetrics(data):
 def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
     try:
         if mode == "individual":
+            
             for score in dfScore["Score"].unique():
                 metricsTable = pd.DataFrame()
+                element_values = []
                 for element in deserializedFile:
                     if score in deserializedFile[element]:
+                        if not element in element_values:
+                            element_values.append(element)
                         df = pd.DataFrame.from_dict(deserializedFile[element][score], orient='index')
                         meanValues, stdValues, countValues = calculateMetrics(df)
                         metricsTable = pd.concat([metricsTable, meanValues.rename('Mean'), stdValues.rename('Std'), countValues.rename('Count')], axis=1)
+                metricsTable.columns.name = None
+                multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
+                metricsTable.columns = multi_index
                 metricsTable.to_csv(f"{targetPath}/Score/Individual/{score}_individualMetrics.csv", index=True)
 
         elif mode == "global":
+            element_values = []
             metricsTable = pd.DataFrame()
             for element in deserializedFile:
+                if not element in element_values:
+                    element_values.append(element)
                 df = pd.DataFrame.from_dict(deserializedFile[element], orient='index')
                 meanValues, stdValues, countValues = calculateMetrics(df)
                 metricsTable = pd.concat([metricsTable, meanValues.rename('Mean'), stdValues.rename('Std'), countValues.rename('Count')], axis=1)
-
+            metricsTable.columns.name = None
+            multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
+            metricsTable.columns = multi_index
             metricsTable.to_csv(f"{targetPath}/Score/Global/globalMetrics.csv", index=True)
         elif mode == "player":
             scoreMetrics = {}
+            element_values = []
             for key in dfScore.keys():
                 previousMetricsTable = pd.DataFrame()
                 metricsTable = pd.DataFrame()
                 for element in deserializedFile:
+                    if not element in element_values:
+                        element_values.append(element)
                     for score in deserializedFile[element]:
                         #print(f"Resultat: {score}")
                         allValues = []
@@ -146,6 +161,9 @@ def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
                         # Concatenate horizontally with the main DataFrame
                     previousMetricsTable = pd.DataFrame.from_dict(scoreMetrics, orient='index')
                     metricsTable = pd.concat([metricsTable, previousMetricsTable], axis = 1)
+                metricsTable.columns.name = None
+                multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
+                metricsTable.columns = multi_index
                 metricsTable.to_csv(f"{targetPath}/Player/{key}_individualMetrics.csv", index = True)
         else:
             raise ValueError("Invalid mode. Please choose 'individual' or 'global'.")
