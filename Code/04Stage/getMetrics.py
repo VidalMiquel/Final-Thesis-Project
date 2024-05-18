@@ -8,20 +8,20 @@ import pandas as pd
 
 
 individualNetworkMetrics = {
-    'inDegree_players': {},
-    'outDegree_players': {},
-    'clustering_coefficients': {},
-    'betweenness_centralities': {},
-    'closeness_centralities': {},
-    'eigenvector_centrality': {},
-    'eccentricity': {}
+    'inD': {},
+    'outD': {},
+    'clust': {},
+    'betw': {},
+    'clos': {},
+    'eigenv': {},
+    'ecce': {}
 }
 
 globalNetworkMetrics = {
-    'average_clustering': {},
-    'density': {},
+    'av_clust': {},
+    'dty': {},
     #'global_efficiency': {},
-    'diameter': {}
+    'diam': {}
 }
 
 # Function to get command-line parameters
@@ -100,33 +100,33 @@ def saveMetrics(targetFolder, type, dicty):
 
 def inicializeGlobalNetworkMetrics(score, graph):
     # Initialize dictionaries for metrics if they don't exist
-        if score not in globalNetworkMetrics['average_clustering']:
-            globalNetworkMetrics['average_clustering'][score] = []
-        if score not in globalNetworkMetrics['density']:
-            globalNetworkMetrics['density'][score] = []
+        if score not in globalNetworkMetrics['av_clust']:
+            globalNetworkMetrics['av_clust'][score] = []
+        if score not in globalNetworkMetrics['dty']:
+            globalNetworkMetrics['dty'][score] = []
         #if score not in network_metrics['global_efficiency']:
             #network_metrics['global_efficiency'][score] = {}
         if nx.is_strongly_connected(graph):   
-            if score not in globalNetworkMetrics['diameter']:
-                globalNetworkMetrics['diameter'][score] = []
+            if score not in globalNetworkMetrics['diam']:
+                globalNetworkMetrics['diam'][score] = []
                 
 def initializeIndividualNetworkMetrics(score, graph):
     # Initialize dictionaries for metrics if they don't exist
-        if score not in individualNetworkMetrics['inDegree_players']:
-            individualNetworkMetrics['inDegree_players'][score] = {}
-        if score not in individualNetworkMetrics['outDegree_players']:
-            individualNetworkMetrics['outDegree_players'][score] = {}
-        if score not in individualNetworkMetrics['clustering_coefficients']:
-            individualNetworkMetrics['clustering_coefficients'][score] = {}
-        if score not in individualNetworkMetrics['betweenness_centralities']:
-            individualNetworkMetrics['betweenness_centralities'][score] = {}
-        if score not in individualNetworkMetrics['closeness_centralities']:
-            individualNetworkMetrics['closeness_centralities'][score] = {}
+        if score not in individualNetworkMetrics['inD']:
+            individualNetworkMetrics['inD'][score] = {}
+        if score not in individualNetworkMetrics['outD']:
+            individualNetworkMetrics['outD'][score] = {}
+        if score not in individualNetworkMetrics['clust']:
+            individualNetworkMetrics['clust'][score] = {}
+        if score not in individualNetworkMetrics['betw']:
+            individualNetworkMetrics['betw'][score] = {}
+        if score not in individualNetworkMetrics['clos']:
+            individualNetworkMetrics['clos'][score] = {}
         if nx.is_strongly_connected(graph):   
-            if score not in individualNetworkMetrics['eigenvector_centrality']:
-                individualNetworkMetrics['eigenvector_centrality'][score] = {}
-            if score not in individualNetworkMetrics['eccentricity']:
-                individualNetworkMetrics['eccentricity'][score] = {}
+            if score not in individualNetworkMetrics['eigenv']:
+                individualNetworkMetrics['eigenv'][score] = {}
+            if score not in individualNetworkMetrics['ecce']:
+                individualNetworkMetrics['ecce'][score] = {}
  
 def getScore(fileName):
     parts = fileName.split("_")
@@ -138,11 +138,11 @@ def getScore(fileName):
 def getGlobalMetrics(graph, score):
     # Calculate clustering coefficient and store
         average_clustering = nx.average_clustering(graph)
-        globalNetworkMetrics['average_clustering'][score].append(average_clustering)
+        globalNetworkMetrics['av_clust'][score].append(average_clustering)
         
         #Calculate betweenness centrality and store
         density = nx.density(graph)
-        globalNetworkMetrics['density'][score].append(density)
+        globalNetworkMetrics['dty'][score].append(density)
         
         #Calculate closeness centrality and store
         #global_efficiency = nx.local_efficiency(graph)
@@ -151,42 +151,52 @@ def getGlobalMetrics(graph, score):
         if nx.is_strongly_connected(graph):   
             #Calcualte eccentricity and store
             diameter = nx.diameter(graph)
-            globalNetworkMetrics["diameter"][score].append(diameter)
+            globalNetworkMetrics["diam"][score].append(diameter)
     
 def getIndividualMetrics(graph, score):
      for node in graph.nodes():
             # Calculate in-degree and append to inDegree_players dictionary
             in_degree = graph.in_degree(node)
-            if node not in individualNetworkMetrics['inDegree_players'][score]:
-                individualNetworkMetrics['inDegree_players'][score][node] = []
-            individualNetworkMetrics['inDegree_players'][score][node].append(in_degree)
+            if node not in individualNetworkMetrics['inD'][score]:
+                individualNetworkMetrics['inD'][score][node] = []
+            individualNetworkMetrics['inD'][score][node].append(in_degree)
             
             # Calculate out-degree and append to outDegree_players dictionary
             out_degree = graph.out_degree(node)
-            if node not in individualNetworkMetrics['outDegree_players'][score]:
-                individualNetworkMetrics['outDegree_players'][score][node] = []
-            individualNetworkMetrics['outDegree_players'][score][node].append(out_degree)
+            if node not in individualNetworkMetrics['outD'][score]:
+                individualNetworkMetrics['outD'][score][node] = []
+            individualNetworkMetrics['outD'][score][node].append(out_degree)
             
             # Calculate clustering coefficient and store
             clustering_coefficient = nx.clustering(graph, node)
-            individualNetworkMetrics['clustering_coefficients'][score][node] = clustering_coefficient
+            if node not in individualNetworkMetrics['clust'][score]:
+                individualNetworkMetrics['clust'][score][node] = []
+            individualNetworkMetrics['clust'][score][node].append(clustering_coefficient)
             
             # Calculate betweenness centrality and store
             betweenness_centrality = nx.betweenness_centrality(graph)[node]
-            individualNetworkMetrics['betweenness_centralities'][score][node] = betweenness_centrality
+            if node not in individualNetworkMetrics['betw'][score]:
+                individualNetworkMetrics['betw'][score][node] = []
+            individualNetworkMetrics['betw'][score][node].append(betweenness_centrality)
             
             # Calculate closeness centrality and store
             closeness_centrality = nx.closeness_centrality(graph)[node]
-            individualNetworkMetrics['closeness_centralities'][score][node] = closeness_centrality
+            if node not in individualNetworkMetrics['clos'][score]:
+                individualNetworkMetrics['clos'][score][node] = []
+            individualNetworkMetrics['clos'][score][node].append(closeness_centrality)
             
             if nx.is_strongly_connected(graph):   
                 #Calcualte eccentricity and store
                 eccentricity = nx.eccentricity(graph)[node]
-                individualNetworkMetrics["eccentricity"][score][node] = eccentricity
+                if node not in individualNetworkMetrics['ecce'][score]:
+                    individualNetworkMetrics['ecce'][score][node] = []
+                individualNetworkMetrics["ecce"][score][node].append(eccentricity)
                 
                 #Calcualte eccentricity and store
                 eigenvector = nx.eigenvector_centrality(graph)[node]
-                individualNetworkMetrics["eigenvector_centrality"][score][node] = eigenvector
+                if node not in individualNetworkMetrics['eigenv'][score]:
+                    individualNetworkMetrics['eigenv'][score][node] = []
+                individualNetworkMetrics["eigenv"][score][node].append(eigenvector)
 
 def manageMetrics(dataFolder, scores):
     
