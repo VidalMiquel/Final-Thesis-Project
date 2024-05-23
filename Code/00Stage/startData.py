@@ -22,14 +22,13 @@ def createFolderStructure(stageName, experimentName):
     folderPath = os.path.join(currentPath, "..", "..", "Data", experimentName, stageName)
 
     # Create the folders based on stage name
-    if stageName != "04Stage" and stageName != "05Stage" and stageName != "00Stage":
+    if stageName != "04Stage" and stageName != "05Stage"and stageName != "06Stage" and stageName != "00Stage":
         createFolder(os.path.join(folderPath, "MiddleFiles"))
         createFolder(os.path.join(folderPath, "TargetFiles"))
     elif stageName == "04Stage":
         createFolder(os.path.join(folderPath, "Graphs"))
         createFolder(os.path.join(folderPath, "Graphs", "diGraphs"))
         createFolder(os.path.join(folderPath, "Graphs", "multiDiGraphs"))
-        createFolder(os.path.join(folderPath, "Graphics"))
         createFolder(os.path.join(folderPath, "Metrics"))
         createFolder(os.path.join(folderPath, "Metrics", "Individual"))
         createFolder(os.path.join(folderPath, "Metrics", "Global"))
@@ -37,6 +36,8 @@ def createFolderStructure(stageName, experimentName):
         createFolder(os.path.join(folderPath, "Tables", "Score", "Individual"))
         createFolder(os.path.join(folderPath, "Tables", "Score", "Global"))
         createFolder(os.path.join(folderPath, "Tables", "Player"))
+    elif stageName == "06Stage":
+        createFolder(os.path.join(folderPath, "Graphics"))
     else:
         pass
 
