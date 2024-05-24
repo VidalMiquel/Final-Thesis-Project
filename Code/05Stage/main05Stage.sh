@@ -21,6 +21,11 @@ python getTables.py "$experimentName" "$club"
 echo "getTables.py executed successfully."
 echo ""  # Blank line
 
+# Execute generateGraph.py
+echo "Filtering tables from executing filteredTables.py"
+python filteredTables.py "$experimentName"
+echo "filteredTables.py executed successfully."
+echo ""  # Blank line
 
 echo ""  # Blank line
 echo "05Satge completed."

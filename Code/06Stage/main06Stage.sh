@@ -17,7 +17,7 @@ echo "" # Blank line
 
 # Execute generateGraph.py
 echo "Generating graphics from executing getGraphics.py"
-python getGraphics.py "$experimentName"
+#python getGraphics.py "$experimentName"
 echo "getGraphics.py executed successfully."
 echo ""  # Blank line
 
