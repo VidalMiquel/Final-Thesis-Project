@@ -29,7 +29,7 @@ def generateDynamicPaths(experimentName):
     )
     
     individualMetricPath = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "04Stage", "Metrics", "Individual", "IndividualnetworkMetrics.pkl"
+        currentDir, "..", "..", "Data", experimentName, "04Stage", "Metrics", "Individual", "normalizateIndividualnetworkMetrics.pkl"
     )
     
     globalMetricPath = os.path.join(
@@ -95,7 +95,6 @@ def calculateMetrics(data):
 def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
     try:
         if mode == "individual":
-            
             for score in dfScore["Score"].unique():
                 metricsTable = pd.DataFrame()
                 element_values = []
@@ -111,6 +110,7 @@ def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
                 multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
                 metricsTable.columns = multi_index
                 #metricsTable.to_csv(f"{targetPath}/Score/Individual/{score}_individualMetrics.csv", index=True)
+                metricsTable.fillna(0, inplace=True)
                 metricsTable.to_pickle(f"{targetPath}/Score/Individual/{score}_individualMetrics.pkl")
         elif mode == "global":
             element_values = []
@@ -126,6 +126,7 @@ def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
                 metricsTable = pd.concat([metricsTable, meanValues.rename('Mean'), stdValues.rename('Std'), countValues.rename('Count')], axis=1)
             multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
             metricsTable.columns = multi_index
+            metricsTable.fillna(0, inplace=True)
             #metricsTable.to_csv(f"{targetPath}/Score/Global/globalMetrics.csv")
             metricsTable.to_pickle(f"{targetPath}/Score/Global/globalMetrics.pkl")
         elif mode == "player":
@@ -138,39 +139,49 @@ def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
                     if not element in element_values:
                         element_values.append(element)
                     for score in deserializedFile[element]:
-                        #print(f"Resultat: {score}")
-                        allValues = []
-                        if str(key) in deserializedFile[element][score].keys():
-                            values = deserializedFile[element][score][str(key)]
-                            if isinstance(values, list):
-                                allValues.extend(values)
+                        if score in deserializedFile[element]:
+                            allValues = []
+                            if str(key) in deserializedFile[element][score].keys():
+                                values = deserializedFile[element][score][str(key)]
+                                cleaned_list = np.array(values)[~np.isnan(values)].tolist()
+                                if cleaned_list:
+                                    if isinstance(cleaned_list, list):
+                                        allValues.extend(cleaned_list)
+                                    else:
+                                        allValues.append(cleaned_list)
+                                    meanValue = np.mean(cleaned_list)
+                                    stdValue = np.std(cleaned_list)
+                                    if isinstance(cleaned_list, list):
+                                        countValue = len(cleaned_list)
+                                    else:
+                                        countValue = 1
+                                    # Round the calculated values
+                                    meanValue = round(meanValue, 2)
+                                    stdValue = round(stdValue, 2)
+                                
+                                    # Create or update dictionary entry for the score
+                                    if score not in scoreMetrics:
+                                        scoreMetrics[score] = {'Mean': meanValue, 'Std': stdValue, 'Count': countValue}
+                                    else:
+                                        scoreMetrics[score]['Mean'] = meanValue
+                                        scoreMetrics[score]['Std'] = stdValue
+                                        scoreMetrics[score]['Count'] = countValue
+                                else:
+                                    if score not in scoreMetrics:
+                                        scoreMetrics[score] = {'Mean': meanValue, 'Std': stdValue, 'Count': countValue}
+                                    else:
+                                        scoreMetrics[score]['Mean'] = 0
+                                        scoreMetrics[score]['Std'] = 0
+                                        scoreMetrics[score]['Count'] = 0
                             else:
-                                allValues.append(values)
-                            meanValue = np.mean(values)
-                            stdValue = np.std(values)
-                            if isinstance(values, list):
-                                countValue = len(values)
-                            else:
-                                countValue = 1
-                            # Round the calculated values
-                            meanValue = round(meanValue, 2)
-                            stdValue = round(stdValue, 2)
-                        
-                            # Create or update dictionary entry for the score
-                            if score not in scoreMetrics:
-                                scoreMetrics[score] = {'Mean': meanValue, 'Std': stdValue, 'Count': countValue}
-                            else:
-                                scoreMetrics[score]['Mean'] = meanValue
-                                scoreMetrics[score]['Std'] = stdValue
-                                scoreMetrics[score]['Count'] = countValue
-                        else:
-                            if score not in scoreMetrics:
-                                scoreMetrics[score] = {'Mean': meanValue, 'Std': stdValue, 'Count': countValue}
-                            else:
-                                scoreMetrics[score]['Mean'] = 0
-                                scoreMetrics[score]['Std'] = 0
-                                scoreMetrics[score]['Count'] = 0
-                        
+                                if score not in scoreMetrics:
+                                    scoreMetrics[score] = {'Mean': meanValue, 'Std': stdValue, 'Count': countValue}
+                                else:
+                                    scoreMetrics[score]['Mean'] = 0
+                                    scoreMetrics[score]['Std'] = 0
+                                    scoreMetrics[score]['Count'] = 0
+                            
+                            
                         # Concatenate horizontally with the main DataFrame
                     previousMetricsTable = pd.DataFrame.from_dict(scoreMetrics, orient='index')
                     #classifyValues = pd.cut(np.array(previousMetricsTable["Mean"]), 5, labels=["worst", "bad", "medium", "good", "excellent"]).astype(str)
@@ -181,6 +192,7 @@ def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
                 multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
                 metricsTable.columns = multi_index
                 #metricsTable.to_csv(f"{targetPath}/Player/{key}_individualMetrics.csv", index = True)
+                metricsTable.fillna(0, inplace=True)
                 metricsTable.to_pickle(f"{targetPath}/Player/{key}_individualMetrics.pkl")
                 
         else:
