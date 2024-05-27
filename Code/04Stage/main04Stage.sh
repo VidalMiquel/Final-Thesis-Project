@@ -26,6 +26,11 @@ python getMetrics.py "$experimentName" "$club"
 echo "getMetrics.py executed successfully."
 echo ""  # Blank line
 
+echo "Normalizating metrics exectuing normalizateMetrics.py"
+python normalizateMetrics.py "$experimentName" 
+echo "normalizateMetrics.py executed successfully."
+echo ""  # Blank line
+
 #echo "Getting graphics exectuing generateGraphic.py"
 #python generateGraphic.py "$experimentName"
 #echo "generateGraphic.py executed successfully."

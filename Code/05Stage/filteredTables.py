@@ -98,7 +98,7 @@ def readDirectory(path, targetFolder):
 def main():
     experimentName = getParameters()
     dataFolderPlayer, dataFolderScoreIndividual, targetFolderPlayer, targetFolderScoreIndividual = generateDynamicPaths(experimentName)
-    #readDirectory(dataFolderPlayer, targetFolderPlayer)
+    readDirectory(dataFolderPlayer, targetFolderPlayer)
     readDirectory(dataFolderScoreIndividual, targetFolderScoreIndividual)
 
     
