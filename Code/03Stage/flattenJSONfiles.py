@@ -41,7 +41,7 @@ def saveFilteredFile(data, targetFolder, fileName):
     # Check if the segment is not empty before saving
 
     if not data.empty:
-        # File name in the format Football_day_n_m
+        # File name in the format n_m_footablDay
         newFileName = changeFilenames(fileName)
         filePath = os.path.join(targetFolder, newFileName)
         try:
@@ -55,7 +55,7 @@ def saveFilteredFile(data, targetFolder, fileName):
         print(f"The file is empty, no file will be generated: ", fileName)
 
 
-# Function to read files in a folder and process them
+# Function to read files in a folder and process them.
 def readFolderFiles(currentPath, targetFolder):
     # Check if the folder exists
     if not os.path.isdir(currentPath):
@@ -78,7 +78,7 @@ def readFolderFiles(currentPath, targetFolder):
             print(f"Error decoding JSON in '{fileName}': {e}")
 
     
-# Function to change file names to a new format
+# Function to change file names to a new format.
 def changeFilenames(fileName):
     # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
     if fileName.endswith(".json"):
@@ -91,7 +91,7 @@ def changeFilenames(fileName):
         return None
 
 
-# Main function to execute the program
+# Main function to execute the program.
 def main():
     experimentName = getParameters()
     dataFolder, targetFolder = generateDynamicPaths(experimentName)

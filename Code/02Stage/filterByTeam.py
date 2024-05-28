@@ -1,7 +1,7 @@
-from decimal import DivisionByZero
-import sys
-import os
 import json
+import os
+import sys
+
 import pandas as pd
 
 
@@ -38,8 +38,8 @@ def generateDynamicPaths(experimentName):
 def filterFileByPossessionTeam(data, nameClub):
     # Filter rows based on conditions
     dataTeam = data[data["possession_team"].apply(lambda x: (x)["name"] == nameClub)]
-    #dataTeamPass = dataTeam[dataTeam["type"].apply(lambda x: (x)["id"] == 30)]
-   
+    # dataTeamPass = dataTeam[dataTeam["type"].apply(lambda x: (x)["id"] == 30)]
+
     # Check if 'dataTeam' is not empty before proceeding
     if not dataTeam.empty:
         return dataTeam
@@ -57,12 +57,12 @@ def saveFilteredFile(data, targetFolder, fileName):
         filePath = os.path.join(targetFolder, newFileName)
         try:
             data.to_json(filePath, orient="records")
-            #print(f"File stored at: {filePath}")
+            # print(f"File stored at: {filePath}")
         except Exception as e:
             print(f"Error while saving the file: {e}")
-        #print(f"File '{newFileName}' generated successfully.")
-    #else:
-        #print(f"The file is empty, no file will be generated: ", fileName)
+        # print(f"File '{newFileName}' generated successfully.")
+    # else:
+    # print(f"The file is empty, no file will be generated: ", fileName)
 
 
 # Function to read files in a folder and process them
@@ -81,7 +81,7 @@ def readFolderFiles(currentPath, targetFolder, nameClub):
             with open(filePath, "r+", encoding="utf-8") as file:
                 content = json.load(file)
                 dFrame = pd.DataFrame(content)
-                
+
                 filteredData = filterFileByPossessionTeam(dFrame, nameClub)
                 saveFilteredFile(filteredData, targetFolder, fileName)
         except OSError as e:
@@ -92,12 +92,12 @@ def readFolderFiles(currentPath, targetFolder, nameClub):
 
 # Function to change file names to a new format
 def changeFilenames(fileName):
-    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
+    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"
     if fileName.endswith(".json"):
-            parts = fileName.split("_")
-            if len(parts) == 3 and parts[2] == "footballDay.json":
-                newFileName = f"{parts[0]}_{parts[1]}_footballDayFiltered.json"
-                return newFileName
+        parts = fileName.split("_")
+        if len(parts) == 3 and parts[2] == "footballDay.json":
+            newFileName = f"{parts[0]}_{parts[1]}_footballDayFiltered.json"
+            return newFileName
     else:
         print("The file name does not follow the expected pattern.")
         return None

@@ -1,12 +1,14 @@
 # saveMetrics.py
 
-import sys
 import os
-import networkx as nx
 import pickle
+import sys
+
 import matplotlib.pyplot as plt
+import networkx as nx
 
 nodeMetrics = {}
+
 
 # Function to get command-line parameters
 def getParameters():
@@ -15,6 +17,7 @@ def getParameters():
     else:
         print("Exactly two values must be provided as arguments.")
         sys.exit(1)
+
 
 # Function to generate dynamic paths for data and target folders
 def generateDynamicPaths(experimentName):
@@ -38,6 +41,7 @@ def generateDynamicPaths(experimentName):
 
     return dataFolder, targetFolder
 
+
 def readFileMetrics(dataFolder, fileName):
     try:
         filePath = os.path.join(dataFolder, fileName)
@@ -51,9 +55,10 @@ def readFileMetrics(dataFolder, fileName):
         print(f"Error reading graph from '{filePath}': {e}")
         return None
 
+
 # Function to change file names to a new format
 def changeFilenames(fileName, final):
-    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
+    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"
     if fileName.endswith(".pkl"):
         parts = fileName.split("_")
         if len(parts) == 4:
@@ -68,9 +73,9 @@ def changeFilenames(fileName, final):
     else:
         print("The file name does not have a CSV extension.")
         return None
-    
-   
 
+
+#
 def generatePath(targetPath, fileName):
     try:
         outputFilePath = os.path.join(targetPath, fileName)
@@ -79,41 +84,43 @@ def generatePath(targetPath, fileName):
         print("Error occurred while generating path:", str(e))
         return None
 
+
 def finalPath(path, name):
     combinedPath = os.path.join(path, name)
     return combinedPath
 
+
 def finalPath(path, filename):
     return os.path.join(path, filename)
+
 
 def saveBoxplot(fig, path):
     fig.savefig(path)
     plt.close()  # Close the plot to free up memory
 
+
 def plotDegreeDistribution(dictionary, fileName, targetFolder):
     newFileName = changeFilenames(fileName, "DegreeDistribution.pdf")
     path = generatePath(targetFolder, newFileName)
     # Prepare data for plotting
-    in_degrees = list(dictionary.get('inDegree', {}).values())
-    out_degrees = list(dictionary.get('outDegree', {}).values())
+    in_degrees = list(dictionary.get("inDegree", {}).values())
+    out_degrees = list(dictionary.get("outDegree", {}).values())
 
     # Create boxplot
     fig, ax = plt.subplots()
-    ax.boxplot([in_degrees, out_degrees], labels=['In-Degree', 'Out-Degree'])
-    ax.set_title('In-Degree vs Out-Degree Boxplot')
-    ax.set_xlabel('Degree Type')
-    ax.set_ylabel('Degree Value')
+    ax.boxplot([in_degrees, out_degrees], labels=["In-Degree", "Out-Degree"])
+    ax.set_title("In-Degree vs Out-Degree Boxplot")
+    ax.set_xlabel("Degree Type")
+    ax.set_ylabel("Degree Value")
 
     saveBoxplot(fig, path)
-    
-    
-    
-def getGraphics(dictionary, fileName, targetFolder):
 
-    plotDegreeDistribution(dictionary,fileName, targetFolder)
-    
+
+def getGraphics(dictionary, fileName, targetFolder):
+    plotDegreeDistribution(dictionary, fileName, targetFolder)
+
+
 def manageGraphics(dataFolder, targetFolder):
-    
     if not os.path.isdir(dataFolder):
         print(f"The folder '{dataFolder}' does not exist.")
         return
@@ -123,11 +130,13 @@ def manageGraphics(dataFolder, targetFolder):
         # Join the folder path with the file name
         dictionary = readFileMetrics(dataFolder, fileName)
         getGraphics(dictionary, fileName, targetFolder)
-        
+
+
 def main():
     experimentName = getParameters()
     dataFolder, targetFolder = generateDynamicPaths(experimentName)
     manageGraphics(dataFolder, targetFolder)
-    
+
+
 if __name__ == "__main__":
     main()

@@ -2,6 +2,7 @@ import json
 import os
 import sys
 
+
 def getExperimentName():
     # Check if the appropriate arguments are provided
     if len(sys.argv) != 2:
@@ -50,10 +51,7 @@ def filterMatchesByTeam(fileSeasonIdPath, teamName):
         awayTeam = match["away_team"]["away_team_name"]
 
         # Check if the team name matches either the home or away team of the match
-        if (
-            teamName.lower() == homeTeam.lower()
-            or teamName.lower() == awayTeam.lower()
-        ):
+        if teamName.lower() == homeTeam.lower() or teamName.lower() == awayTeam.lower():
             # Get the match week number
             matchWeek = match["match_date"]
             matchId = match["match_id"]  # Get the match ID
@@ -67,7 +65,7 @@ def filterMatchesByTeam(fileSeasonIdPath, teamName):
 
     if not selectedMatches:
         raise Exception(f"We don't have data for the selected team: {teamName}")
-    
+
     # Path to save the selected matches file
     outputPath = os.path.join(outputPath, "idMatches.json")
 
