@@ -1,9 +1,10 @@
-import sys
 import os
+import sys
+
 import pandas as pd
 
 
-# Function to get command-line parameters
+# Function to get command-line parameters.
 def getParameters():
     if len(sys.argv) == 3:
         return sys.argv[1], sys.argv[2]
@@ -12,6 +13,7 @@ def getParameters():
         sys.exit(1)
 
 
+# Read the first metadataFiles version.
 def getMetaDataFile(path, clubName):
     try:
         fileName = f"metadata{clubName}.csv"
@@ -25,7 +27,8 @@ def getMetaDataFile(path, clubName):
         print(f"An error occurred: {str(e)}")
         return None
 
-# Function to generate dynamic paths for data and target folders
+
+# Function to generate dynamic paths for data and target folders.
 def generateDynamicPaths(experimentName):
     currentDir = os.path.abspath(
         os.path.dirname(__file__)
@@ -42,7 +45,6 @@ def generateDynamicPaths(experimentName):
         currentDir, "..", "..", "Data", experimentName, "02Stage"
     )
 
-
     if not os.path.exists(targetFolder):
         print(
             f"The folder {targetFolder} does not exist for experiment {experimentName}."
@@ -52,7 +54,7 @@ def generateDynamicPaths(experimentName):
     return dataFolder, targetFolder, metaDataFolder
 
 
-# Function to save filtered data to a file
+# Function to save filtered data to a file.
 def saveFilteredFile(data, targetFolder, fileName, metadata):
     # Check if the segment is not empty before saving
 
@@ -69,11 +71,12 @@ def saveFilteredFile(data, targetFolder, fileName, metadata):
 
     else:
         print(fileName)
-        #print(f"The file is empty, no file will be generated: ", fileName)
+        # print(f"The file is empty, no file will be generated: ", fileName)
         pass
 
+
 # Function to read files in a folder and process them
-def readFolderFiles(currentPath, targetFolder, clubName,metadata):
+def readFolderFiles(currentPath, targetFolder, clubName, metadata):
     # Check if the folder exists
     if not os.path.isdir(currentPath):
         print(f"The folder '{currentPath}' does not exist.")
@@ -90,23 +93,23 @@ def readFolderFiles(currentPath, targetFolder, clubName,metadata):
 
 # Function to change file names to a new format
 def changeFilenames(fileName, metadata):
-    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"   
+    # Check if the file name follows the pattern "Football_day_{jornada_value}_{i+1}.json"
     if fileName.endswith(".csv"):
         parts = fileName.split("_")
         if len(parts) == 3 and parts[2] == "footballDayFlattened.csv":
             id_value = f"{parts[0]}_{parts[1]}"
             # Filter metadata based on IdFile
-            filtered_metadata = metadata[metadata["IdFiles"] == id_value]
-            
-            if not filtered_metadata.empty:
-                NF = filtered_metadata["NoInformation"].values[0]
-                
+            filteredMetadata = metadata[metadata["IdFiles"] == id_value]
+
+            if not filteredMetadata.empty:
+                NF = filteredMetadata["NoInformation"].values[0]
+
                 if NF == "NF":
                     newFileName = f"{parts[0]}_{parts[1]}_{NF}_footballDayPasses.csv"
                 else:
-                    score = filtered_metadata["Score"].values[0]
+                    score = filteredMetadata["Score"].values[0]
                     newFileName = f"{parts[0]}_{parts[1]}_{score}_footballDayPasses.csv"
-                
+
                 return newFileName
             else:
                 print(f"No matching data found for IdFile: {id_value}")
@@ -119,10 +122,9 @@ def changeFilenames(fileName, metadata):
         return None
 
 
-                    
 def filterByPasses(dfRaw, clubName):
     finalDf = pd.DataFrame()
-    # List of columns you want to add to the final DataFrame. PROBLEMATIC COLUMN IS: PASS_OUTCOME_NAME
+    # List of columns you want to add to the final DataFrame.
     columnsToAdd = [
         "index",
         "period",
@@ -152,16 +154,18 @@ def filterByPasses(dfRaw, clubName):
 
     # Remove NaN values
     dfNoNan = dfRaw.dropna(axis=1, how="all")
-    #Filter by club's parameter
-    passes = dfNoNan.loc[(dfNoNan["type_id"] == "30") & (dfNoNan["team_name"] == clubName)]
-    #Calculate difference between target columns and df
+    # Filter by club's parameter
+    passes = dfNoNan.loc[
+        (dfNoNan["type_id"] == "30") & (dfNoNan["team_name"] == clubName)
+    ]
+    # Calculate difference between target columns and df
     difference = set(columnsToAdd) - set(passes.columns)
-    
+
     if difference:
-        #There is difference
+        # There is difference
         finalDf = passes.reindex(columns=columnsToAdd)
     else:
-        #All columns are present
+        # All columns are present
         finalDf = passes.loc[:, columnsToAdd]
     return finalDf
 

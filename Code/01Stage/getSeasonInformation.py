@@ -1,17 +1,22 @@
 import json
-import urllib.request
 import os
 import sys
+import urllib.request
+
 import pandas as pd
 
+
+# Verifies if the correct arguments are provided and returns them.
 def getSeasonInformation():
-    # Verify if the correct arguments are provided
     if len(sys.argv) != 6:
-        print("Please provide values for CompetitionName, CompetitionYear, CompetitionGender, and Club.")
+        print(
+            "Please provide values for CompetitionName, CompetitionYear, CompetitionGender, and Club."
+        )
         raise ValueError("Invalid number of arguments")
 
     # Get the values of the arguments
     return tuple(sys.argv[1:])
+
 
 # Function to read a JSON file from a URL
 def readJsonFromUrl(url):
@@ -23,6 +28,8 @@ def readJsonFromUrl(url):
         print(f"Error reading file from URL: {e}")
         raise  # Re-raise the exception
 
+
+# Searches for a match in the JSON data based on the provided criteria.
 def searchMatch(data, competitionName, competitionGender, seasonName):
     try:
         df = pd.DataFrame(data)
@@ -33,21 +40,29 @@ def searchMatch(data, competitionName, competitionGender, seasonName):
         ]
 
         if filtered_df.empty:
-            
-            print("\nNo matches found for the provided values:\n\n -Competition name: " + competitionName + 
-                "\n\n -Competition gender: " + competitionGender + "\n\n -Season name: " + seasonName + "\n")
+            print(
+                "\nNo matches found for the provided values:\n\n -Competition name: "
+                + competitionName
+                + "\n\n -Competition gender: "
+                + competitionGender
+                + "\n\n -Season name: "
+                + seasonName
+                + "\n"
+            )
 
             raise
-        
+
         result_dict = {
             "competitionId": int(filtered_df["competition_id"].values[0]),
-            "seasonId": int(filtered_df["season_id"].values[0])
+            "seasonId": int(filtered_df["season_id"].values[0]),
         }
 
         return result_dict
     except Exception as e:
         raise  # Re-raise the exception
 
+
+# Constructs the output path for saving the JSON data.
 def getOutputPath(experimentName):
     currentPath = os.path.abspath(os.path.dirname(__file__))
     outputPath = os.path.abspath(
@@ -63,7 +78,11 @@ def getOutputPath(experimentName):
     )
     return outputPath
 
-def saveJsonData(searchResults, competitionName, competitionGender, seasonName, club, experimentName):
+
+# Saves the search results and metadata to a JSON file.
+def saveJsonData(
+    searchResults, competitionName, competitionGender, seasonName, club, experimentName
+):
     filename = "chosenSeasonData.json"
     outputPath = getOutputPath(experimentName)
     completeFilePath = os.path.join(outputPath, filename)
@@ -93,44 +112,56 @@ def saveJsonData(searchResults, competitionName, competitionGender, seasonName, 
         print(f"Error saving JSON file: {e}")
         raise  # Re-raise the exception
 
-# URL of the competitions.json file
-urlCompetitionsJson = (
-    "https://github.com/VidalMiquel/Statsbomb/raw/master/data/competitions.json"
-)
 
-# Read the contents of the competitions.json file from the URL
-try:
-    jsonData = readJsonFromUrl(urlCompetitionsJson)
+def main():
+    # URL of the competitions.json file on GitHub
+    urlCompetitionsJson = (
+        "https://github.com/VidalMiquel/Statsbomb/raw/master/data/competitions.json"
+    )
 
-    if jsonData is not None:
-        values = getSeasonInformation()
+    try:
+        # Read the JSON data from the URL
+        jsonData = readJsonFromUrl(urlCompetitionsJson)
 
-        if values:
-            (
-                competitionName,
-                competitionYear,
-                competitionGender,
-                club,
-                experimentName,
-            ) = values
+        # Check if JSON data was successfully retrieved
+        if jsonData is not None:
+            # Get the season information from command line arguments
+            values = getSeasonInformation()
 
-            # Further operations using these values can be performed here in your script
-            # For instance, passing these values to other functions or performing specific logic
-            # based on these variables can be done from this point onwards.
-            searchResults = searchMatch(
-                jsonData, competitionName, competitionGender, competitionYear
-            )
-
-            if searchResults:
-                saveJsonData(
-                    searchResults,
+            if values:
+                # Unpack the values into respective variables
+                (
                     competitionName,
-                    competitionGender,
                     competitionYear,
+                    competitionGender,
                     club,
                     experimentName,
+                ) = values
+
+                # Search for the match based on the provided competition details
+                searchResults = searchMatch(
+                    jsonData, competitionName, competitionGender, competitionYear
                 )
-            else:
-                raise ValueError("No matches found for the provided values:", {values})
-except Exception as e:
-    sys.exit(1)
+
+                # If search results are found, save the JSON data
+                if searchResults:
+                    saveJsonData(
+                        searchResults,
+                        competitionName,
+                        competitionGender,
+                        competitionYear,
+                        club,
+                        experimentName,
+                    )
+                else:
+                    # Raise an error if no matches are found
+                    raise ValueError("No matches found for the provided values.")
+    except Exception as e:
+        # Print the error message and exit the script if an exception occurs
+        print(f"Error: {e}")
+        sys.exit(1)
+
+
+# Ensure the script runs only when executed directly
+if __name__ == "__main__":
+    main()

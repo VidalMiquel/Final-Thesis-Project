@@ -1,9 +1,11 @@
-import sys
-import os
 import json
+import os
+import sys
+
 import pandas as pd
 
 metadataContent = []  # Initialize an empty list for metadata content
+
 
 # Function to get the experiment name from command-line arguments
 def getExperimentName():
@@ -37,19 +39,24 @@ def generateDynamicPaths(experimentName):
     return dataFolder, targetFolder
 
 
+# Get the fileNames saved in a given directory.
 def getFileNamesInFolder(folderPath):
     try:
         if os.path.isdir(folderPath):
             files = os.listdir(folderPath)
             return files
         else:
-            raise FileNotFoundError(f"The path '{folderPath}' is not a valid directory.")
+            raise FileNotFoundError(
+                f"The path '{folderPath}' is not a valid directory."
+            )
     except OSError as e:
         raise OSError(f"Error accessing the directory: {e}")
 
 
 # Function to iterate through files, read them, and perform operations
-def iterateAndManagmentFiles(currentPath, targetPath, nameFiles, clubName, experimentName):
+def iterateAndManagmentFiles(
+    currentPath, targetPath, nameFiles, clubName, experimentName
+):
     try:
         for fileName in nameFiles:
             filePath = os.path.join(currentPath, fileName)
@@ -60,25 +67,29 @@ def iterateAndManagmentFiles(currentPath, targetPath, nameFiles, clubName, exper
                     divisionFiles = getGoals(dataFrame)
                     teamGoals = getScore(dataFrame)
                     splitList = getDivisionIndices(divisionFiles, len(dataFrame))
-                    scoreDifference, resultsForSplit = generateMatchResults(teamGoals,clubName)
-                    newFileName = generateDivisionFiles(splitList, dataFrame, fileName, targetPath)
-                    metadataFile = generateMetadataFile(teamGoals, resultsForSplit, newFileName, scoreDifference)
+                    scoreDifference, resultsForSplit = generateMatchResults(
+                        teamGoals, clubName
+                    )
+                    newFileName = generateDivisionFiles(
+                        splitList, dataFrame, fileName, targetPath
+                    )
+                    metadataFile = generateMetadataFile(
+                        teamGoals, resultsForSplit, newFileName, scoreDifference
+                    )
             except OSError as e:
                 print(f"Error reading the file '{fileName}': {e}")
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON in '{fileName}': {e}")
-        #print(metadataFile)
+        # print(metadataFile)
         saveFilteredFile(metadataFile, experimentName, clubName)
     except OSError as e:
         print(f"Error accessing the path: {e}")
-    
+
+
 # Function to save filtered data to a file
 def saveFilteredFile(data, experimentName, clubName):
-    
-    currentDir = os.path.abspath(
-        os.path.dirname(__file__)
-    )
-    
+    currentDir = os.path.abspath(os.path.dirname(__file__))
+
     targetFolder = os.path.join(
         currentDir, "..", "..", "Data", experimentName, "02Stage"
     )
@@ -86,7 +97,7 @@ def saveFilteredFile(data, experimentName, clubName):
 
     df = pd.DataFrame(data)
     df.columns = ["IdFiles", "ScoringTeam", "Score", "Difference", "NoInformation"]
-    
+
     if data:
         # File name in the format Football_day_n_m
         filePath = os.path.join(targetFolder, f"metadata{clubName}.csv")
@@ -99,6 +110,7 @@ def saveFilteredFile(data, experimentName, clubName):
         print(f"The file is empty, no file will be generated: ")
 
 
+# Given a fileName, it separates by specific character.
 def separateFileName(fileName):
     correctPart = []
     for name in fileName:
@@ -106,29 +118,34 @@ def separateFileName(fileName):
         firstPart = "_".join(parts[:2])
         correctPart.append(firstPart)
     return correctPart
-    
-        
+
+
+# Generate metadataFile
 def generateMetadataFile(teamGoals, scorerSplit, fileName, scoreDifference):
     idFiles = separateFileName(fileName)
 
-    if  teamGoals.empty:
+    if teamGoals.empty:
         metadataContent.append((idFiles[0], None, None, "NF"))
     else:
-            # Create tuples and append them to metadataContent
-        for team, scorer, idFile, difference in zip(teamGoals, scorerSplit, idFiles, scoreDifference):
-            metadataContent.append((idFile, team, scorer, int(difference), None)) 
+        # Create tuples and append them to metadataContent
+        for team, scorer, idFile, difference in zip(
+            teamGoals, scorerSplit, idFiles, scoreDifference
+        ):
+            metadataContent.append((idFile, team, scorer, int(difference), None))
         metadataContent.append((idFiles[-1], None, "NF", "NF", "NF"))
     return metadataContent
 
-    
-        
 
+# Filter dataFrame by goals scored. Then get the team who scores the goal.
 def getGoals(data):
-       
-    goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23 )]
-    goals = goalkeeperActions[goalkeeperActions["goalkeeper"].apply(lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28)]  
+    goalkeeperActions = data[data["type"].apply(lambda x: (x)["id"] == 23)]
+    goals = goalkeeperActions[
+        goalkeeperActions["goalkeeper"].apply(
+            lambda x: (x)["type"]["id"] == 26 or (x)["type"]["id"] == 28
+        )
+    ]
     teamGoals1 = goals[["possession_team"]]
-    
+
     ownGoalsAgainstTeam = data[data["type"].apply(lambda x: (x)["id"] == 20)]
     teamOwnGoalsAgainst = ownGoalsAgainstTeam["possession_team"]
 
@@ -138,12 +155,13 @@ def getGoals(data):
     return sortedGoals
 
 
+# Used to know the matches parcials results.
 def getScore(data):
     # Filter to get shots and goals
     goalFor = data[data["type"].apply(lambda x: x["id"] == 16)]
     goals = goalFor[goalFor["shot"].apply(lambda x: x["outcome"]["id"] == 97)]
     goalTeamNames = goals["team"].apply(lambda x: x["name"])
-    
+
     # Filter to get own goals
     ownGoalsAgainstTeam = data[data["type"].apply(lambda x: x["id"] == 25)]
     ownGoalTeamNames = ownGoalsAgainstTeam["team"].apply(lambda x: x["name"])
@@ -152,32 +170,33 @@ def getScore(data):
     return teamNames
 
 
-# Function to get division indices from the data
+# Function to get division indices from the data.
 def getDivisionIndices(data, lenght):
-
     if not data.empty:
-        
         divisionIndices = data.index.tolist()
-        
+
         divisionIndices.insert(0, 0)
         divisionIndices.append(lenght)
         return divisionIndices
     else:
-        #print("There are no divisions in 'data' as aux2 is empty.")
-        return [0, lenght]  # Return [0, len(data)] as default values when no divisions are found
+        # print("There are no divisions in 'data' as aux2 is empty.")
+        return [
+            0,
+            lenght,
+        ]  # Return [0, len(data)] as default values when no divisions are found
 
 
+# Generate the result used for adding to the file name.
 def generateMatchResults(clubNames, ClubName):
     matchResults = []
     resultDifferences = []
     home_score = 0
     away_score = 0
 
-
     if clubNames.empty:
         matchResults.append(f"{home_score}_{away_score}")
     else:
-         for club in clubNames:
+        for club in clubNames:
             if club == ClubName:
                 home_score += 1
             else:
@@ -185,12 +204,11 @@ def generateMatchResults(clubNames, ClubName):
 
             matchResults.append(f"{home_score}_{away_score}")
             resultDifferences.append(home_score - away_score)
-            
+
     return resultDifferences, matchResults
 
-#def generateMetadataFiles(teams, scores):
-    
 
+# Divide a file by goals (using indicesList).
 def generateDivisionFiles(indicesList, dataframe, fileName, targetPath):
     fileNameList = []
     try:
@@ -218,16 +236,17 @@ def generateDivisionFiles(indicesList, dataframe, fileName, targetPath):
         return fileNameList
     except Exception as e:
         print(f"Error generating division files: {e}")
-        
 
 
-# Main function to execute the program
+# Main function to execute the program.
 def main():
-    experimentName,clubName = getExperimentName()
+    experimentName, clubName = getExperimentName()
     dataFolder, targetFolder = generateDynamicPaths(experimentName)
     nameFootballDayFiles = getFileNamesInFolder(dataFolder)
 
-    iterateAndManagmentFiles(dataFolder, targetFolder, nameFootballDayFiles, clubName, experimentName)
+    iterateAndManagmentFiles(
+        dataFolder, targetFolder, nameFootballDayFiles, clubName, experimentName
+    )
 
 
 if __name__ == "__main__":

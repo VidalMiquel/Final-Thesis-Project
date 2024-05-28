@@ -1,11 +1,6 @@
 import os
 import sys
 
-def getExperimentName():
-    if len(sys.argv) > 1:
-        return sys.argv[1]
-    else:
-        return None
 
 def createFolderStructure(stageName, experimentName):
     # Function to create folder if it doesn't exist
@@ -19,13 +14,22 @@ def createFolderStructure(stageName, experimentName):
     currentPath = os.path.abspath(os.path.dirname(__file__))
 
     # Construct the absolute path for the folders
-    folderPath = os.path.join(currentPath, "..", "..", "Data", experimentName, stageName)
+    folderPath = os.path.join(
+        currentPath, "..", "..", "Data", experimentName, stageName
+    )
 
     # Create the folders based on stage name
-    if stageName != "04Stage" and stageName != "05Stage"and stageName != "06Stage" and stageName != "00Stage":
+    if (
+        stageName != "04Stage"
+        and stageName != "05Stage"
+        and stageName != "06Stage"
+        and stageName != "00Stage"
+    ):
+        # Generic stage
         createFolder(os.path.join(folderPath, "MiddleFiles"))
         createFolder(os.path.join(folderPath, "TargetFiles"))
     elif stageName == "04Stage":
+        # 04Stage-Special strucutre
         createFolder(os.path.join(folderPath, "Graphs"))
         createFolder(os.path.join(folderPath, "Graphs", "diGraphs"))
         createFolder(os.path.join(folderPath, "Graphs", "multiDiGraphs"))
@@ -33,17 +37,21 @@ def createFolderStructure(stageName, experimentName):
         createFolder(os.path.join(folderPath, "Metrics", "Individual"))
         createFolder(os.path.join(folderPath, "Metrics", "Global"))
     elif stageName == "05Stage":
-        createFolder(os.path.join(folderPath, "Tables","Raw", "Score", "Individual"))
-        createFolder(os.path.join(folderPath, "Tables","Raw", "Score", "Global"))
-        createFolder(os.path.join(folderPath, "Tables","Raw", "Player"))
-        createFolder(os.path.join(folderPath, "Tables","Filtered", "Score", "Individual"))
-        createFolder(os.path.join(folderPath, "Tables","Filtered", "Score", "Global"))
-        createFolder(os.path.join(folderPath, "Tables","Filtered", "Player"))
-
+        # 05Stage-Special strucutre
+        createFolder(os.path.join(folderPath, "Tables", "Raw", "Score", "Individual"))
+        createFolder(os.path.join(folderPath, "Tables", "Raw", "Score", "Global"))
+        createFolder(os.path.join(folderPath, "Tables", "Raw", "Player"))
+        createFolder(
+            os.path.join(folderPath, "Tables", "Filtered", "Score", "Individual")
+        )
+        createFolder(os.path.join(folderPath, "Tables", "Filtered", "Score", "Global"))
+        createFolder(os.path.join(folderPath, "Tables", "Filtered", "Player"))
     elif stageName == "06Stage":
+        # 06Stage-Special strucutre
         createFolder(os.path.join(folderPath, "Graphics"))
     else:
         pass
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

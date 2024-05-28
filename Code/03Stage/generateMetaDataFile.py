@@ -67,7 +67,8 @@ def getIdFile(fileName):
     else:
         print("The file name does not have a CSV extension.")
         return None
-    
+
+#Calcualte the colpeted passes between teammates in a specific division.
 def getPasses(data, fileName):
     try:
         idFile = getIdFile(fileName)
@@ -88,7 +89,7 @@ def getPasses(data, fileName):
         print(f"An error occurred: {str(e)}")
         return [None, None, None, None, None, None]  # Return None values in case of an error
 
-    
+#Get all the passes (row represents passes) in a df.
 def getPassesForFile(dataFolder):
     finalVersion = []
     # Iterate through all the files in the folder
@@ -103,7 +104,7 @@ def getPassesForFile(dataFolder):
     return finalVersion
 
 
-# Function to save filtered data to a file
+# Function to save filtered data to a file.
 def saveFilteredFile(data, targetFolder):
     # Check if the segment is not empty before saving
     if not data.empty:
@@ -114,7 +115,8 @@ def saveFilteredFile(data, targetFolder):
             print(f"Error while saving the file: {e}")
     else:
         print(f"The data is empty, no file will be generated")
-     
+
+#Generate the final and most completed MetadataFile version
 def generateFinalMetaDataFile(passesList,firstMetadataFile, targetFolder, clubName):
     
     # Convert passesList to a DataFrame for easier manipulation   
