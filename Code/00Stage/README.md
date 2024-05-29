@@ -3,7 +3,7 @@ L'etapa 00Stage permet crar tot el directori "/Data/experimentName" de manera di
 *****************************************************************************************************************************************************************************************
 
 Adjunt el directori que forma aquesta etapa prèvia:
-
+"""
 TFG
 ├── Code
 │   └── 00Stage
@@ -12,5 +12,5 @@ TFG
 |   └── main.sh
 └── Data
     └── experimentName
-
+"""
 

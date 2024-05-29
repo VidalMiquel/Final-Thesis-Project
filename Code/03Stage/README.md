@@ -4,7 +4,7 @@ Una vegada tenim aquest tipus d'arquitectura, els guardam com a tipus csv. Això
 *****************************************************************************************************************************************************************************************
 
 Adjunt el directori que forma aquesta tercera etapa:
-
+"""
 TFG
 ├── Code
 │   └── 00Stage
@@ -29,3 +29,4 @@ TFG
                 ├── 1_1_footballDayFlattened.json
                 ├── {}
                 └── 364_n_footballDayFlattened.json
+"""
