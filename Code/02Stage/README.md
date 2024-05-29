@@ -8,7 +8,7 @@ A més, i per començar a encarar el que serà l'anàlisi en base a l'equip intr
 
 
 Adjunt el directori que forma aquesta segona etapa:
-
+"""
 TFG
 ├── Code
 │   └── 00Stage
@@ -32,3 +32,4 @@ TFG
                 ├── 1_1_footballDayFiltered.json
                 ├── {}
                 └── 364_n_footballDayFiltered.json
+"""

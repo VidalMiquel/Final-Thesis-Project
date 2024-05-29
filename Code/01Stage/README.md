@@ -11,7 +11,7 @@ En quart lloc, i amb els identificadors de totes les jorandes. Executam "getTarg
 Finalment, recordar que tant la creació del directori "Data" i les seves subcarpetes referents a First Stage es generen de manera dinàmica executant startData.py. Les execusions dels fitxers anomenats son unificades dins el fixter main01Stage.py, per simplificar la comprensió i la complexitat del codi.
 
 *****************************************************************************************************************************************************************************************
-
+"""
 Adjunt el directori que forma aquesta primera etapa:
 
 TFG
@@ -36,4 +36,4 @@ TFG
                 ├── 1_footballDay.json
                 ├── {}
                 └── 364_footballDay.json
-
+"""

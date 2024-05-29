@@ -2,7 +2,7 @@
 *****************************************************************************************************************************************************************************************
 
 Adjunt el directori que forma aquesta quarta etapa:
-
+"""
 TFG
 ├── Code
 │   └── 00Stage
@@ -29,4 +29,4 @@ TFG
                 └── Individual
                     ├── normalizateIndividualnetworkMetrics.pkl
                     └── IndividualnetworkMetrics.pkl
-
+"""
