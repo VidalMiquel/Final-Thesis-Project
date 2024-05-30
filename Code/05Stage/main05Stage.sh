@@ -22,9 +22,9 @@ echo "getTables.py executed successfully."
 echo ""  # Blank line
 
 # Execute generateGraph.py
-echo "Filtering tables from executing filteredTables.py"
-python filteredTables.py "$experimentName"
-echo "filteredTables.py executed successfully."
+echo "Cutting tables from executing cutTables.py"
+python cutTables.py "$experimentName"
+echo "cutTables.py executed successfully."
 echo ""  # Blank line
 
 echo ""  # Blank line
