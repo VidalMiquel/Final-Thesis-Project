@@ -22,7 +22,6 @@ def createFolderStructure(stageName, experimentName):
     if (
         stageName != "04Stage"
         and stageName != "05Stage"
-        and stageName != "06Stage"
         and stageName != "00Stage"
     ):
         # Generic stage
@@ -41,14 +40,9 @@ def createFolderStructure(stageName, experimentName):
         createFolder(os.path.join(folderPath, "Tables", "Raw", "Score", "Individual"))
         createFolder(os.path.join(folderPath, "Tables", "Raw", "Score", "Global"))
         createFolder(os.path.join(folderPath, "Tables", "Raw", "Player"))
-        createFolder(
-            os.path.join(folderPath, "Tables", "Filtered", "Score", "Individual")
-        )
-        createFolder(os.path.join(folderPath, "Tables", "Filtered", "Score", "Global"))
-        createFolder(os.path.join(folderPath, "Tables", "Filtered", "Player"))
-    elif stageName == "06Stage":
-        # 06Stage-Special strucutre
-        createFolder(os.path.join(folderPath, "Graphics"))
+        createFolder(os.path.join(folderPath, "Tables", "Cut", "Score", "Individual"))
+        createFolder(os.path.join(folderPath, "Tables", "Cut", "Score", "Global"))
+        createFolder(os.path.join(folderPath, "Tables", "Cut", "Player"))
     else:
         pass
 

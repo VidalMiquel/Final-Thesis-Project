@@ -103,7 +103,6 @@ def saveMetrics(targetFolder, type, dicty):
     try:
         with open(f"{targetFolder}/{type}/{type}networkMetrics.pkl", "wb") as f:
             pickle.dump(dicty, f)
-        print("Metrics saved successfully.")
     except Exception as e:
         print("Error occurred while saving metrics:", str(e))
 
