@@ -12,16 +12,16 @@ currentDirectory=$(dirname "$0")
 # Change to the directory containing startFourthStage.py
 cd "$currentDirectory"
 
-echo Executing "04Stage"...
+echo Executing "06Stage"...
 echo "" # Blank line
 
 # Execute generateGraph.py
-echo "Generating graph from csv file exectuing generateGrpah.py"
-python generateGraph.py "$experimentName"
-echo "generateGraph.py executed successfully."
+echo "Generating tables from executing getTables.py"
+python getTables.py "$experimentName" "$club"
+echo "getTables.py executed successfully."
 echo ""  # Blank line
 
 echo ""  # Blank line
-echo "04Satge completed."
+echo "06Satge completed."
 echo ""  # Blank line
 echo "------------------------------------------"

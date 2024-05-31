@@ -9,22 +9,25 @@ club="$2"
 # Get the current directory path
 currentDirectory=$(dirname "$0")
 
-# Change to the directory containing startFourthStage.py
+# Change to the directory containing start05Stage.py
 cd "$currentDirectory"
 
 echo Executing "05Stage"...
 echo "" # Blank line
 
-# Execute generateGraph.py
-echo "Generating tables from executing getTables.py"
-python getTables.py "$experimentName" "$club"
-echo "getTables.py executed successfully."
+echo "Getting graphs metrics exectuing getMetrics.py"
+python getMetrics.py "$experimentName" "$club"
+echo "getMetrics.py executed successfully."
 echo ""  # Blank line
 
-# Execute generateGraph.py
-echo "Cutting tables from executing cutTables.py"
-python cutTables.py "$experimentName"
-echo "cutTables.py executed successfully."
+echo "Normalizating metrics exectuing normalizateMetrics.py"
+python normalizateMetrics.py "$experimentName" 
+echo "normalizateMetrics.py executed successfully."
+echo ""  # Blank line
+
+echo "Classifying metrics exectuing classificateMetrics.py"
+python classificateMetrics.py "$experimentName" 
+echo "classificateMetrics.py executed successfully."
 echo ""  # Blank line
 
 echo ""  # Blank line
