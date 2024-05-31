@@ -31,8 +31,9 @@ def generateDynamicPaths(experimentName):
         "..",
         "Data",
         experimentName,
-        "04Stage",
+        "05Stage",
         "Metrics",
+        "Raw",
         "Individual",
         "IndividualnetworkMetrics.pkl",
     )
@@ -43,8 +44,9 @@ def generateDynamicPaths(experimentName):
         "..",
         "Data",
         experimentName,
-        "04Stage",
+        "05Stage",
         "Metrics",
+        "Normalized",
         "Individual",
     )
 
@@ -90,7 +92,6 @@ def nomralizatedMetrics(file):
             df = pd.DataFrame.from_dict(file[element][score], orient="index")
             dfN = (df - df.min()) / (df.max() - df.min())
             dfN.set_index(df.index, inplace=True)
-            print(dfN)
             a = dfN.T.to_dict(orient="list")
             concatenated_dict[score] = a
         finalDict[element] = concatenated_dict

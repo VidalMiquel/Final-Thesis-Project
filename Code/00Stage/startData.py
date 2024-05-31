@@ -23,6 +23,7 @@ def createFolderStructure(stageName, experimentName):
         stageName != "04Stage"
         and stageName != "05Stage"
         and stageName != "00Stage"
+        and stageName != "06Stage"
     ):
         # Generic stage
         createFolder(os.path.join(folderPath, "MiddleFiles"))
@@ -32,17 +33,20 @@ def createFolderStructure(stageName, experimentName):
         createFolder(os.path.join(folderPath, "Graphs"))
         createFolder(os.path.join(folderPath, "Graphs", "diGraphs"))
         createFolder(os.path.join(folderPath, "Graphs", "multiDiGraphs"))
-        createFolder(os.path.join(folderPath, "Metrics"))
-        createFolder(os.path.join(folderPath, "Metrics", "Individual"))
-        createFolder(os.path.join(folderPath, "Metrics", "Global"))
     elif stageName == "05Stage":
+        createFolder(os.path.join(folderPath, "Metrics"))
+        createFolder(os.path.join(folderPath, "Metrics", "Raw","Individual"))
+        createFolder(os.path.join(folderPath, "Metrics", "Raw","Global"))
+        createFolder(os.path.join(folderPath, "Metrics", "Normalized","Individual"))
+        #createFolder(os.path.join(folderPath, "Metrics", "Normalized","Global"))
+        createFolder(os.path.join(folderPath, "Metrics", "Classified","Individual"))
+
+    elif stageName == "06Stage":
         # 05Stage-Special strucutre
-        createFolder(os.path.join(folderPath, "Tables", "Raw", "Score", "Individual"))
-        createFolder(os.path.join(folderPath, "Tables", "Raw", "Score", "Global"))
-        createFolder(os.path.join(folderPath, "Tables", "Raw", "Player"))
-        createFolder(os.path.join(folderPath, "Tables", "Cut", "Score", "Individual"))
-        createFolder(os.path.join(folderPath, "Tables", "Cut", "Score", "Global"))
-        createFolder(os.path.join(folderPath, "Tables", "Cut", "Player"))
+        createFolder(os.path.join(folderPath, "Tables", "Score", "Individual"))
+        createFolder(os.path.join(folderPath, "Tables", "Score", "Global"))
+        createFolder(os.path.join(folderPath, "Tables", "Player"))
+
     else:
         pass
 

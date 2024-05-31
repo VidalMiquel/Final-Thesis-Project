@@ -40,7 +40,7 @@ def generateDynamicPaths(experimentName, clubName):
     )
 
     targetFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "04Stage", "Metrics"
+        currentDir, "..", "..", "Data", experimentName, "05Stage", "Metrics", "Raw"
     )
 
     metadataFile = os.path.join(

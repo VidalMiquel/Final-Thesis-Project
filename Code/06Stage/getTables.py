@@ -29,15 +29,15 @@ def generateDynamicPaths(experimentName):
     )
     
     individualMetricPath = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "04Stage", "Metrics", "Individual", "normalizateIndividualnetworkMetrics.pkl"
+        currentDir, "..", "..", "Data", experimentName, "05Stage", "Metrics", "Classified", "Individual", "classifiedIndividualnetworkMetrics.pkl"
     )
     
     globalMetricPath = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "04Stage", "Metrics", "Global", "GlobalnetworkMetrics.pkl"
+        currentDir, "..", "..", "Data", experimentName, "05Stage", "Metrics", "Raw", "Global", "GlobalnetworkMetrics.pkl"
     )
 
     targetFolder = os.path.join(
-        currentDir, "..", "..", "Data", experimentName, "05Stage", "Tables", "Raw"
+        currentDir, "..", "..", "Data", experimentName, "06Stage", "Tables"
     )
 
     if not os.path.exists(targetFolder):
@@ -95,6 +95,7 @@ def calculateMetrics(data):
 def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
     try:
         if mode == "individual":
+            
             for score in dfScore["Score"].unique():
                 metricsTable = pd.DataFrame()
                 element_values = []
@@ -103,35 +104,28 @@ def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
                         if not element in element_values:
                             element_values.append(element)
                         df = pd.DataFrame.from_dict(deserializedFile[element][score], orient='index')
-                        meanValues, stdValues, countValues = calculateMetrics(df)
-                        #classifyValues = pd.cut(np.array(meanValues), 5, labels=["worst", "bad", "medium", "good", "excellent"]).astype(str)
-                        #columnClassifiy = pd.DataFrame({'Class': classifyValues}, index=meanValues.index)
-                        metricsTable = pd.concat([metricsTable, meanValues.rename('Mean'), stdValues.rename('Std'), countValues.rename('Count')], axis=1)
-                multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
+                        metricsTable = pd.concat([metricsTable, df], axis=1)
+                multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count', 'Class']], names=[None, None])
                 metricsTable.columns = multi_index
-                #metricsTable.to_csv(f"{targetPath}/Score/Individual/{score}_individualMetrics.csv", index=True)
                 metricsTable.fillna(0, inplace=True)
                 metricsTable.to_pickle(f"{targetPath}/Score/Individual/{score}_individualMetrics.pkl")
         elif mode == "global":
             element_values = []
             metricsTable = pd.DataFrame()
-            #columnClassifiy = pd.DataFrame()
             for element in deserializedFile:
                 if not element in element_values:
                     element_values.append(element)
                 df = pd.DataFrame.from_dict(deserializedFile[element], orient='index')
                 meanValues, stdValues, countValues = calculateMetrics(df)
-                #classifyValues = pd.cut(np.array(meanValues), 5, labels=["worst", "bad", "medium", "good", "excellent"]).astype(str)
-                #columnClassifiy = pd.DataFrame({'Class': classifyValues}, index=meanValues.index)
                 metricsTable = pd.concat([metricsTable, meanValues.rename('Mean'), stdValues.rename('Std'), countValues.rename('Count')], axis=1)
             multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
             metricsTable.columns = multi_index
             metricsTable.fillna(0, inplace=True)
-            #metricsTable.to_csv(f"{targetPath}/Score/Global/globalMetrics.csv")
             metricsTable.to_pickle(f"{targetPath}/Score/Global/globalMetrics.pkl")
         elif mode == "player":
-            scoreMetrics = {}
             element_values = []
+            scoreMetrics = {}
+
             for key in dfScore.keys():
                 previousMetricsTable = pd.DataFrame()
                 metricsTable = pd.DataFrame()
@@ -143,64 +137,43 @@ def processAndGenerateMetrics(dfScore, deserializedFile, targetPath, mode):
                             allValues = []
                             if str(key) in deserializedFile[element][score].keys():
                                 values = deserializedFile[element][score][str(key)]
-                                cleaned_list = np.array(values)[~np.isnan(values)].tolist()
-                                if cleaned_list:
-                                    if isinstance(cleaned_list, list):
-                                        allValues.extend(cleaned_list)
-                                    else:
-                                        allValues.append(cleaned_list)
-                                    meanValue = np.mean(cleaned_list)
-                                    stdValue = np.std(cleaned_list)
-                                    if isinstance(cleaned_list, list):
-                                        countValue = len(cleaned_list)
-                                    else:
-                                        countValue = 1
-                                    # Round the calculated values
-                                    meanValue = round(meanValue, 2)
-                                    stdValue = round(stdValue, 2)
-                                
+                                if values:           
                                     # Create or update dictionary entry for the score
                                     if score not in scoreMetrics:
-                                        scoreMetrics[score] = {'Mean': meanValue, 'Std': stdValue, 'Count': countValue}
+                                        scoreMetrics[score] = {'Mean': values[0], 'Std': values[1], 'Count': values[2], 'Class': values[3]}
                                     else:
-                                        scoreMetrics[score]['Mean'] = meanValue
-                                        scoreMetrics[score]['Std'] = stdValue
-                                        scoreMetrics[score]['Count'] = countValue
+                                        scoreMetrics[score]['Mean'] = values[0]
+                                        scoreMetrics[score]['Std'] = values[1]
+                                        scoreMetrics[score]['Count'] = values[2]
+                                        scoreMetrics[score]['Class'] = values[3]
                                 else:
                                     if score not in scoreMetrics:
-                                        scoreMetrics[score] = {'Mean': meanValue, 'Std': stdValue, 'Count': countValue}
+                                        scoreMetrics[score] = {'Mean': 0, 'Std': 0, 'Count': 0, 'Class':0}
                                     else:
                                         scoreMetrics[score]['Mean'] = 0
                                         scoreMetrics[score]['Std'] = 0
                                         scoreMetrics[score]['Count'] = 0
+                                        scoreMetrics[score]['Class'] = 0
                             else:
                                 if score not in scoreMetrics:
-                                    scoreMetrics[score] = {'Mean': meanValue, 'Std': stdValue, 'Count': countValue}
+                                    scoreMetrics[score] = {'Mean': 0, 'Std': 0, 'Count': 0, 'Class': 0}
                                 else:
                                     scoreMetrics[score]['Mean'] = 0
                                     scoreMetrics[score]['Std'] = 0
                                     scoreMetrics[score]['Count'] = 0
-                            
-                            
-                        # Concatenate horizontally with the main DataFrame
+                                    scoreMetrics[score]['Class'] = 0
+
                     previousMetricsTable = pd.DataFrame.from_dict(scoreMetrics, orient='index')
-                    #classifyValues = pd.cut(np.array(previousMetricsTable["Mean"]), 5, labels=["worst", "bad", "medium", "good", "excellent"]).astype(str)
-                    #columnClassifiy = pd.DataFrame({'Class': classifyValues}, index=previousMetricsTable["Mean"].index)
-                    metricsTable = pd.concat([metricsTable, previousMetricsTable], axis = 1)                                      
-                    
+                    metricsTable = pd.concat([metricsTable, previousMetricsTable], axis = 1) 
                 metricsTable.columns.name = None
-                multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count']], names=[None, None])
+                multi_index = pd.MultiIndex.from_product([element_values, ['Mean', 'Std', 'Count','Class']], names=[None, None])
                 metricsTable.columns = multi_index
-                #metricsTable.to_csv(f"{targetPath}/Player/{key}_individualMetrics.csv", index = True)
                 metricsTable.fillna(0, inplace=True)
                 metricsTable.to_pickle(f"{targetPath}/Player/{key}_individualMetrics.pkl")
-                
         else:
             raise ValueError("Invalid mode. Please choose 'individual' or 'global'.")
     except Exception as e:
         print("An error occurred:", str(e))
-    
-        
         
 def main():
     experimentName, clubName = getParameters()
