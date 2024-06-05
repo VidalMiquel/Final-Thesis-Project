@@ -20,15 +20,15 @@ python getMetrics.py "$experimentName" "$club"
 echo "getMetrics.py executed successfully."
 echo ""  # Blank line
 
-echo "Normalizating metrics exectuing normalizateMetrics.py"
-python normalizateMetrics.py "$experimentName" 
-echo "normalizateMetrics.py executed successfully."
-echo ""  # Blank line
+#echo "Normalizating metrics exectuing normalizateMetrics.py"
+#python normalizateMetrics.py "$experimentName" 
+#echo "normalizateMetrics.py executed successfully."
+#echo ""  # Blank line
 
-echo "Classifying metrics exectuing classificateMetrics.py"
-python classificateMetrics.py "$experimentName" 
-echo "classificateMetrics.py executed successfully."
-echo ""  # Blank line
+#echo "Classifying metrics exectuing classificateMetrics.py"
+#python classificateMetrics.py "$experimentName" 
+#echo "classificateMetrics.py executed successfully."
+#echo ""  # Blank line
 
 echo ""  # Blank line
 echo "05Satge completed."

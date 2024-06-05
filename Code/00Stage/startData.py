@@ -37,9 +37,8 @@ def createFolderStructure(stageName, experimentName):
         createFolder(os.path.join(folderPath, "Metrics"))
         createFolder(os.path.join(folderPath, "Metrics", "Raw","Individual"))
         createFolder(os.path.join(folderPath, "Metrics", "Raw","Global"))
-        createFolder(os.path.join(folderPath, "Metrics", "Normalized","Individual"))
-        #createFolder(os.path.join(folderPath, "Metrics", "Normalized","Global"))
-        createFolder(os.path.join(folderPath, "Metrics", "Classified","Individual"))
+        createFolder(os.path.join(folderPath, "Metrics", "Filtered","Individual"))
+        createFolder(os.path.join(folderPath, "Metrics", "Filtered","Global"))
 
     elif stageName == "06Stage":
         # 05Stage-Special strucutre
@@ -49,7 +48,6 @@ def createFolderStructure(stageName, experimentName):
 
     else:
         pass
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
