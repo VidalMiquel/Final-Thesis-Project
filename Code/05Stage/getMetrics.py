@@ -12,7 +12,7 @@ individualNetworkMetrics = {
     "clust": {},
     "betw": {},
     "clos": {},
-    "eigenv": {},
+    #"eigenv": {},
     "ecce": {},
 }
 
@@ -131,8 +131,8 @@ def initializeIndividualNetworkMetrics(score, graph):
     if score not in individualNetworkMetrics["clos"]:
         individualNetworkMetrics["clos"][score] = {}
     if nx.is_strongly_connected(graph):
-        if score not in individualNetworkMetrics["eigenv"]:
-            individualNetworkMetrics["eigenv"][score] = {}
+        #if score not in individualNetworkMetrics["eigenv"]:
+            #individualNetworkMetrics["eigenv"][score] = {}
         if score not in individualNetworkMetrics["ecce"]:
             individualNetworkMetrics["ecce"][score] = {}
 
@@ -203,10 +203,10 @@ def getIndividualMetrics(graph, score):
             individualNetworkMetrics["ecce"][score][node].append(eccentricity)
 
             # Calcualte eccentricity and store
-            eigenvector = nx.eigenvector_centrality(graph)[node]
-            if node not in individualNetworkMetrics["eigenv"][score]:
-                individualNetworkMetrics["eigenv"][score][node] = []
-            individualNetworkMetrics["eigenv"][score][node].append(eigenvector)
+            #eigenvector = nx.eigenvector_centrality(graph)[node]
+            #if node not in individualNetworkMetrics["eigenv"][score]:
+                #individualNetworkMetrics["eigenv"][score][node] = []
+            #individualNetworkMetrics["eigenv"][score][node].append(eigenvector)
 
 
 # Manage getting metrics
