@@ -13,7 +13,7 @@ individualNetworkMetrics = {
     "betw": {},
     "clos": {},
     #"eigenv": {},
-    "ecce": {},
+    #"ecce": {},
 }
 
 # Define data strucutre for global metrics.
@@ -133,9 +133,9 @@ def initializeIndividualNetworkMetrics(score, graph):
     if nx.is_strongly_connected(graph):
         #if score not in individualNetworkMetrics["eigenv"]:
             #individualNetworkMetrics["eigenv"][score] = {}
-        if score not in individualNetworkMetrics["ecce"]:
-            individualNetworkMetrics["ecce"][score] = {}
-
+        #if score not in individualNetworkMetrics["ecce"]:
+           #individualNetworkMetrics["ecce"][score] = {}
+        pass
 
 # Get score from a given fileName.
 def getScore(fileName):
@@ -157,7 +157,7 @@ def getGlobalMetrics(graph, score):
     globalNetworkMetrics["dty"][score].append(density)
 
     if nx.is_strongly_connected(graph):
-        # Calcualte eccentricity and store
+        # Calcualte diameter and store
         diameter = nx.diameter(graph)
         globalNetworkMetrics["diam"][score].append(diameter)
 
@@ -197,17 +197,17 @@ def getIndividualMetrics(graph, score):
 
         if nx.is_strongly_connected(graph):
             # Calcualte eccentricity and store
-            eccentricity = nx.eccentricity(graph)[node]
-            if node not in individualNetworkMetrics["ecce"][score]:
-                individualNetworkMetrics["ecce"][score][node] = []
-            individualNetworkMetrics["ecce"][score][node].append(eccentricity)
+            #eccentricity = nx.eccentricity(graph)[node]
+            #if node not in individualNetworkMetrics["ecce"][score]:
+                #individualNetworkMetrics["ecce"][score][node] = []
+            #individualNetworkMetrics["ecce"][score][node].append(eccentricity)
 
             # Calcualte eccentricity and store
             #eigenvector = nx.eigenvector_centrality(graph)[node]
             #if node not in individualNetworkMetrics["eigenv"][score]:
                 #individualNetworkMetrics["eigenv"][score][node] = []
             #individualNetworkMetrics["eigenv"][score][node].append(eigenvector)
-
+            pass
 
 # Manage getting metrics
 def manageMetrics(dataFolder, scores):
