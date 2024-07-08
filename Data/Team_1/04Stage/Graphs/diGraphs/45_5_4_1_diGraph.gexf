@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2024-06-26">
+    <creator>NetworkX 3.2.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <nodes>
+      <node id="4320" label="Neymar da Silva Santos Junior" />
+      <node id="5470" label="Ivan Rakitić" />
+      <node id="5203" label="Sergio Busquets i Burgos" />
+      <node id="5213" label="Gerard Piqué Bernabéu" />
+      <node id="4691" label="Claudio Andrés Bravo Muñoz" />
+      <node id="5506" label="Javier Alejandro Mascherano" />
+      <node id="11094" label="Arda Turan" />
+      <node id="5503" label="Lionel Andrés Messi Cuccittini" />
+      <node id="6400" label="Aleix Vidal Parreu" />
+      <node id="5246" label="Luis Alberto Suárez Díaz" />
+    </nodes>
+    <edges>
+      <edge source="4320" target="5470" id="0" weight="1" />
+      <edge source="4320" target="5503" id="1" weight="1" />
+      <edge source="5470" target="5213" id="2" weight="1" />
+      <edge source="5470" target="5503" id="3" weight="1" />
+      <edge source="5470" target="5506" id="4" weight="1" />
+      <edge source="5203" target="4320" id="5" weight="1" />
+      <edge source="5203" target="5213" id="6" weight="1" />
+      <edge source="5203" target="5246" id="7" weight="1" />
+      <edge source="5213" target="4320" id="8" weight="1" />
+      <edge source="5213" target="4691" id="9" weight="1" />
+      <edge source="5213" target="5470" id="10" weight="1" />
+      <edge source="5213" target="5503" id="11" weight="1" />
+      <edge source="5213" target="5506" id="12" weight="1" />
+      <edge source="5213" target="11094" id="13" weight="1" />
+      <edge source="4691" target="5213" id="14" weight="1" />
+      <edge source="4691" target="5506" id="15" weight="1" />
+      <edge source="5506" target="4320" id="16" weight="1" />
+      <edge source="5506" target="4691" id="17" weight="1" />
+      <edge source="5506" target="5203" id="18" weight="1" />
+      <edge source="5506" target="5213" id="19" weight="1" />
+      <edge source="5506" target="5470" id="20" weight="1" />
+      <edge source="5506" target="11094" id="21" weight="1" />
+      <edge source="11094" target="5506" id="22" weight="1" />
+      <edge source="5503" target="4320" id="23" weight="1" />
+      <edge source="6400" target="5203" id="24" weight="1" />
+      <edge source="5246" target="5503" id="25" weight="1" />
+    </edges>
+  </graph>
+</gexf>
