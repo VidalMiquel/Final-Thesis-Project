@@ -21,7 +21,6 @@ python generateGraph.py "$experimentName"
 echo "generateGraph.py executed successfully."
 echo ""  # Blank line
 
-echo ""  # Blank line
 echo "04Satge completed."
 echo ""  # Blank line
 echo "------------------------------------------"

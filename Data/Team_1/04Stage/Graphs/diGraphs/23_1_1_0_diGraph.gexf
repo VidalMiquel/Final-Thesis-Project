@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2024-06-26">
+    <creator>NetworkX 3.2.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <nodes>
+      <node id="5246" label="Luis Alberto Suárez Díaz" />
+      <node id="5503" label="Lionel Andrés Messi Cuccittini" />
+      <node id="5203" label="Sergio Busquets i Burgos" />
+      <node id="6400" label="Aleix Vidal Parreu" />
+      <node id="5506" label="Javier Alejandro Mascherano" />
+      <node id="22102" label="Adriano Correia Claro" />
+      <node id="6332" label="Thomas Vermaelen" />
+    </nodes>
+    <edges>
+      <edge source="5246" target="5503" id="0" weight="1" />
+      <edge source="5503" target="5203" id="1" weight="1" />
+      <edge source="5503" target="5246" id="2" weight="1" />
+      <edge source="5503" target="5506" id="3" weight="1" />
+      <edge source="5503" target="6400" id="4" weight="1" />
+      <edge source="5203" target="6400" id="5" weight="1" />
+      <edge source="6400" target="5503" id="6" weight="1" />
+      <edge source="6400" target="5506" id="7" weight="1" />
+      <edge source="5506" target="5503" id="8" weight="1" />
+      <edge source="5506" target="6332" id="9" weight="1" />
+      <edge source="5506" target="22102" id="10" weight="1" />
+      <edge source="22102" target="6332" id="11" weight="1" />
+      <edge source="6332" target="5506" id="12" weight="1" />
+    </edges>
+  </graph>
+</gexf>

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd" version="1.2">
+  <meta lastmodifieddate="2024-06-26">
+    <creator>NetworkX 3.2.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="static" name="">
+    <nodes>
+      <node id="5246" label="Luis Alberto Suárez Díaz" />
+      <node id="5503" label="Lionel Andrés Messi Cuccittini" />
+      <node id="6379" label="Sergi Roberto Carnicer" />
+      <node id="4691" label="Claudio Andrés Bravo Muñoz" />
+      <node id="5211" label="Jordi Alba Ramos" />
+      <node id="4320" label="Neymar da Silva Santos Junior" />
+      <node id="4324" label="Daniel Alves da Silva" />
+      <node id="5203" label="Sergio Busquets i Burgos" />
+      <node id="10609" label="10609" />
+      <node id="5470" label="5470" />
+    </nodes>
+    <edges>
+      <edge source="5246" target="5503" id="0" weight="1" />
+      <edge source="5503" target="4320" id="1" weight="1" />
+      <edge source="5503" target="6379" id="2" weight="1" />
+      <edge source="6379" target="4320" id="3" weight="1" />
+      <edge source="6379" target="5211" id="4" weight="1" />
+      <edge source="6379" target="10609" id="5" weight="1" />
+      <edge source="4691" target="4324" id="6" weight="1" />
+      <edge source="4691" target="5211" id="7" weight="1" />
+      <edge source="5211" target="4320" id="8" weight="1" />
+      <edge source="5211" target="4324" id="9" weight="1" />
+      <edge source="5211" target="6379" id="10" weight="1" />
+      <edge source="4320" target="6379" id="11" weight="1" />
+      <edge source="4320" target="10609" id="12" weight="1" />
+      <edge source="4324" target="4320" id="13" weight="1" />
+      <edge source="4324" target="5203" id="14" weight="1" />
+      <edge source="4324" target="5246" id="15" weight="1" />
+      <edge source="4324" target="5470" id="16" weight="1" />
+      <edge source="5203" target="4324" id="17" weight="1" />
+      <edge source="5203" target="5503" id="18" weight="1" />
+    </edges>
+  </graph>
+</gexf>
